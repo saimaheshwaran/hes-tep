@@ -4,16 +4,16 @@ package org.sm.api.config;
  * A utility class that contains constant keys used for configuring REST API requests.
  * <p>
  * This class provides standardized keys for various aspects of REST configurations,
- * such as base URLs, endpoints, headers, query parameters, and retry mechanisms.
+ * such as base URIs, endpoints, headers, query parameters, and retry mechanisms.
  * <p>
  * This class is not meant to be instantiated, as it serves as a container for static constants.
  */
 public final class RestConfigKeys {
 
     /**
-     * Key for specifying the base URL of the REST API.
+     * Key for specifying the base URI of the REST API.
      */
-    public static final String BASE_URL = "baseUrl";
+    public static final String BASE_URI = "baseUri";
 
     /**
      * Key for specifying the endpoint of the REST API.
