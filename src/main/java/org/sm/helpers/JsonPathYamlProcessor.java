@@ -1,4 +1,4 @@
-package org.sm.api.helpers;
+package org.sm.helpers;
 
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.DocumentContext;

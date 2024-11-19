@@ -1,4 +1,4 @@
-package org.sm.api.helpers;
+package org.sm.helpers;
 
 import org.sm.api.config.RestConfigConstants;
 import org.sm.utilities.MapEnvValueResolver;

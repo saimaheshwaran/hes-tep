@@ -2,7 +2,7 @@ package org.sm.api.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sm.api.helpers.JsonPathYamlProcessor;
+import org.sm.helpers.JsonPathYamlProcessor;
 import org.sm.utilities.EnvReader;
 import org.sm.utilities.PlaceHolderReplacer;
 
