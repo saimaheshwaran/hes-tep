@@ -73,7 +73,7 @@ public class DriverHelpers {
         LOGGER.debug("Form Parameters from config: {}", configFormParams);
 
 
-        // Set details for NGTPAPI
+        // Set details for DriverAPI
         if (configBaseUri != null) driverApi.setBaseUri(configBaseUri);
         if (configBasePath != null) driverApi.setBasePath(configBasePath);
         if (configEndpoint != null) driverApi.setEndpoint(configEndpoint);

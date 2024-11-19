@@ -74,6 +74,25 @@ public class YamlReader {
         return mergedYaml;
     }
 
+    public Map<String, Object> getYamlDataFromFile(String filePath) throws IOException {
+        Objects.requireNonNull(filePath, "File path must not be null.");
+
+        File file = new File(filePath);
+        if (!file.isFile()) {
+            throw new IllegalArgumentException("The specified path is not a valid file path: " + filePath);
+        }
+
+        try (FileInputStream fis = new FileInputStream(file)) {
+            Map<String, Object> yamlData = yaml.load(fis);
+            if (yamlData != null) {
+                return yamlData;
+            }
+        } catch (IOException e) {
+            throw new IOException("Failed to read file: " + file.getName(), e);
+        }
+        return Map.of();
+    }
+
     /**
      * Converts a YAML data map to a JSON-formatted string.
      *

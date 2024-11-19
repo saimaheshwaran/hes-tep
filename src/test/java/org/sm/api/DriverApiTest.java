@@ -211,4 +211,7 @@ public class DriverApiTest {
         DriverApi.getInstance().executeRequest("post");
         DriverApi.getInstance().getResponse().then().statusCode(200);
     }
+
+    public static class DriverApiSyncTest {
+    }
 }

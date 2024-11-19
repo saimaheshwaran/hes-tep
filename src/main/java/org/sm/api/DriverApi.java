@@ -33,8 +33,6 @@ public class DriverApi extends DriverApiOperations {
                         .setParam("http.socket.timeout", 10000));
     }
 
-    //public static DriverApi getRest() { return getInstance(); }
-
     public static DriverApi getInstance() {
         if(threadLocalInstance.get() == null) {
             threadLocalInstance.set(new DriverApi());
