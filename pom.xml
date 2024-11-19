@@ -88,6 +88,13 @@
             <version>0.6.2</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/io.cucumber/datatable -->
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>datatable</artifactId>
+            <version>7.20.1</version>
+        </dependency>
+
     </dependencies>
 
 </project>

@@ -15,8 +15,8 @@ import java.util.Objects;
 import static org.sm.utilities.CommonUtils.isNullOrEmpty;
 import static org.sm.utilities.StringUtils.secret;
 
-public class Operations {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Operations.class);
+public class DriverApiOperations {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DriverApiOperations.class);
     private String API_NAME;
     private String BASE_URI;
     private String BASE_PATH;
@@ -29,6 +29,7 @@ public class Operations {
     private String PROXY_HOST;
     private Integer PROXY_PORT;
     private String PROXY_SCHEME;
+    private String PROXY_URL;
     private String PROXY_USERNAME;
     private String PROXY_PASSWORD;
     private Response RESPONSE;
@@ -397,7 +398,6 @@ public class Operations {
      *
      * @return a String representation of this class.
      */
-    @Override
     public String toString() {
         // Language level 15+
 //        return String.format("""

@@ -88,7 +88,7 @@ public final class RestConfigKeys {
     /**
      * Key for enabling or disabling the proxy.
      */
-    private static final String PROXY_ENABLED = PROXY + ".enabled";
+    public static final String PROXY_ENABLED = PROXY + ".enabled";
 
     /**
      * Key for enabling or disabling retries on request errors.
