@@ -1,0 +1,9 @@
+uat:
+  api_name_1:
+    baseUri: https://www.uat.example.com
+    proxy:
+      enabled: false
+      url: https://example.uatproxy.com:9022
+
+  api_name_2:
+    baseUri: https://www.dev.catfacts.com
