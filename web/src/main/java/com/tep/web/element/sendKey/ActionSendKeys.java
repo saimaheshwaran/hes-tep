@@ -12,6 +12,9 @@ import com.tep.utilities.Strings;
 
 import java.util.Map;
 
+/**
+ * ActionSendKeys class to handle sending keys and key combinations to web elements.
+ */
 public class ActionSendKeys {
 
     private Waits waits;
@@ -19,21 +22,46 @@ public class ActionSendKeys {
     private Element element;
     private PageObjects objects;
 
+    /**
+     * Constructor to initialize the ActionSendKeys with a WebDriver instance.
+     *
+     * @param driver the WebDriver instance to interact with.
+     */
     public ActionSendKeys(WebDriver driver) {
         this.driver = driver;
-        waits = new Waits(driver);
-        element = new Element(driver);
+        this.waits = new Waits(driver);
+        this.element = new Element(driver);
     }
 
+    /**
+     * Constructor to initialize the ActionSendKeys with a WebDriver instance and PageObjects.
+     *
+     * @param driver  the WebDriver instance to interact with.
+     * @param objects the PageObjects instance to retrieve element locators.
+     */
     public ActionSendKeys(WebDriver driver, PageObjects objects) {
         this.driver = driver;
         this.objects = objects;
-        waits = new Waits(driver);
-        element = new Element(driver);
+        this.waits = new Waits(driver);
+        this.element = new Element(driver);
     }
 
-    public void sendKeys(String objName, String text) { sendKeys(objects.get(objName), text); }
+    /**
+     * Sends the specified text to the element identified by the object name.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     * @param text    the text to send.
+     */
+    public void sendKeys(String objName, String text) {
+        sendKeys(objects.get(objName), text);
+    }
 
+    /**
+     * Sends the specified text to the element identified by the locator pair.
+     *
+     * @param locatorPair a Map.Entry containing the locator type and value.
+     * @param text        the text to send.
+     */
     public void sendKeys(Map.Entry<String, String> locatorPair, String text) {
         try {
             waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
@@ -45,8 +73,22 @@ public class ActionSendKeys {
         }
     }
 
-    public void enterKeyCombinations(String objName, String[] keystrings) { enterKeyCombinations(objects.get(objName), keystrings); }
+    /**
+     * Enters the specified key combinations to the element identified by the object name.
+     *
+     * @param objName    the name of the object whose locator is to be retrieved.
+     * @param keystrings the key combinations to enter.
+     */
+    public void enterKeyCombinations(String objName, String[] keystrings) {
+        enterKeyCombinations(objects.get(objName), keystrings);
+    }
 
+    /**
+     * Enters the specified key combinations to the element identified by the locator pair.
+     *
+     * @param locatorPair a Map.Entry containing the locator type and value.
+     * @param keystrings  the key combinations to enter.
+     */
     public void enterKeyCombinations(Map.Entry<String, String> locatorPair, String[] keystrings) {
         try {
             CharSequence[] keys = new CharSequence[keystrings.length];
@@ -67,6 +109,11 @@ public class ActionSendKeys {
         }
     }
 
+    /**
+     * Hits the specified key combinations.
+     *
+     * @param keystrings the key combinations to hit.
+     */
     public void hitKeyCombinations(String[] keystrings) {
         try {
             CharSequence[] keys = new CharSequence[keystrings.length];
@@ -86,10 +133,32 @@ public class ActionSendKeys {
         }
     }
 
-    public void enterKeys(String objName, Keys keys) { enterKeys(objects.get(objName), keys); }
+    /**
+     * Enters the specified key to the element identified by the object name.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     * @param keys    the key to enter.
+     */
+    public void enterKeys(String objName, Keys keys) {
+        enterKeys(objects.get(objName), keys);
+    }
 
-    public void enterKeys(String objName, String keys) { enterKeys(objects.get(objName), Strings.identifyKey(keys)); }
+    /**
+     * Enters the specified key to the element identified by the object name.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     * @param keys    the key to enter as a string.
+     */
+    public void enterKeys(String objName, String keys) {
+        enterKeys(objects.get(objName), Strings.identifyKey(keys));
+    }
 
+    /**
+     * Enters the specified key to the element identified by the locator pair.
+     *
+     * @param locatorPair a Map.Entry containing the locator type and value.
+     * @param keys        the key to enter.
+     */
     public void enterKeys(Map.Entry<String, String> locatorPair, Keys keys) {
         try {
             waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
@@ -98,5 +167,4 @@ public class ActionSendKeys {
             enterKeys(locatorPair, keys);
         }
     }
-
 }

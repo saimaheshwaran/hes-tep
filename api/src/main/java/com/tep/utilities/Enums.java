@@ -12,7 +12,11 @@ public class Enums {
         GREATER_THAN,
         LESS_THAN;
     }
-
+    public enum Manipulation_Mode {
+        SET,
+        UPDATE,
+        DELETE
+    }
     /**
      * Private constructor to prevent instantiation.
      */

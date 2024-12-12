@@ -3,8 +3,7 @@ package com.tep.api.config;
 import com.tep.utilities.Constants;
 import com.tep.utilities.PropUtils;
 
-import static com.tep.utilities.Constants.SEPARATOR;
-import static com.tep.utilities.Constants.TEST_RESOURCES_PATH;
+import static com.tep.utilities.Constants.*;
 
 /**
  * A utility class that defines constant paths and configuration values for the API framework.
@@ -29,7 +28,7 @@ public final class ApiConstants {
     /**
      * The path to the API properties file.
      */
-    public static final String API_PROPERTIES_PATH = PROJECT_FOLDER_PATH + SEPARATOR + "properties" + SEPARATOR + "api.properties";
+    public static final String API_PROPERTIES_PATH = MAIN_RESOURCES_PATH + SEPARATOR + "api.properties";
 
     // Default configuration values
     /**

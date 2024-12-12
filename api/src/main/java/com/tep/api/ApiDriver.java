@@ -1,5 +1,6 @@
 package com.tep.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tep.api.config.ApiConfig;
 import com.tep.api.config.ApiConstants;
@@ -7,6 +8,7 @@ import com.tep.api.config.ApiEnums;
 import com.tep.api.config.ApiKeys;
 import com.tep.api.response.ApiResponse;
 import com.tep.api.response.ApiSchema;
+import com.tep.utilities.Enums;
 import com.tep.utilities.JsonUtils;
 import com.tep.utilities.MethodUtils;
 import io.restassured.RestAssured;
@@ -16,15 +18,20 @@ import io.restassured.response.Response;
 import io.restassured.specification.ProxySpecification;
 import io.restassured.specification.RequestSpecification;
 import lombok.Data;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.tep.utilities.MapUtils.updateMap;
 import static com.tep.utilities.StringUtils.secret;
 
 /**
@@ -149,9 +156,12 @@ public class ApiDriver {
      * Validates the proxy configuration for missing credentials or URL.
      */
     private void validateProxyConfig() {
-        if (proxyUrl == null) logger.error("'{}' is enabled but '{}' was not found in the config.", ApiKeys.PROXY_ENABLED, ApiKeys.PROXY_URL);
-        if (proxyUsername == null) logger.error("'{}' is enabled but '{}' was not found in the config.", ApiKeys.PROXY_ENABLED, ApiKeys.PROXY_USERNAME);
-        if (proxyPassword == null) logger.error("'{}' is enabled but '{}' was not found in the config.", ApiKeys.PROXY_ENABLED, ApiKeys.PROXY_PASSWORD);
+        if (proxyUrl == null)
+            logger.error("'{}' is enabled but '{}' was not found in the config.", ApiKeys.PROXY_ENABLED, ApiKeys.PROXY_URL);
+        if (proxyUsername == null)
+            logger.error("'{}' is enabled but '{}' was not found in the config.", ApiKeys.PROXY_ENABLED, ApiKeys.PROXY_USERNAME);
+        if (proxyPassword == null)
+            logger.error("'{}' is enabled but '{}' was not found in the config.", ApiKeys.PROXY_ENABLED, ApiKeys.PROXY_PASSWORD);
     }
 
     /**
@@ -319,5 +329,215 @@ public class ApiDriver {
         logger.debug(String.format("Using %s mode to modify %s with %s", mode.toUpperCase(), paramType, params));
         logger.info("Current " + paramType + ": {}", params);
     }
+
+    /**
+     * Updates the query parameters of the API request.
+     *
+     * @param queryParams A map containing the query parameters to be updated.
+     * @param mode        The update mode as defined in {@link Enums.Manipulation_Mode}.
+     */
+    public void setQueryParams(Map<String, String> queryParams, Enums.Manipulation_Mode mode) {
+        updateAndLogParams("QUERY PARAMETERS", queryParams, String.valueOf(mode));
+        setQueryParams(updateMap(mode, queryParams, getQueryParams()));
+    }
+
+    /**
+     * Updates the form parameters of the API request.
+     *
+     * @param formParams A map containing the form parameters to be updated.
+     * @param mode       The update mode as defined in {@link Enums.Manipulation_Mode}.
+     */
+    public void setFormParams(Map<String, String> formParams, Enums.Manipulation_Mode mode) {
+        updateAndLogParams("FORM PARAMETERS", formParams, String.valueOf(mode));
+        setFormParams(updateMap(mode, formParams, getFormParams()));
+    }
+
+    /**
+     * Updates the cookies of the API request.
+     *
+     * @param cookies A map containing the cookies to be updated.
+     * @param mode    The update mode as defined in {@link Enums.Manipulation_Mode}.
+     */
+    public void setCookies(Map<String, String> cookies, Enums.Manipulation_Mode mode) {
+        updateAndLogParams("COOKIES", cookies, String.valueOf(mode));
+        setCookies(updateMap(mode, cookies, getCookies()));
+    }
+
+    /**
+     * Updates the headers of the API request.
+     *
+     * @param headers A map containing the headers to be updated.
+     * @param mode    The update mode as defined in {@link Enums.Manipulation_Mode}.
+     */
+    public void setHeaders(Map<String, String> headers, Enums.Manipulation_Mode mode) {
+        updateAndLogParams("HEADERS", headers, String.valueOf(mode));
+        setHeaders(updateMap(mode, headers, getHeaders()));
+    }
+
+    /**
+     * Updates the request body based on the specified mode of manipulation.
+     * This method allows updating or deleting a value associated with a given key in a JSON body.
+     *
+     * @param jsonBody The JSON body as a String that needs to be manipulated.
+     * @param key      The key in the JSON body whose value is to be updated or deleted.
+     * @param newValue The new value to update in the JSON body. This parameter is ignored if mode is DELETE.
+     * @param dataType The data type to which the new value should be converted. This parameter is ignored if mode is DELETE.
+     * @param mode     The mode of manipulation, either UPDATE or DELETE, as defined in Enums.Manipulating_Mode..
+     */
+    public void updateRequestBody(String jsonBody, String key, String newValue, String dataType, Enums.Manipulation_Mode mode) {
+        try {
+            switch (mode) {
+                case UPDATE:
+                    Object updatedValue = convertValueBasedOnType(newValue, dataType);
+                    this.body = updateJSONBody(jsonBody, key, updatedValue);
+                    break;
+                case DELETE:
+                    this.body = deleteFieldFromJSONBody(jsonBody, key);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unknown mode: " + mode);
+            }
+
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Updates the JSON body with the new value for the given key.
+     * This method supports updating both top-level and nested keys within the JSON object.
+     * Nested keys are specified using dot notation (e.g., "parent.child").
+     *
+     * @param jsonBody     The original JSON body as a String.
+     * @param key          The key whose value is to be updated. Can be a nested key represented in dot notation.
+     * @param updatedValue The new value to be associated with the key.
+     * @return The updated JSON body as a String.
+     * @throws JSONException if there is an issue with JSON processing.
+     */
+    public String updateJSONBody(String jsonBody, String key, Object updatedValue) throws JSONException {
+        JSONObject jsonObj = new JSONObject(jsonBody);
+        if (key.contains(".")) {
+            //nested json
+            String[] newKeys = key.split("\\.");
+
+            switch (newKeys.length) {
+                case 2:
+                    if (newKeys[1].contains("[")) {
+                        jsonObj.put(newKeys[0], arrayUpdate(jsonObj.getJSONObject(newKeys[0]), newKeys[1], updatedValue));
+                    } else
+                        jsonObj.getJSONObject(newKeys[0]).put(newKeys[1], updatedValue);
+                    break;
+                case 3:
+                    if (newKeys[1].contains("[")) {
+                        jsonObj.put(newKeys[0], arrayUpdate(jsonObj.getJSONObject(newKeys[0]).getJSONObject(newKeys[1]), newKeys[2], updatedValue));
+                    } else
+                        jsonObj.getJSONObject(newKeys[0]).getJSONObject(newKeys[1]).put(newKeys[2], updatedValue);
+                    break;
+                case 4:
+                    if (newKeys[1].contains("[")) {
+                        jsonObj.put(newKeys[0], arrayUpdate(jsonObj.getJSONObject(newKeys[0]).getJSONObject(newKeys[1]).getJSONObject(newKeys[2]), newKeys[3], updatedValue));
+                    } else
+                        jsonObj.getJSONObject(newKeys[0]).getJSONObject(newKeys[1]).getJSONObject(newKeys[2]).put(newKeys[3], updatedValue);
+                    break;
+            }
+        } else {
+            if (key.contains("[")) {
+                jsonObj = arrayUpdate(jsonObj, key, updatedValue);
+            } else
+                jsonObj.put(key, updatedValue);
+        }
+        return jsonObj.toString();
+    }
+
+    public String deleteFieldFromJSONBody(String jsonBody, String key) throws JSONException {
+        JSONObject jsonObj = new JSONObject(jsonBody);
+        if (key.contains(".")) {
+            String[] newKeys = key.split("\\.");
+            switch (newKeys.length) {
+                case 2:
+                    if (newKeys[1].contains("[")) {
+                        jsonObj.put(newKeys[0], arrayDelete(jsonObj.getJSONObject(newKeys[0]), newKeys[1]));
+                    } else
+                        jsonObj.getJSONObject(newKeys[0]).remove(newKeys[1]);
+                    break;
+                case 3:
+                    if (newKeys[2].contains("[")) {
+                        jsonObj.put(newKeys[0], arrayDelete(jsonObj.getJSONObject(newKeys[0]).getJSONObject(newKeys[1]), newKeys[2]));
+                    } else
+                        jsonObj.getJSONObject(newKeys[0]).getJSONObject(newKeys[1]).remove(newKeys[2]);
+                    break;
+                case 4:
+                    if (newKeys[3].contains("[")) {
+                        jsonObj.put(newKeys[0], arrayDelete(jsonObj.getJSONObject(newKeys[0]).getJSONObject(newKeys[1]).getJSONObject(newKeys[2]), newKeys[3]));
+                    } else
+                        jsonObj.getJSONObject(newKeys[0]).getJSONObject(newKeys[1]).getJSONObject(newKeys[2]).remove(newKeys[3]);
+                    break;
+            }
+        } else {
+            if (key.contains("[")) {
+                jsonObj = arrayDelete(jsonObj, key);
+            } else
+                jsonObj.remove(key);
+        }
+        return jsonObj.toString();
+    }
+
+    /**
+     * Deletes an element at a specific index within a JSONArray that is part of a JSONObject.
+     * * The method locates the JSONArray associated with the provided key and removes the element at the specified index.
+     * * * @param jsonObj The JSONObject containing the JSONArray from which an element will be deleted.
+     * * @param key     The key corresponding to the JSONArray in the JSONObject.
+     * *                The key should contain the index of the element to delete in square brackets.
+     * * @return        The updated JSONObject with the JSONArray element removed.
+     * * @throws JSONException If the key is invalid or if an error occurs during the deletion process.
+     */
+    public JSONObject arrayDelete(JSONObject jsonObj, String key) throws JSONException {
+        JSONObject nestObject = jsonObj;
+        JSONArray cArray = nestObject.getJSONArray((key.split("\\["))[0]);
+        int index = Integer.parseInt(key.substring(key.indexOf('[') + 1, key.indexOf(']')));
+        cArray.remove(index);
+        return jsonObj;
+    }
+
+    /**
+     * Updates a specific index within a JSONArray that is part of a JSONObject.
+     * * The method locates the JSONArray associated with the provided key and updates * the value at the specified index with the new value.
+     * * * @param jsonObj   The JSONObject containing the JSONArray to be updated.
+     * * @param key The key corresponding to the JSONArray in the JSONObject.
+     * The key should contain the index of the element to update in square brackets.
+     * * @param newValue  The new value to replace the existing value at the specified index in the JSONArray.
+     * * @return The updated JSONObject with the modified JSONArray.
+     * * @throws JSONException If the key is invalid or if an error occurs during the update process.
+     */
+    public JSONObject arrayUpdate(JSONObject jsonObj, String key, Object newValue) throws JSONException {
+        JSONObject nestObject = jsonObj;
+        JSONArray cArray = nestObject.getJSONArray((key.split("\\["))[0]);
+        int index = Integer.parseInt(key.substring(key.indexOf('[') + 1, key.indexOf(']')));
+        cArray.put(index, newValue);
+        return jsonObj;
+    }
+
+    /**
+     * Converts the given string value to the specified data type.
+     * This method supports conversion to Integer, Boolean, and Double data types.
+     * If the specified data type is not one of the supported types, the original string value is returned.
+     * @param newValue The string value to be converted.
+     * @param dataType The name of the data type to which the value should be converted. Supported types are "Integer", "Boolean", and "Double".
+     * @return The converted value as an Object. If the data type is not supported, the original string value is returned.
+     */
+    private Object convertValueBasedOnType(String newValue, String dataType) throws JsonProcessingException {
+
+        switch (dataType) {
+            case "Integer":
+                return Integer.parseInt(newValue);
+            case "Boolean":
+                return Boolean.parseBoolean(newValue);
+            case "Double":
+                return Double.parseDouble(newValue);
+            default:
+                return newValue;
+        }
+    }
+
 
 }

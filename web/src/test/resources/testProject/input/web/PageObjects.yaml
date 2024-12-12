@@ -10,3 +10,6 @@ EY:
     xpath: '//button[contains(@id, "button-addtocart")]'
   alert:
     xpath: '//div[@id="messageBoxContainerId"]'
+
+Login:
+  user:

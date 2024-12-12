@@ -87,12 +87,12 @@ public class ApiResponse {
         // Retrieve the response
         ValidatableResponse response = this.response.then();
         switch (comparison) {
-            case Enums.Comparison_Type.EQUAL -> response.body(path, equalTo(expected));
-            case Enums.Comparison_Type.NOT_EQUAL -> response.body(path, not(equalTo(expected)));
-            case Enums.Comparison_Type.CONTAIN -> response.body(path, containsString(expected));
-            case Enums.Comparison_Type.NOT_CONTAIN -> response.body(path, not(containsString(expected)));
-            case Enums.Comparison_Type.HAS_ITEM -> response.body(path, hasItem(expected));
-            case Enums.Comparison_Type.NOT_HAS_ITEM -> response.body(path, not(hasItem(expected)));
+            case EQUAL -> response.body(path, equalTo(expected));
+            case NOT_EQUAL -> response.body(path, not(equalTo(expected)));
+            case CONTAIN -> response.body(path, containsString(expected));
+            case NOT_CONTAIN -> response.body(path, not(containsString(expected)));
+            case HAS_ITEM -> response.body(path, hasItem(expected));
+            case NOT_HAS_ITEM -> response.body(path, not(hasItem(expected)));
             default -> {
                 logger.error(String.format("Invalid comparison type '%s' in validateResponseStringFieldByPath.", comparison));
                 throw new IllegalArgumentException("Invalid comparison type: " + comparison);
@@ -116,10 +116,10 @@ public class ApiResponse {
         // Retrieve the response
         ValidatableResponse response = this.response.then();
         switch (comparison) {
-            case Enums.Comparison_Type.EQUAL -> response.body(path, equalTo(expected));
-            case Enums.Comparison_Type.NOT_EQUAL -> response.body(path, not(equalTo(expected)));
-            case Enums.Comparison_Type.HAS_ITEM -> response.body(path, hasItem(expected));
-            case Enums.Comparison_Type.NOT_HAS_ITEM -> response.body(path, not(hasItem(expected)));
+            case EQUAL -> response.body(path, equalTo(expected));
+            case NOT_EQUAL -> response.body(path, not(equalTo(expected)));
+            case HAS_ITEM -> response.body(path, hasItem(expected));
+            case NOT_HAS_ITEM -> response.body(path, not(hasItem(expected)));
             default -> {
                 logger.error("Invalid comparison type '{}' in validateBooleanFieldByPath.", comparison);
                 throw new IllegalArgumentException("Invalid comparison type: " + comparison);
@@ -142,17 +142,17 @@ public class ApiResponse {
         //comparison = comparison.trim().toLowerCase();
 
         switch (comparison) {
-            case Enums.Comparison_Type.EQUAL -> compareValues(path, response, expected, equalTo(expected));
-            case Enums.Comparison_Type.NOT_EQUAL -> compareValues(path, response, expected, not(equalTo(expected)));
-            case Enums.Comparison_Type.GREATER_THAN-> {
+            case EQUAL -> compareValues(path, response, expected, equalTo(expected));
+            case NOT_EQUAL -> compareValues(path, response, expected, not(equalTo(expected)));
+            case GREATER_THAN-> {
                 Double actualDoubleGT = ((Number) response.path(path)).doubleValue();
                 assertThat("Value at " + path, actualDoubleGT, greaterThan(expected.doubleValue()));
             }
-            case Enums.Comparison_Type.LESS_THAN -> {
+            case LESS_THAN -> {
                 Double actualDoubleLT = ((Number) response.path(path)).doubleValue();
                 assertThat("Value at " + path, actualDoubleLT, lessThan(expected.doubleValue()));
             }
-            case Enums.Comparison_Type.HAS_ITEM, Enums.Comparison_Type.NOT_HAS_ITEM -> handleMixedList(path, response, expected, comparison);
+            case HAS_ITEM, NOT_HAS_ITEM -> handleMixedList(path, response, expected, comparison);
             default -> {
                 logger.error(String.format("Invalid comparison type '%s' in validateResponseNumericFieldByPath.", comparison));
                 throw new IllegalArgumentException("Invalid comparison type: " + comparison);
@@ -173,16 +173,16 @@ public class ApiResponse {
         //comparison = comparison.trim().toLowerCase();
 
         switch (comparison) {
-            case Enums.Comparison_Type.EQUAL:
+            case EQUAL:
                 response.then().body(equalTo(expected));
                 break;
-            case Enums.Comparison_Type.NOT_EQUAL:
+            case NOT_EQUAL:
                 response.then().body(not(equalTo(expected)));
                 break;
-            case Enums.Comparison_Type.CONTAIN:
+            case CONTAIN:
                 response.then().body(containsString(expected));
                 break;
-            case Enums.Comparison_Type.NOT_CONTAIN:
+            case NOT_CONTAIN:
                 response.then().body(not(containsString(expected)));
                 break;
             default:

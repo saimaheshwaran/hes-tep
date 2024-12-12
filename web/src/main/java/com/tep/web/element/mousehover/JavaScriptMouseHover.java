@@ -11,6 +11,9 @@ import com.tep.web.config.Constants;
 
 import java.util.Map;
 
+/**
+ * JavaScriptMouseHover class to handle mouse hover actions on web elements using JavaScript.
+ */
 public class JavaScriptMouseHover {
 
     private Waits waits;
@@ -18,19 +21,35 @@ public class JavaScriptMouseHover {
     private Element element;
     private PageObjects objects;
 
+    /**
+     * Constructor to initialize the JavaScriptMouseHover with a WebDriver instance.
+     *
+     * @param driver the WebDriver instance to interact with.
+     */
     public JavaScriptMouseHover(WebDriver driver) {
         this.driver = driver;
-        waits = new Waits(driver);
-        element = new Element(driver);
+        this.waits = new Waits(driver);
+        this.element = new Element(driver);
     }
 
+    /**
+     * Constructor to initialize the JavaScriptMouseHover with a WebDriver instance and PageObjects.
+     *
+     * @param driver  the WebDriver instance to interact with.
+     * @param objects the PageObjects instance to retrieve element locators.
+     */
     public JavaScriptMouseHover(WebDriver driver, PageObjects objects) {
         this.driver = driver;
         this.objects = objects;
-        waits = new Waits(driver);
-        element = new Element(driver);
+        this.waits = new Waits(driver);
+        this.element = new Element(driver);
     }
 
+    /**
+     * Performs a mouse hover action on the element identified by the locator pair using JavaScript.
+     *
+     * @param locatorPair a Map.Entry containing the locator type and value.
+     */
     public void mouseHover(Map.Entry<String, String> locatorPair) {
         try {
             waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
@@ -39,14 +58,19 @@ public class JavaScriptMouseHover {
                     "evObj.initEvent('mouseover',true, false); arguments[0].dispatchEvent(evObj);} " +
                     "else if(document.createEventObject) { arguments[0].fireEvent('onmouseover');}";
             JavascriptExecutor executor = (JavascriptExecutor) driver;
-            executor.executeScript("arguments[0].click();", element);
+            executor.executeScript(mouseOverScript, element);
             waits.sleep(5);
-
         } catch (StaleElementReferenceException e) {
             mouseHover(locatorPair);
         }
     }
 
-    public void mouseHover(String objName) { mouseHover(objects.get(objName)); }
-
+    /**
+     * Performs a mouse hover action on the element identified by the object name using JavaScript.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     */
+    public void mouseHover(String objName) {
+        mouseHover(objects.get(objName));
+    }
 }

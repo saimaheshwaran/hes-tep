@@ -1,107 +1,166 @@
 package com.tep.web.browser;
 
+import com.tep.utilities.PropUtils;
 import com.tep.web.base.Element;
 import com.tep.web.base.Waits;
 import org.openqa.selenium.WebDriver;
 import com.tep.web.config.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
+/**
+ * WindowHandling class to handle browser window and alert operations.
+ */
 public class WindowHandling {
 
+    // Logger for logging important events and errors
+    private static final Logger logger = LoggerFactory.getLogger(PropUtils.class);
     private WebDriver driver;
     private Waits waits;
     private Element element;
-    String old_win;
-    String lastWinHandle;
+    private String oldWindowHandle;
+    private String lastWindowHandle;
 
+    /**
+     * Constructor to initialize the WindowHandling with a WebDriver instance.
+     *
+     * @param driver the WebDriver instance to interact with.
+     */
     public WindowHandling(WebDriver driver) {
         this.driver = driver;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("WindowHandling instance created");
     }
 
-    public void handleAlert(String decision)
-    {
-        if(decision.equals("accept")) {
+    /**
+     * Handles browser alerts based on the decision provided.
+     *
+     * @param decision the decision to either accept or dismiss the alert.
+     */
+    public void handleAlert(String decision) {
+        if ("accept".equalsIgnoreCase(decision)) {
+            logger.info("Accepting the alert");
             driver.switchTo().alert().accept();
         } else {
+            logger.info("Dismiss the alert");
             driver.switchTo().alert().dismiss();
         }
     }
 
-    public String alerttext()
-    {
-        return   driver.switchTo().alert().getText();
+    /**
+     * Retrieves the text from the browser alert.
+     *
+     * @return the text from the alert.
+     */
+    public String getAlertText() {
+        String alertText = driver.switchTo().alert().getText();
+        logger.info("Retrieved alert text: {}", alertText);
+        return alertText;
     }
 
-    public void switchToNewWindow()
-    {
-        old_win = driver.getWindowHandle();
-        for(String winHandle : driver.getWindowHandles())
-            lastWinHandle = winHandle;
-        driver.switchTo().window(lastWinHandle);
+    /**
+     * Switches to a new browser window.
+     */
+    public void switchToNewWindow() {
+        oldWindowHandle = driver.getWindowHandle();
+        for (String winHandle : driver.getWindowHandles()) {
+            lastWindowHandle = winHandle;
+        }
+        driver.switchTo().window(lastWindowHandle);
+        logger.info("Switched to new window: {}", lastWindowHandle);
     }
 
-    public void switchToOldWindow()
-    {
-        driver.switchTo().window(old_win);
+    /**
+     * Switches back to the old browser window.
+     */
+    public void switchToOldWindow() {
+        driver.switchTo().window(oldWindowHandle);
+        logger.info("Switching back to the old window with handle: {}", oldWindowHandle);
     }
 
-    public void switchToNewTab()
-    {
-        old_win = driver.getWindowHandle();
-        for(String winHandle : driver.getWindowHandles())
-            lastWinHandle = winHandle;
-        driver.switchTo().window(lastWinHandle);
+    /**
+     * Switches to a new browser tab.
+     */
+    public void switchToNewTab() {
+        oldWindowHandle = driver.getWindowHandle();
+        for (String winHandle : driver.getWindowHandles()) {
+            lastWindowHandle = winHandle;
+        }
+        driver.switchTo().window(lastWindowHandle);
+        logger.info("Switched to new tab: {}", lastWindowHandle);
     }
 
-    public void switchToOldTab()
-    {
-        driver.switchTo().window(old_win);
+    /**
+     * Switches back to the old browser tab.
+     */
+    public void switchToOldTab() {
+        driver.switchTo().window(oldWindowHandle);
+        logger.info("Switching back to the old tab with handle: {}", oldWindowHandle);
     }
 
-    public void switchToWindowByTitle(String windowTitle) throws Exception
-    {
-        old_win = driver.getWindowHandle();
-        boolean winFound = false;
-        for(String winHandle : driver.getWindowHandles())
-        {
-            String str = driver.switchTo().window(winHandle).getTitle();
-            if (str.equals(windowTitle))
-            {
-                winFound = true;
+    /**
+     * Switches to a browser window by its title.
+     *
+     * @param windowTitle the title of the window to switch to.
+     * @throws Exception if the window with the specified title is not found.
+     */
+    public void switchToWindowByTitle(String windowTitle) throws Exception {
+        oldWindowHandle = driver.getWindowHandle();
+        logger.info("Current window handle: {}", oldWindowHandle);
+        boolean windowFound = false;
+        for (String winHandle : driver.getWindowHandles()) {
+            String title = driver.switchTo().window(winHandle).getTitle();
+            if (title.equals(windowTitle)) {
+                logger.info("Switched to window with title: {}", windowTitle);
+                windowFound = true;
                 break;
             }
         }
-        if (!winFound)
-            throw new Exception("Window having title "+windowTitle+" not found");
+        if (!windowFound) {
+            logger.error("Window with title '{}' not found", windowTitle);
+            throw new Exception("Window with title " + windowTitle + " not found");
+        }
     }
 
-    public void closeNewWindow()
-    {
+    /**
+     * Closes the current browser window.
+     */
+    public void closeNewWindow() {
+        logger.info("Closing the current window");
         driver.close();
     }
 
-    public void switchFrame(Map.Entry<String, String> locatorPair)
-    {
-        if(locatorPair.getKey().equalsIgnoreCase("index")) {
+    /**
+     * Switches to a frame identified by the provided locator pair.
+     *
+     * @param locatorPair a Map.Entry containing the locator type and value.
+     */
+    public void switchFrame(Map.Entry<String, String> locatorPair) {
+        if ("index".equalsIgnoreCase(locatorPair.getKey())) {
             driver.switchTo().frame(locatorPair.getValue());
-        }
-        else
-        {
+        } else {
             waits.waitForPresenceOfElementsLocated(locatorPair, Constants.DEFAULT_WAIT_TIME_SEC);
             driver.switchTo().frame(element.get(locatorPair));
         }
+        logger.info("Switched to frame successfully");
     }
 
-    public void switchToDefaultContent()
-    {
+    /**
+     * Switches back to the default content from a frame.
+     */
+    public void switchToDefaultContent() {
+        logger.info("Switching to the default content (main document)");
         driver.switchTo().defaultContent();
     }
 
+    /**
+     * Refreshes the current page.
+     */
     public void refreshPage() {
+        logger.info("Refreshing the current page");
         driver.navigate().refresh();
     }
-
 }

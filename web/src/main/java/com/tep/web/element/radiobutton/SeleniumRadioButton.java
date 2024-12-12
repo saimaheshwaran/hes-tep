@@ -12,6 +12,9 @@ import com.tep.web.config.Constants;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * SeleniumRadioButton class to handle radio button interactions using Selenium.
+ */
 public class SeleniumRadioButton {
 
     private Waits waits;
@@ -20,28 +23,51 @@ public class SeleniumRadioButton {
     private PageObjects objects;
     private SeleniumClick seleniumClick;
 
+    /**
+     * Constructor to initialize the SeleniumRadioButton with a WebDriver instance.
+     *
+     * @param driver the WebDriver instance to interact with.
+     */
     public SeleniumRadioButton(WebDriver driver) {
         this.driver = driver;
-        waits = new Waits(driver);
-        element = new Element(driver);
-        seleniumClick = new SeleniumClick(driver);
+        this.waits = new Waits(driver);
+        this.element = new Element(driver);
+        this.seleniumClick = new SeleniumClick(driver);
     }
 
+    /**
+     * Constructor to initialize the SeleniumRadioButton with a WebDriver instance and PageObjects.
+     *
+     * @param driver  the WebDriver instance to interact with.
+     * @param objects the PageObjects instance to retrieve element locators.
+     */
     public SeleniumRadioButton(WebDriver driver, PageObjects objects) {
         this.driver = driver;
         this.objects = objects;
-        waits = new Waits(driver);
-        element = new Element(driver);
-        seleniumClick = new SeleniumClick(driver);
+        this.waits = new Waits(driver);
+        this.element = new Element(driver);
+        this.seleniumClick = new SeleniumClick(driver);
     }
 
-    public void select(String objName) { select(objects.get(objName)); }
+    /**
+     * Selects the radio button identified by the object name.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     */
+    public void select(String objName) {
+        select(objects.get(objName));
+    }
 
+    /**
+     * Selects the radio button identified by the locator pair.
+     *
+     * @param locatorPair a Map.Entry containing the locator type and value.
+     */
     public void select(Map.Entry<String, String> locatorPair) {
         try {
             waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
             WebElement radioButton = this.element.get(locatorPair);
-            if(!radioButton.isSelected()) {
+            if (!radioButton.isSelected()) {
                 seleniumClick.click(locatorPair);
             }
         } catch (StaleElementReferenceException ignored) {
@@ -49,26 +75,41 @@ public class SeleniumRadioButton {
         }
     }
 
+    /**
+     * Selects a radio button from a group identified by the object name.
+     *
+     * @param option        the option to select.
+     * @param selectionType the method to select the option (value or text).
+     * @param objName       the name of the object whose locator is to be retrieved.
+     */
     public void selectFromRadioButtonGroup(String option, String selectionType, String objName) {
         selectFromRadioButtonGroup(option, selectionType, objects.get(objName));
     }
 
+    /**
+     * Selects a radio button from a group identified by the locator pair.
+     *
+     * @param option        the option to select.
+     * @param selectionType the method to select the option (value or text).
+     * @param locatorPair   a Map.Entry containing the locator type and value.
+     */
     public void selectFromRadioButtonGroup(String option, String selectionType, Map.Entry<String, String> locatorPair) {
         try {
             waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
             List<WebElement> radioButtonGroup = driver.findElements(this.element.getBy(locatorPair));
-            for (WebElement radiobutton : radioButtonGroup) {
+            for (WebElement radioButton : radioButtonGroup) {
                 if (selectionType.equals("value")) {
-                    if (radiobutton.getAttribute("value").equals(option) && !radiobutton.isSelected())
-                        radiobutton.click();
+                    if (radioButton.getAttribute("value").equals(option) && !radioButton.isSelected()) {
+                        radioButton.click();
+                    }
                 } else if (selectionType.equals("text")) {
-                    if (radiobutton.getText().equals(option) && !radiobutton.isSelected())
-                        radiobutton.click();
+                    if (radioButton.getText().equals(option) && !radioButton.isSelected()) {
+                        radioButton.click();
+                    }
                 }
             }
         } catch (StaleElementReferenceException e) {
-            selectFromRadioButtonGroup( option,  selectionType, locatorPair);
+            selectFromRadioButtonGroup(option, selectionType, locatorPair);
         }
     }
-
 }

@@ -1,18 +1,19 @@
 package com.tep.web;
 
+import com.tep.utilities.PropUtils;
 import com.tep.web.base.Driver;
 import com.tep.web.base.Waits;
 import com.tep.web.browser.*;
 import com.tep.web.config.Enums;
 import com.tep.web.config.PageObjects;
 import com.tep.web.element.checkbox.ActionCheckBox;
-import com.tep.web.element.checkbox.JavaScriptChekBox;
+import com.tep.web.element.checkbox.JavaScriptCheckBox;
 import com.tep.web.element.checkbox.SeleniumCheckBox;
 import com.tep.web.element.click.ActionClick;
 import com.tep.web.element.click.JavaScriptClick;
 import com.tep.web.element.click.SeleniumClick;
 import com.tep.web.element.dropdown.ActionDropdown;
-import com.tep.web.element.dropdown.JavascritpDropdown;
+import com.tep.web.element.dropdown.JavaScriptDropdown;
 import com.tep.web.element.dropdown.SeleniumDropdown;
 import com.tep.web.element.getter.GetAttribute;
 import com.tep.web.element.getter.GetElement;
@@ -26,23 +27,31 @@ import com.tep.web.element.sendKey.JavaScriptSendKeys;
 import com.tep.web.element.sendKey.SeleniumSendKeys;
 import com.tep.web.validation.*;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.testng.Assert;
+
 
 import java.util.Map;
 
+/**
+ * WebAppDriver class to initialize and manage web driver and various element actions and validations.
+ */
 public class WebAppDriver {
 
     protected Driver driver;
     protected PageObjects objects;
     protected Map.Entry<String, String> locatorPair;
+    private static final Logger logger = LoggerFactory.getLogger(PropUtils.class);
 
-    //Browser functions
+    // Browser functions
     public BrowserHandling browserHandling;
     public TabHandling tabHandling;
     public WindowHandling windowHandling;
     public WindowManipulation windowManipulation;
     public WindowScrolling windowScrolling;
 
-    //Element action functions
+    // Element action functions
     public ActionClick actionClick;
     public ActionCheckBox actionCheckBox;
     public ActionDropdown actionDropdown;
@@ -50,22 +59,22 @@ public class WebAppDriver {
     public ActionRadioButton actionRadioButton;
     public ActionSendKeys actionSendKeys;
 
-    //Element Javascript functions
+    // Element JavaScript functions
     public JavaScriptClick javaScriptClick;
-    public JavaScriptChekBox javaScriptChekBox;
-    public JavascritpDropdown javascritpDropdown;
+    public JavaScriptCheckBox javaScriptCheckBox;
+    public JavaScriptDropdown javaScriptDropdown;
     public JavaScriptMouseHover javaScriptMouseHover;
     public JavaScriptRadioButton javaScriptRadioButton;
     public JavaScriptSendKeys javaScriptSendKeys;
 
-    //Element Selenium functions
+    // Element Selenium functions
     public SeleniumClick seleniumClick;
     public SeleniumCheckBox seleniumCheckBox;
     public SeleniumDropdown seleniumDropdown;
     public SeleniumRadioButton seleniumRadioButton;
     public SeleniumSendKeys seleniumSendKeys;
 
-    //Validation functions
+    // Validation functions
     public PageValidation pageValidation;
     public AttributeValidation attributeValidation;
     public CheckBoxValidation checkBoxValidation;
@@ -76,35 +85,61 @@ public class WebAppDriver {
     public TextValidation textValidation;
     public TypeValidation typeValidation;
 
-    //Getters
+    // Getters
     public GetElement getElement;
     public GetAttribute getAttribute;
 
-    //Wais
+    // Waits
     public Waits waits;
 
+    /**
+     * Constructor to initialize the WebAppDriver with a specified browser type.
+     *
+     * @param browserType the type of browser to initialize.
+     */
     public WebAppDriver(Enums.BrowserType browserType) {
-        this.driver = new Driver(browserType);
-        this.objects = new PageObjects();
-        intializeDriver(driver.getDriver(), objects);
+        try {
+            this.driver = new Driver(browserType);
+            this.objects = new PageObjects();
+            initializeDriver(driver.getDriver(), objects);
+        } catch (Exception e) {
+            logger.info("Failed to initialize WebDriver:");
+            Assert.fail("Failed to initialize WebDriver: " + e.getMessage());
+        }
     }
 
+    /**
+     * Constructor to initialize the WebAppDriver with a specified browser type and PageObjects.
+     *
+     * @param browserType the type of browser to initialize.
+     * @param objects     the PageObjects instance to use.
+     */
     public WebAppDriver(Enums.BrowserType browserType, PageObjects objects) {
-        this.driver = new Driver(browserType);
-        this.objects = objects;
-        intializeDriver(driver.getDriver(), objects);
+        try {
+            this.driver = new Driver(browserType);
+            this.objects = objects;
+            initializeDriver(driver.getDriver(), objects);
+        } catch (Exception e) {
+            logger.info("Failed to initialize WebDriver:");
+            Assert.fail("Failed to initialize WebDriver: " + e.getMessage());
+        }
     }
 
-    protected void intializeDriver(WebDriver driver, PageObjects objects) {
-
-        //Browser functions
+    /**
+     * Initializes the driver and various element actions and validations.
+     *
+     * @param driver  the WebDriver instance to use.
+     * @param objects the PageObjects instance to use.
+     */
+    protected void initializeDriver(WebDriver driver, PageObjects objects) {
+        // Browser functions
         browserHandling = new BrowserHandling(driver, objects);
         tabHandling = new TabHandling(driver);
         windowHandling = new WindowHandling(driver);
         windowManipulation = new WindowManipulation(driver, objects);
         windowScrolling = new WindowScrolling(driver, objects);
 
-        //Element action functions
+        // Element action functions
         actionClick = new ActionClick(driver, objects);
         actionCheckBox = new ActionCheckBox(driver, objects);
         actionDropdown = new ActionDropdown(driver, objects);
@@ -112,22 +147,22 @@ public class WebAppDriver {
         actionRadioButton = new ActionRadioButton(driver, objects);
         actionSendKeys = new ActionSendKeys(driver, objects);
 
-        //Element javascritp functions
+        // Element JavaScript functions
         javaScriptClick = new JavaScriptClick(driver, objects);
-        javaScriptChekBox = new JavaScriptChekBox(driver, objects);
-        javascritpDropdown = new JavascritpDropdown(driver, objects);
+        javaScriptCheckBox = new JavaScriptCheckBox(driver, objects);
+        javaScriptDropdown = new JavaScriptDropdown(driver, objects);
         javaScriptMouseHover = new JavaScriptMouseHover(driver, objects);
         javaScriptRadioButton = new JavaScriptRadioButton(driver, objects);
         javaScriptSendKeys = new JavaScriptSendKeys(driver, objects);
 
-        //Element selenium functions
+        // Element Selenium functions
         seleniumClick = new SeleniumClick(driver, objects);
         seleniumCheckBox = new SeleniumCheckBox(driver, objects);
         seleniumDropdown = new SeleniumDropdown(driver, objects);
         seleniumRadioButton = new SeleniumRadioButton(driver, objects);
         seleniumSendKeys = new SeleniumSendKeys(driver, objects);
 
-        //Validation functions
+        // Validation functions
         pageValidation = new PageValidation(driver);
         attributeValidation = new AttributeValidation(driver, objects);
         checkBoxValidation = new CheckBoxValidation(driver, objects);
@@ -136,20 +171,28 @@ public class WebAppDriver {
         presenceValidation = new PresenceValidation(driver, objects);
         radioButtonValidation = new RadioButtonValidation(driver, objects);
         textValidation = new TextValidation(driver, objects);
-        typeValidation = new TypeValidation();
+        typeValidation = TypeValidation.getInstance();
 
-        //Getters
+        // Getters
         getAttribute = new GetAttribute(driver, objects);
         getElement = new GetElement(driver, objects);
 
-        //Waits
+        // Waits
         waits = new Waits(driver);
-
     }
 
+    /**
+     * Closes the driver and unloads the PageObjects.
+     */
     public void close() {
-        objects.unload();
-        driver.close();
+        try {
+            objects.unload();
+            driver.close();
+        } catch (Exception e) {
+            logger.info("Failed to close WebDriver:");
+            Assert.fail("Failed to close WebDriver: " + e.getMessage());
+
+        }
     }
 
 }

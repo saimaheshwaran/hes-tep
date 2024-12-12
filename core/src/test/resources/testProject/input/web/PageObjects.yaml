@@ -1,0 +1,17 @@
+#Only one locator should be used at anytime. If two locators are used, only one will be picked at Random or first come first pick.
+
+EY:
+  page: {value: 'https://ey.corpmerchandise.com'}
+
+  searchBox: {id: 'searchTextBox'}
+
+  pen: {xpath: '//ul//a[@id="linkProductName"]//h4[contains(text(),"Pen")]'}
+
+  quantity:
+    id: 'Quantity'
+
+  addToCart:
+    xpath: '//button[contains(@id, "button-addtocart")]'
+
+  alert:
+    xpath: '//div[@id="messageBoxContainerId"]'

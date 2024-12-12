@@ -8,10 +8,19 @@ import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Strings utility class for various string operations and key identification.
+ */
 public class Strings {
 
+    /**
+     * Identifies the Selenium Keys constant based on the provided key string.
+     *
+     * @param key the key string to identify.
+     * @return the corresponding Selenium Keys constant.
+     */
     public static Keys identifyKey(String key) {
-        Keys k = switch (key.toUpperCase()) {
+        return switch (key.toUpperCase()) {
             case "NULL" -> Keys.NULL;
             case "CANCEL" -> Keys.CANCEL;
             case "HELP" -> Keys.HELP;
@@ -75,10 +84,15 @@ public class Strings {
             case "F12" -> Keys.F12;
             default -> Keys.NULL;
         };
-        return k;
     }
 
-    public static StringBuffer removeUTFCharacters(String data){
+    /**
+     * Removes UTF characters from the provided string.
+     *
+     * @param data the string from which UTF characters need to be removed.
+     * @return a StringBuffer with UTF characters removed.
+     */
+    public static StringBuffer removeUTFCharacters(String data) {
         Pattern p = Pattern.compile("\\\\u(\\p{XDigit}{4})");
         Matcher m = p.matcher(data);
         StringBuffer buf = new StringBuffer(data.length());
@@ -90,23 +104,36 @@ public class Strings {
         return buf;
     }
 
-    public static String stringFetch(String string,String regex,int group){
-        String result=null;
+    /**
+     * Fetches a substring from the provided string based on the regex and group.
+     *
+     * @param string the source string.
+     * @param regex  the regex pattern to match.
+     * @param group  the regex group to fetch.
+     * @return the fetched substring.
+     */
+    public static String stringFetch(String string, String regex, int group) {
+        String result = null;
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(string);
-        if (matcher.find())
-        {
-            result =(matcher.group(group));
+        if (matcher.find()) {
+            result = (matcher.group(group));
         }
         return result;
     }
 
-    public static String subStringSearchInList(ArrayList<String> list, String SearchString){
-        ArrayList <Strings> listClone = new ArrayList<Strings>();
-        String regex = String.format("^@(%s)(.*)\\d+",SearchString);
+    /**
+     * Searches for a substring in a list of strings.
+     *
+     * @param list         the list of strings to search in.
+     * @param searchString the substring to search for.
+     * @return the matched string.
+     */
+    public static String subStringSearchInList(ArrayList<String> list, String searchString) {
+        String regex = String.format("^@(%s)(.*)\\d+", searchString);
         String match = null;
         for (String string : list) {
-            if(string.matches(regex)){
+            if (string.matches(regex)) {
                 match = string;
                 break;
             }
@@ -114,22 +141,33 @@ public class Strings {
         return match;
     }
 
+    /**
+     * Encodes the provided string using Base64 encoding.
+     *
+     * @param string the string to encode.
+     * @return the Base64 encoded string.
+     */
     public static String encode(String string) {
         return Base64.getEncoder().encodeToString(String.format("%s", string).getBytes());
     }
 
+    /**
+     * Decodes the provided Base64 encoded string.
+     *
+     * @param bytes the Base64 encoded string to decode.
+     * @return the decoded string.
+     */
     public static String decode(String bytes) {
         return new String(Base64.getDecoder().decode(bytes));
     }
 
     /**
-     * Method to verify partial page title
+     * Compares two strings and asserts if they are equal.
      *
-     * @param str1 : String : source string
-     * @param str2     : String : target string
+     * @param str1 the source string.
+     * @param str2 the target string.
      */
-    public void compareStrings(String str1, String str2)  {
-        Assertion.equals(str1, str2,"Success");
+    public void compareStrings(String str1, String str2) {
+        Assertion.equals(str1, str2, "Success");
     }
-
 }
