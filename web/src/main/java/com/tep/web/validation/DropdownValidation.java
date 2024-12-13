@@ -22,7 +22,7 @@ public class DropdownValidation {
     private WebDriver driver;
     private Element element;
     private PageObjects objects;
-    private static final Logger logger = LoggerFactory.getLogger(PropUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(DropdownValidation.class);
 
     /**
      * Constructor to initialize the DropdownValidation with a WebDriver instance.
@@ -33,6 +33,7 @@ public class DropdownValidation {
         this.driver = driver;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("DropdownValidation with webdriver initialized successfully");
     }
 
     /**
@@ -46,6 +47,7 @@ public class DropdownValidation {
         this.objects = objects;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("DropdownValidation with Webdriver and Pageobject initialized successfully");
     }
 
     /**

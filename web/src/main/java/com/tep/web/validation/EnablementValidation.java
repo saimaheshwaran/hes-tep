@@ -21,7 +21,7 @@ public class EnablementValidation {
     private WebDriver driver;
     private Element element;
     private PageObjects objects;
-    private static final Logger logger = LoggerFactory.getLogger(PropUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(EnablementValidation.class);
 
     /**
      * Constructor to initialize the EnablementValidation with a WebDriver instance.
@@ -32,6 +32,7 @@ public class EnablementValidation {
         this.driver = driver;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("EnablementValidation initialized with Webdriver successfully");
     }
 
     /**
@@ -45,6 +46,7 @@ public class EnablementValidation {
         this.objects = objects;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("EnablementValidation with Webdriver and Pageobjects initialized successfully");
     }
 
     /**
@@ -67,8 +69,10 @@ public class EnablementValidation {
         waits.waitForPresenceOfElementsLocated(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
         WebElement attributeElement = element.get(locatorPair);
         if (!attributeElement.isEnabled() && elementEnabled) {
+            logger.error("Element with attribute \"" + locatorPair.getKey() + "=" + locatorPair.getValue() + "\" should be enabled, but it is not.");
             Assertion.equalsTrue(attributeElement.isEnabled(), "Expected: Element with attribute \"" + locatorPair.getKey() + "=" + locatorPair.getValue() + "\" should be enabled. But element is not enabled.");
         } else if (attributeElement.isEnabled() && !elementEnabled) {
+            logger.error ("Element with attribute \"" + locatorPair.getKey() + "=" + locatorPair.getValue() + "\" should not be enabled, but it is.");
             Assertion.equalsFalse(attributeElement.isEnabled(), "Expected: Element with attribute \"" + locatorPair.getKey() + "=" + locatorPair.getValue() + "\" should not be enabled. But element is enabled.");
         }
     }

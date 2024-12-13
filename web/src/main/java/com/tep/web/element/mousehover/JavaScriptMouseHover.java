@@ -3,11 +3,14 @@ package com.tep.web.element.mousehover;
 import com.tep.web.base.Element;
 import com.tep.web.base.Waits;
 import com.tep.web.config.PageObjects;
+import com.tep.web.element.checkbox.ActionCheckBox;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import com.tep.web.config.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -20,6 +23,7 @@ public class JavaScriptMouseHover {
     private WebDriver driver;
     private Element element;
     private PageObjects objects;
+    private static final Logger logger = LoggerFactory.getLogger(JavaScriptMouseHover.class);
 
     /**
      * Constructor to initialize the JavaScriptMouseHover with a WebDriver instance.
@@ -30,6 +34,7 @@ public class JavaScriptMouseHover {
         this.driver = driver;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("JavaScriptMouseHover initialized with WebDriver, Waits, and Element.");
     }
 
     /**
@@ -43,6 +48,7 @@ public class JavaScriptMouseHover {
         this.objects = objects;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("JavaScriptMouseHover initialized with WebDriver, PageObjects, Waits, and Element.");
     }
 
     /**
@@ -60,7 +66,9 @@ public class JavaScriptMouseHover {
             JavascriptExecutor executor = (JavascriptExecutor) driver;
             executor.executeScript(mouseOverScript, element);
             waits.sleep(5);
+            logger.info("Mouse hover performed on element with locator", locatorPair);
         } catch (StaleElementReferenceException e) {
+            logger.error("StaleElementReferenceException occurred while performing mouse hover. Retrying..", locatorPair, e);
             mouseHover(locatorPair);
         }
     }

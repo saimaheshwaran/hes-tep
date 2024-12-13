@@ -1,5 +1,6 @@
 package com.tep.web.element.sendKey;
 
+import com.tep.web.base.Driver;
 import com.tep.web.base.Element;
 import com.tep.web.base.Waits;
 import com.tep.web.config.PageObjects;
@@ -9,6 +10,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
 import com.tep.web.config.Constants;
 import com.tep.utilities.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -21,6 +24,7 @@ public class ActionSendKeys {
     private WebDriver driver;
     private Element element;
     private PageObjects objects;
+    private static final Logger logger = LoggerFactory.getLogger(ActionSendKeys.class);
 
     /**
      * Constructor to initialize the ActionSendKeys with a WebDriver instance.
@@ -31,6 +35,7 @@ public class ActionSendKeys {
         this.driver = driver;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("ActionSendKeys initialized with WebDriver, Waits, and Element.");
     }
 
     /**
@@ -44,6 +49,7 @@ public class ActionSendKeys {
         this.objects = objects;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("ActionSendKeys initialized with WebDriver, PageObjects, Waits, and Element.");
     }
 
     /**
@@ -68,7 +74,9 @@ public class ActionSendKeys {
             Actions actions = new Actions(driver);
             actions.moveToElement(element.get(locatorPair)).click().sendKeys(text).build().perform();
             actions.release().perform();
+            logger.info("Text sent to element with locator.", text, locatorPair);
         } catch (StaleElementReferenceException e) {
+            logger.error("StaleElementReferenceException occurred while sending text.", e);
             sendKeys(locatorPair, text);
         }
     }
@@ -104,7 +112,9 @@ public class ActionSendKeys {
             Actions actions = new Actions(driver);
             actions.moveToElement(element.get(locatorPair)).click().sendKeys(Keys.chord(keys)).perform();
             actions.release().perform();
+            logger.info("Key combinations entered successfully on element with locator.", locatorPair);
         } catch (StaleElementReferenceException e) {
+            logger.warn("StaleElementReferenceException occurred while entering key combinations.", e);
             enterKeyCombinations(locatorPair, keystrings);
         }
     }
@@ -128,7 +138,9 @@ public class ActionSendKeys {
             Actions actions = new Actions(driver);
             actions.sendKeys(Keys.chord(keys)).perform();
             actions.release().perform();
+            logger.info("Key combinations hit successfully.");
         } catch (StaleElementReferenceException e) {
+            logger.warn("StaleElementReferenceException occurred while hitting key combinations.", e);
             hitKeyCombinations(keystrings);
         }
     }
@@ -163,7 +175,9 @@ public class ActionSendKeys {
         try {
             waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
             element.get(locatorPair).sendKeys(keys);
+            logger.info("keys entered on element with locator.", keys, locatorPair);
         } catch (StaleElementReferenceException e) {
+            logger.warn("StaleElementReferenceException occurred while entering keys. Retrying...", e);
             enterKeys(locatorPair, keys);
         }
     }

@@ -21,7 +21,7 @@ public class AttributeValidation {
     private WebDriver driver;
     private Element element;
     private PageObjects objects;
-    private static final Logger logger = LoggerFactory.getLogger(PropUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(AttributeValidation.class);
 
     /**
      * Constructor to initialize the AttributeValidation with a WebDriver instance.

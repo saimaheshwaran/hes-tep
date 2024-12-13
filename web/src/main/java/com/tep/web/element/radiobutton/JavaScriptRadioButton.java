@@ -3,11 +3,14 @@ package com.tep.web.element.radiobutton;
 import com.tep.web.base.Element;
 import com.tep.web.base.Waits;
 import com.tep.web.config.PageObjects;
+import com.tep.web.element.checkbox.ActionCheckBox;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import com.tep.web.config.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -20,6 +23,7 @@ public class JavaScriptRadioButton {
     private WebDriver driver;
     private Element element;
     private PageObjects objects;
+    private static final Logger logger = LoggerFactory.getLogger(JavaScriptRadioButton.class);
 
     /**
      * Constructor to initialize the JavaScriptRadioButton with a WebDriver instance.
@@ -30,6 +34,7 @@ public class JavaScriptRadioButton {
         this.driver = driver;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("JavaScriptRadioButton initialized with WebDriver, Waits, and Element helpers.");
     }
 
     /**
@@ -43,6 +48,7 @@ public class JavaScriptRadioButton {
         this.objects = objects;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("JavaScriptRadioButton initialized with WebDriver, PageObjects, Waits, and Element helpers.");
     }
 
     /**
@@ -65,7 +71,9 @@ public class JavaScriptRadioButton {
             WebElement radioButton = this.element.get(locatorPair);
             JavascriptExecutor executor = (JavascriptExecutor) driver;
             executor.executeScript("var radio=arguments[0]; if(!radio.checked){radio.checked=true;}", radioButton);
+            logger.info("Radio button selected successfully using JavaScript.");
         } catch (StaleElementReferenceException e) {
+            logger.warn("StaleElementReferenceException occurred while selecting radio button using JavaScript.", e);
             select(locatorPair);
         }
     }

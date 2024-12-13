@@ -1,11 +1,9 @@
 package com.tep.web.base;
 
-import com.tep.utilities.PropUtils;
 import com.tep.web.config.Constants;
 import org.openqa.selenium.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.tep.web.config.Enums;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +16,7 @@ public class Element {
     private Waits waits;
     private WebDriver driver;
     private WebElement element;
-    private static final Logger logger = LoggerFactory.getLogger(PropUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(Element.class);
 
     /**
      * Constructor to initialize the Element with a WebDriver instance.
@@ -26,7 +24,7 @@ public class Element {
      * @param driver the WebDriver instance to interact with.
      */
     public Element(WebDriver driver) {
-        logger.debug("Initializing Element with WebDriver instance.");
+        //logger.debug("Initializing Element with WebDriver instance.");
         this.driver = driver;
     }
 
@@ -72,6 +70,7 @@ public class Element {
             case "partiallinktest" -> by = By.partialLinkText(locatorPair.getValue());
             default -> by = null;
         }
+        logger.info("Successfully created By locator for key: {}", locatorPair.getKey());
         return by;
     }
 
@@ -90,7 +89,7 @@ public class Element {
             ((JavascriptExecutor) driver).executeScript(
                     "arguments[0].setAttribute('style','background:; border: 0px solid blue;')", element);
         } catch (Exception ignored) {
-            logger.error("Exception occurred while scrolling to WebElement: {}", element, ignored);
+            logger.error("Exception occurred while scrolling to WebElement.", element, ignored);
         }
     }
 
@@ -101,7 +100,9 @@ public class Element {
      * @return the list of located WebElements.
      */
     public List<WebElement> getList(Map.Entry<String, String> locatorPair) {
-        return waits.waitForPresenceOfElementsLocated(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
+        List<WebElement> elements = waits.waitForPresenceOfElementsLocated(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
+        logger.info("Found elements for locator.", elements.size(), locatorPair.getKey());
+        return elements;
     }
 
     /**

@@ -4,12 +4,12 @@ import org.junit.Test;
 
 public class TestCases {
 
-    WebAppDriver driver;
+    WebAppDriver driver = new WebAppDriver();
 
     @Test
     public void seleniumEYChromeTest() {
 
-        driver = new WebAppDriver(Enums.BrowserType.CHROME);
+        driver.open(Enums.BrowserType.CHROME);
 
         driver.browserHandling.goTo("EY.page");
         driver.seleniumSendKeys.sendKeys("EY.searchBox", "Pen");
@@ -22,6 +22,7 @@ public class TestCases {
         driver.javaScriptClick.click("EY.addToCart");
         driver.textValidation.isPartiallyMatching("EY.alert", "Added to cart", true);
         driver.waits.sleep(2);
+
         driver.close();
 
     }
@@ -29,8 +30,7 @@ public class TestCases {
     @Test
     public void seleniumEYChromeTest1() {
 
-        driver = new WebAppDriver(Enums.BrowserType.CHROME);
-
+        driver.open(Enums.BrowserType.CHROME);
         driver.browserHandling.goTo("EY.page");
         driver.seleniumSendKeys.sendKeys("EY.searchBox", "Pen");
         driver.actionSendKeys.enterKeys("EY.searchBox", "ENTER");
@@ -42,6 +42,7 @@ public class TestCases {
         driver.javaScriptClick.click("EY.addToCart");
         driver.textValidation.isPartiallyMatching("EY.alert", "Added to cart", true);
         driver.waits.sleep(2);
+
         driver.close();
 
     }

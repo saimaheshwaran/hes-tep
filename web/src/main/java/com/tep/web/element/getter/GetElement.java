@@ -3,11 +3,14 @@ package com.tep.web.element.getter;
 import com.tep.web.base.Element;
 import com.tep.web.base.Waits;
 import com.tep.web.config.PageObjects;
+import com.tep.web.element.checkbox.ActionCheckBox;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import com.tep.web.config.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -21,6 +24,7 @@ public class GetElement {
     private WebDriver driver;
     private Element element;
     private PageObjects objects;
+    private static final Logger logger = LoggerFactory.getLogger(GetElement.class);
 
     /**
      * Constructor to initialize the GetElement with a WebDriver instance.
@@ -31,6 +35,7 @@ public class GetElement {
         this.driver = driver;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("GetElement initialized with WebDriver, Waits, and Element.");
     }
 
     /**
@@ -44,6 +49,7 @@ public class GetElement {
         this.objects = objects;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("GetElement initialized with WebDriver, PageObjects, Waits, and Element.");
     }
 
     /**
@@ -77,7 +83,9 @@ public class GetElement {
         try {
             WebElement element = fetch(locatorPair);
             elementSelected = element.isSelected();
+            logger.info("Element selected status", elementSelected);
         } catch (StaleElementReferenceException e) {
+            logger.error("StaleElementReferenceException occurred while checking if element is selected.", e);
             elementSelected = isSelected(locatorPair);
         }
         return elementSelected;
@@ -94,7 +102,9 @@ public class GetElement {
         try {
             WebElement element = fetch(locatorPair);
             elementEnabled = element.isEnabled();
+            logger.info("Element enabled status.", elementEnabled);
         } catch (StaleElementReferenceException e) {
+            logger.warn("StaleElementReferenceException occurred while checking if element is enabled.", e);
             elementEnabled = isEnabled(locatorPair);
         }
         return elementEnabled;
@@ -111,9 +121,12 @@ public class GetElement {
         try {
             WebElement element = fetch(locatorPair);
             elementDisplayed = element.isDisplayed();
+            logger.info("Element displayed status.", elementDisplayed);
         } catch (StaleElementReferenceException e) {
+            logger.warn("StaleElementReferenceException occurred while checking if element is displayed.", e);
             elementDisplayed = isDisplayed(locatorPair);
         } catch (NoSuchElementException e) {
+            logger.warn("NoSuchElementException occurred while checking if element is displayed.", e);
             elementDisplayed = false;
         }
         return elementDisplayed;

@@ -1,6 +1,5 @@
 package com.tep.web.browser;
 
-import com.tep.utilities.PropUtils;
 import com.tep.web.base.Element;
 import com.tep.web.base.Waits;
 import org.openqa.selenium.WebDriver;
@@ -16,7 +15,7 @@ import java.util.Map;
 public class WindowHandling {
 
     // Logger for logging important events and errors
-    private static final Logger logger = LoggerFactory.getLogger(PropUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(WindowHandling.class);
     private WebDriver driver;
     private Waits waits;
     private Element element;

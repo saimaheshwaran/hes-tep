@@ -3,9 +3,12 @@ package com.tep.web.element.sendKey;
 import com.tep.web.base.Element;
 import com.tep.web.base.Waits;
 import com.tep.web.config.PageObjects;
+import com.tep.web.element.checkbox.ActionCheckBox;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import com.tep.web.config.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -18,6 +21,7 @@ public class SeleniumSendKeys {
     private WebDriver driver;
     private Element element;
     private PageObjects objects;
+    private static final Logger logger = LoggerFactory.getLogger(SeleniumSendKeys.class);
 
     /**
      * Constructor to initialize the SeleniumSendKeys with a WebDriver instance.
@@ -28,6 +32,7 @@ public class SeleniumSendKeys {
         this.driver = driver;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("SeleniumSendKeys initialized with WebDriver, Waits, and Element.");
     }
 
     /**
@@ -41,6 +46,8 @@ public class SeleniumSendKeys {
         this.objects = objects;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("SeleniumSendKeys initialized with WebDriver, PageObjects, Waits, and Element.");
+
     }
 
     /**
@@ -64,7 +71,9 @@ public class SeleniumSendKeys {
         try {
             waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
             element.get(locatorPair).sendKeys(value);
+            logger.info("Keys sent to element with locator.", value, locatorPair);
         } catch (StaleElementReferenceException e) {
+            logger.warn("StaleElementReferenceException occurred while sending keys.", e);
             sendKeys(locatorPair, value);
         }
     }
@@ -87,7 +96,9 @@ public class SeleniumSendKeys {
         try {
             waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
             element.get(locatorPair).clear();
+            logger.info("Input field cleared with locator.", locatorPair);
         } catch (StaleElementReferenceException e) {
+            logger.warn("StaleElementReferenceException occurred while clearing input field.", e);
             clearInputs(locatorPair);
         }
     }

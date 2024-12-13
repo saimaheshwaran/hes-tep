@@ -42,7 +42,7 @@ public class WebAppDriver {
     protected Driver driver;
     protected PageObjects objects;
     protected Map.Entry<String, String> locatorPair;
-    private static final Logger logger = LoggerFactory.getLogger(PropUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(WebAppDriver.class);
 
     // Browser functions
     public BrowserHandling browserHandling;
@@ -95,11 +95,10 @@ public class WebAppDriver {
     /**
      * Constructor to initialize the WebAppDriver with a specified browser type.
      *
-     * @param browserType the type of browser to initialize.
      */
-    public WebAppDriver(Enums.BrowserType browserType) {
+    public WebAppDriver() {
         try {
-            this.driver = new Driver(browserType);
+            this.driver = new Driver();
             this.objects = new PageObjects();
             initializeDriver(driver.getDriver(), objects);
         } catch (Exception e) {
@@ -111,18 +110,21 @@ public class WebAppDriver {
     /**
      * Constructor to initialize the WebAppDriver with a specified browser type and PageObjects.
      *
-     * @param browserType the type of browser to initialize.
      * @param objects     the PageObjects instance to use.
      */
-    public WebAppDriver(Enums.BrowserType browserType, PageObjects objects) {
+    public WebAppDriver(PageObjects objects) {
         try {
-            this.driver = new Driver(browserType);
+            this.driver = new Driver();
             this.objects = objects;
-            initializeDriver(driver.getDriver(), objects);
         } catch (Exception e) {
             logger.info("Failed to initialize WebDriver:");
             Assert.fail("Failed to initialize WebDriver: " + e.getMessage());
         }
+    }
+
+    public void open(Enums.BrowserType browserType) {
+        this.driver.open(browserType);
+        initializeDriver(driver.getDriver(), objects);
     }
 
     /**

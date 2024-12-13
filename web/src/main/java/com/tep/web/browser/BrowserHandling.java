@@ -1,6 +1,5 @@
 package com.tep.web.browser;
 
-import com.tep.utilities.PropUtils;
 import com.tep.web.config.PageObjects;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
@@ -12,7 +11,7 @@ import org.slf4j.LoggerFactory;
 public class BrowserHandling {
 
     // Logger for logging important events and errors
-    private static final Logger logger = LoggerFactory.getLogger(PropUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(BrowserHandling.class);
     private WebDriver driver;
     private PageObjects objects;
 

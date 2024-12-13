@@ -5,13 +5,14 @@ import com.tep.api.config.ApiEnums;
 
 import com.tep.web.WebAppDriver;
 import com.tep.web.config.Enums;
+import io.qameta.allure.*;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class TestCases {
 
     ApiDriver apiDriver = new ApiDriver();
-    WebAppDriver webAppDriver;
+    WebAppDriver webAppDriver = new WebAppDriver();
 
     @Test
     public void combined_Test() {
@@ -26,8 +27,7 @@ public class TestCases {
         code = apiDriver.Response().get().statusCode();
         Assert.assertEquals(200, code);
 
-        webAppDriver = new WebAppDriver(Enums.BrowserType.CHROME);
-        System.setProperty("default_assertion", "soft");
+        webAppDriver.open(Enums.BrowserType.CHROME);
 
         webAppDriver.browserHandling.goTo("EY.page");
         webAppDriver.seleniumSendKeys.sendKeys("EY.searchBox", "Pen");
@@ -38,6 +38,7 @@ public class TestCases {
         webAppDriver.seleniumSendKeys.clearInputs("EY.quantity");
         webAppDriver.seleniumSendKeys.sendKeys("EY.quantity", "2");
         webAppDriver.javaScriptClick.click("EY.addToCart");
+        webAppDriver.textValidation.isPartiallyMatching("EY.alert", "Added to cart", true);
         webAppDriver.waits.sleep(2);
 
         webAppDriver.close();
@@ -45,6 +46,11 @@ public class TestCases {
     }
 
     @Test
+    @Epic("Api Testing")
+    @Feature("Yaml Representation")
+    @Story("Basics")
+    @Severity(SeverityLevel.BLOCKER)
+    @Description("Test to verify that the user can execute api from yaml representation")
     public void api_basic_request_from_yaml() {
         apiDriver.setConfigFromYaml("catfact_fact");
         apiDriver.executeRequest(ApiEnums.Http_Method.GET);
@@ -53,6 +59,11 @@ public class TestCases {
     }
 
     @Test
+    @Epic("Api Testing")
+    @Feature("Yaml Representation")
+    @Story("QueryParams")
+    @Severity(SeverityLevel.BLOCKER)
+    @Description("Test to verify that the user can do api query param execution from yaml representation")
     public void api_basic_request_from_yaml_with_query_params() {
         apiDriver.setConfigFromYaml("catfact_facts");
         apiDriver.executeRequest(ApiEnums.Http_Method.GET);
@@ -61,10 +72,14 @@ public class TestCases {
     }
 
     @Test
+    @Epic("Web Testing")
+    @Feature("Yaml Representation")
+    @Story("Basics")
+    @Severity(SeverityLevel.BLOCKER)
+    @Description("Test to verify that the user can do basic execution from yaml representation")
     public void seleniumEYChromeTest() {
 
-        webAppDriver = new WebAppDriver(Enums.BrowserType.CHROME);
-        System.setProperty("default_assertion", "soft");
+        webAppDriver.open(Enums.BrowserType.CHROME);
 
         webAppDriver.browserHandling.goTo("EY.page");
         webAppDriver.seleniumSendKeys.sendKeys("EY.searchBox", "Pen");
@@ -75,6 +90,7 @@ public class TestCases {
         webAppDriver.seleniumSendKeys.clearInputs("EY.quantity");
         webAppDriver.seleniumSendKeys.sendKeys("EY.quantity", "2");
         webAppDriver.javaScriptClick.click("EY.addToCart");
+        webAppDriver.textValidation.isPartiallyMatching("EY.alert", "Added to cart", true);
         webAppDriver.waits.sleep(2);
 
         webAppDriver.close();

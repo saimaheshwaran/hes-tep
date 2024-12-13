@@ -3,11 +3,14 @@ package com.tep.web.element.sendKey;
 import com.tep.web.base.Element;
 import com.tep.web.base.Waits;
 import com.tep.web.config.PageObjects;
+import com.tep.web.element.checkbox.ActionCheckBox;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import com.tep.web.config.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -20,6 +23,7 @@ public class JavaScriptSendKeys {
     private WebDriver driver;
     private Element element;
     private PageObjects objects;
+    private static final Logger logger = LoggerFactory.getLogger(JavaScriptSendKeys.class);
 
     /**
      * Constructor to initialize the JavaScriptSendKeys with a WebDriver instance.
@@ -30,6 +34,7 @@ public class JavaScriptSendKeys {
         this.driver = driver;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("JavaScriptSendKeys initialized with WebDriver, Waits, and Element.");
     }
 
     /**
@@ -43,6 +48,7 @@ public class JavaScriptSendKeys {
         this.objects = objects;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("JavaScriptSendKeys initialized with WebDriver, PageObjects, Waits, and Element.");
     }
 
     /**
@@ -68,8 +74,10 @@ public class JavaScriptSendKeys {
             if (element.isEnabled()) {
                 JavascriptExecutor executor = (JavascriptExecutor) driver;
                 executor.executeScript("arguments[0].setAttribute('value', arguments[1])", element, text);
+                logger.info("Text sent to element with locator.", text, locatorPair);
             }
         } catch (StaleElementReferenceException e) {
+            logger.error("StaleElementReferenceException occurred while sending keys.", e);
             sendKeys(locatorPair, text);
         }
     }

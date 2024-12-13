@@ -21,7 +21,7 @@ public class CheckBoxValidation {
     private WebDriver driver;
     private Element element;
     private PageObjects objects;
-    private static final Logger logger = LoggerFactory.getLogger(PropUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(CheckBoxValidation.class);
 
     /**
      * Constructor to initialize the CheckBoxValidation with a WebDriver instance.
@@ -32,6 +32,7 @@ public class CheckBoxValidation {
         this.driver = driver;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("CheckBoxValidation initialized successfully");
     }
 
     /**
@@ -45,6 +46,7 @@ public class CheckBoxValidation {
         this.objects = objects;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("CheckBoxValidation initialized successfully");
     }
 
     /**

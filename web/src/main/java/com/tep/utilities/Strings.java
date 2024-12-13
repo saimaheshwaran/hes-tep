@@ -1,7 +1,10 @@
 package com.tep.utilities;
 
+import com.tep.web.base.Waits;
 import com.tep.web.validation.Assertion;
 import org.openqa.selenium.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Base64;
@@ -12,6 +15,7 @@ import java.util.regex.Pattern;
  * Strings utility class for various string operations and key identification.
  */
 public class Strings {
+    private static final Logger logger = LoggerFactory.getLogger(Strings.class);
 
     /**
      * Identifies the Selenium Keys constant based on the provided key string.
@@ -101,6 +105,7 @@ public class Strings {
             m.appendReplacement(buf, Matcher.quoteReplacement(ch));
         }
         m.appendTail(buf);
+        logger.info("UTF characters removed. Result: {}", buf);
         return buf;
     }
 
@@ -118,6 +123,7 @@ public class Strings {
         Matcher matcher = pattern.matcher(string);
         if (matcher.find()) {
             result = (matcher.group(group));
+            logger.info("Substring fetched: '{}'", result);
         }
         return result;
     }
@@ -135,6 +141,7 @@ public class Strings {
         for (String string : list) {
             if (string.matches(regex)) {
                 match = string;
+                logger.info("Match found: '{}'", match);
                 break;
             }
         }

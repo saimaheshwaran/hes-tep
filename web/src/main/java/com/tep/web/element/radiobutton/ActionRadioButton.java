@@ -3,12 +3,15 @@ package com.tep.web.element.radiobutton;
 import com.tep.web.base.Element;
 import com.tep.web.base.Waits;
 import com.tep.web.config.PageObjects;
+import com.tep.web.element.checkbox.ActionCheckBox;
 import com.tep.web.element.click.ActionClick;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import com.tep.web.config.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -22,6 +25,7 @@ public class ActionRadioButton {
     private Element element;
     private PageObjects objects;
     private ActionClick actionClick;
+    private static final Logger logger = LoggerFactory.getLogger(ActionRadioButton.class);
 
     /**
      * Constructor to initialize the ActionRadioButton with a WebDriver instance.
@@ -33,6 +37,7 @@ public class ActionRadioButton {
         this.waits = new Waits(driver);
         this.element = new Element(driver);
         this.actionClick = new ActionClick(driver);
+        logger.info("ActionRadioButton initialized with WebDriver, Waits, Element, and ActionClick helpers.");
     }
 
     /**
@@ -47,6 +52,7 @@ public class ActionRadioButton {
         this.waits = new Waits(driver);
         this.element = new Element(driver);
         this.actionClick = new ActionClick(driver);
+        logger.info("ActionRadioButton initialized with WebDriver, PageObjects, Waits, Element, and ActionClick helpers.");
     }
 
     /**
@@ -72,8 +78,10 @@ public class ActionRadioButton {
             if (!radioButton.isSelected()) {
                 actionClick.click(locatorPair);
             }
+            logger.info("RadioButton is selected successfully.");
             actions.release().perform();
         } catch (StaleElementReferenceException ignored) {
+            logger.error("StaleElementReferenceException caught, retrying check operation.", ignored);
             select(locatorPair);
         }
     }

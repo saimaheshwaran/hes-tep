@@ -12,7 +12,7 @@ import java.util.Arrays;
 public class TypeValidation {
 
     private static TypeValidation instance = null;
-    private static final Logger logger = LoggerFactory.getLogger(PropUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(TypeValidation.class);
 
     /**
      * Private constructor to prevent instantiation.

@@ -22,7 +22,7 @@ public class RadioButtonValidation {
     private WebDriver driver;
     private Element element;
     private PageObjects objects;
-    private static final Logger logger = LoggerFactory.getLogger(PropUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(RadioButtonValidation.class);
 
     /**
      * Constructor to initialize the RadioButtonValidation with a WebDriver instance.
@@ -33,6 +33,7 @@ public class RadioButtonValidation {
         this.driver = driver;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("RadioButtonValidation with Webdriver initialized successfully");
     }
 
     /**
@@ -46,6 +47,7 @@ public class RadioButtonValidation {
         this.objects = objects;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("RadioButtonValidation with Webdriver and PageObjects");
     }
 
     /**

@@ -70,6 +70,7 @@ public class PropUtils {
         for (String key : properties.stringPropertyNames()) {
             map.put(key, properties.getProperty(key));
         }
+        logger.info("Properties have been converted to a map with {} entries.", map.size());
         return map;
     }
 

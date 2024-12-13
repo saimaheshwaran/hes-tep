@@ -1,6 +1,7 @@
 package com.tep.web.base;
 
 import com.tep.utilities.PropUtils;
+import com.tep.web.browser.BrowserHandling;
 import com.tep.web.config.Constants;
 import com.tep.web.config.Enums;
 import lombok.Data;
@@ -29,15 +30,21 @@ import java.util.HashMap;
 @Data
 public class Driver {
 
-    private static final Logger logger = LoggerFactory.getLogger(PropUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(Driver.class);
+    PropUtils webProps = new PropUtils(Constants.WEB_PROP_PATH);
     private WebDriver driver;
 
     /**
      * Constructor to initialize the WebDriver based on the specified browser type.
-     *
-     * @param browser the browser type to initialize the WebDriver for.
      */
-    public Driver(Enums.BrowserType browser) {
+    public Driver() {
+    }
+
+    /**
+     * Opens the WebDriver instance.
+     */
+    public void open(Enums.BrowserType browser) {
+
         if (driver != null) {
             logger.info("Existing WebDriver instance detected. Closing the current driver.");
             close();
@@ -47,6 +54,8 @@ public class Driver {
         capabilities.setCapability("takesScreenshot", true);
         logger.info("Desired capabilities set: {}", capabilities);
 
+        if(browser == Enums.BrowserType.DEFAULT) browser = Enums.BrowserType.valueOf(webProps.get("browser").toUpperCase());
+
         switch (browser) {
             case CHROME -> initializeChromeDriver(capabilities);
             case FIREFOX -> initializeFirefoxDriver(capabilities);
@@ -54,7 +63,8 @@ public class Driver {
             case SAFARI -> initializeSafariDriver();
             default -> driver = null;
         }
-        logger.info("WebDriver initialization complete." + browser);
+        logger.info(browser + " Browser initialization complete.");
+
     }
 
     /**
@@ -63,17 +73,20 @@ public class Driver {
      * @param capabilities the desired capabilities for the Chrome WebDriver.
      */
     private void initializeChromeDriver(DesiredCapabilities capabilities) {
+        logger.info("Initializing Chrome Driver...");
         ChromeOptions chromeOptions = new ChromeOptions();
 
         if (Constants.BROWSER_HEADLESS) {
+            logger.info("Running Chrome in headless mode.");
             chromeOptions.addArguments("--headless");
             chromeOptions.addArguments("--disable-gpu");
         }
 
         if (Constants.BROWSER_MAXIMIZE) {
+            logger.info("Maximizing Chrome window on start.");
             chromeOptions.addArguments("start-maximized");
         }
-
+        logger.info("Adding Chrome arguments for automation, sandbox, infobars and other settings.");
         chromeOptions.addArguments("enable-automation");
         chromeOptions.addArguments("--no-sandbox");
         chromeOptions.addArguments("--disable-infobars");
@@ -81,6 +94,7 @@ public class Driver {
         chromeOptions.addArguments("--disable-browser-side-navigation");
         chromeOptions.addArguments("--remote-allow-origins=*");
 
+        logger.info("Setting Chrome preferences for popups.");
         HashMap<String, Object> chromePrefs = new HashMap<>();
         chromePrefs.put("profile.default_content_settings.popups", 0);
         chromeOptions.setExperimentalOption("prefs", chromePrefs);
@@ -91,6 +105,7 @@ public class Driver {
                 .withSilent(true).usingAnyFreePort().build();
 
         driver = new ChromeDriver(chromeDriverService, chromeOptions);
+        logger.info("ChromeDriver initialized successfully.");
     }
 
     /**
@@ -99,13 +114,15 @@ public class Driver {
      * @param capabilities the desired capabilities for the Firefox WebDriver.
      */
     private void initializeFirefoxDriver(DesiredCapabilities capabilities) {
+        logger.info("Initializing Firefox Driver...");
         FirefoxOptions firefoxOptions = new FirefoxOptions();
 
         if (Constants.BROWSER_HEADLESS) {
+            logger.info("Running Firefox in headless mode.");
             firefoxOptions.addArguments("--headless");
             firefoxOptions.addArguments("--disable-gpu");
         }
-
+        logger.info("Adding Firefox arguments to disable certificate errors, extensions, and more.");
         firefoxOptions.addArguments("--ignore-certificate-errors", "--disable-extensions", "--no-sandbox", "--disable-dev-shm-usage");
         firefoxOptions.addArguments("--disable-infobars", "--disable-browser-side-navigation");
 
@@ -119,11 +136,14 @@ public class Driver {
         try {
             geckoDriverService = new GeckoDriverService.Builder().usingAnyFreePort().build();
         } catch (Exception ignored) {
+            logger.error("Failed to start GeckoDriverService: {}", ignored.getMessage());
         }
 
         driver = new FirefoxDriver(geckoDriverService, firefoxOptions);
+        logger.info("FirefoxDriver initialized successfully.");
 
         if (Constants.BROWSER_MAXIMIZE) {
+            logger.info("Maximizing Firefox browser window.");
             driver.manage().window().maximize();
         }
     }

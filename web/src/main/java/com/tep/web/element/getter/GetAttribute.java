@@ -3,8 +3,11 @@ package com.tep.web.element.getter;
 import com.tep.web.base.Element;
 import com.tep.web.base.Waits;
 import com.tep.web.config.PageObjects;
+import com.tep.web.element.checkbox.ActionCheckBox;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -17,6 +20,7 @@ public class GetAttribute {
     private WebDriver driver;
     private Element element;
     private PageObjects objects;
+    private static final Logger logger = LoggerFactory.getLogger(GetAttribute.class);
 
     /**
      * Constructor to initialize the GetAttribute with a WebDriver instance.
@@ -27,6 +31,7 @@ public class GetAttribute {
         this.driver = driver;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("GetAttribute initialized with WebDriver, Waits, and Element.");
     }
 
     /**
@@ -40,6 +45,7 @@ public class GetAttribute {
         this.objects = objects;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("GetAttribute initialized with WebDriver, PageObjects, Waits, and Element.");
     }
 
     /**

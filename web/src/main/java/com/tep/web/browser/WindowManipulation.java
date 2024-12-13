@@ -1,6 +1,5 @@
 package com.tep.web.browser;
 
-import com.tep.utilities.PropUtils;
 import com.tep.web.base.Element;
 import com.tep.web.base.Waits;
 import com.tep.web.config.PageObjects;
@@ -18,7 +17,7 @@ import java.util.Map;
 public class WindowManipulation {
 
     // Logger for logging important events and errors
-    private static final Logger logger = LoggerFactory.getLogger(PropUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(WindowManipulation.class);
     private WebDriver driver;
     private Waits waits;
     private Element element;

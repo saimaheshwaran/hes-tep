@@ -3,11 +3,14 @@ package com.tep.web.element.radiobutton;
 import com.tep.web.base.Element;
 import com.tep.web.base.Waits;
 import com.tep.web.config.PageObjects;
+import com.tep.web.element.checkbox.SeleniumCheckBox;
 import com.tep.web.element.click.SeleniumClick;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import com.tep.web.config.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -22,6 +25,7 @@ public class SeleniumRadioButton {
     private Element element;
     private PageObjects objects;
     private SeleniumClick seleniumClick;
+    private static final Logger logger = LoggerFactory.getLogger(SeleniumRadioButton.class);
 
     /**
      * Constructor to initialize the SeleniumRadioButton with a WebDriver instance.
@@ -33,6 +37,7 @@ public class SeleniumRadioButton {
         this.waits = new Waits(driver);
         this.element = new Element(driver);
         this.seleniumClick = new SeleniumClick(driver);
+        logger.info("SeleniumRadioButton initialized with WebDriver, Waits, Element, and SeleniumClick helpers.");
     }
 
     /**
@@ -47,6 +52,7 @@ public class SeleniumRadioButton {
         this.waits = new Waits(driver);
         this.element = new Element(driver);
         this.seleniumClick = new SeleniumClick(driver);
+        logger.info("SeleniumRadioButton initialized with WebDriver, PageObjects, Waits, Element, and SeleniumClick helpers.");
     }
 
     /**
@@ -70,7 +76,9 @@ public class SeleniumRadioButton {
             if (!radioButton.isSelected()) {
                 seleniumClick.click(locatorPair);
             }
+            logger.info("RadioButton is selected successfully.");
         } catch (StaleElementReferenceException ignored) {
+            logger.error("StaleElementReferenceException caught, retrying check operation.",ignored);
             select(locatorPair);
         }
     }
@@ -101,14 +109,17 @@ public class SeleniumRadioButton {
                 if (selectionType.equals("value")) {
                     if (radioButton.getAttribute("value").equals(option) && !radioButton.isSelected()) {
                         radioButton.click();
+                        logger.info("Radio button with value selected.", option);
                     }
                 } else if (selectionType.equals("text")) {
                     if (radioButton.getText().equals(option) && !radioButton.isSelected()) {
                         radioButton.click();
+                        logger.info("Radio button with text selected.", option);
                     }
                 }
             }
-        } catch (StaleElementReferenceException e) {
+          } catch (StaleElementReferenceException e) {
+            logger.warn("StaleElementReferenceException occurred while selecting from radio button group. Retrying...", option, selectionType, locatorPair, e);
             selectFromRadioButtonGroup(option, selectionType, locatorPair);
         }
     }

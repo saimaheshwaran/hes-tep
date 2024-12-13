@@ -6,6 +6,8 @@ import com.tep.web.config.PageObjects;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import com.tep.web.config.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -18,6 +20,8 @@ public class PresenceValidation {
     private WebDriver driver;
     private Element element;
     private PageObjects objects;
+    private static final Logger logger = LoggerFactory.getLogger(PresenceValidation.class);
+
 
     /**
      * Constructor to initialize the PresenceValidation with a WebDriver instance.
@@ -28,6 +32,7 @@ public class PresenceValidation {
         this.driver = driver;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("PresenceValidation with Webdriver initialized successfully");
     }
 
     /**
@@ -41,6 +46,7 @@ public class PresenceValidation {
         this.objects = objects;
         this.waits = new Waits(driver);
         this.element = new Element(driver);
+        logger.info("PresenceValidation with Webdriver and Pageobjects initialized successfully");
     }
 
     /**
@@ -64,11 +70,13 @@ public class PresenceValidation {
             try {
                 waits.waitForElementToDisplay(locatorPair, Constants.DEFAULT_WAIT_TIME_SEC);
             } catch (TimeoutException e) {
+                logger.error("Expected element with attribute \"" + locatorPair.getKey() + "=" + locatorPair.getValue() + "\" to be present, but it is not.");
                 Assertion.equalsTrue(false, "Expected: Element with attribute \"" + locatorPair.getKey() + "=" + locatorPair.getValue() + "\" should be present. But element is not present.");
             }
         } else {
             try {
                 waits.waitForElementToDisplay(locatorPair, Constants.DEFAULT_WAIT_TIME_SEC);
+                logger.info("Element with attribute \"" + locatorPair.getKey() + "=" + locatorPair.getValue() + "\" is present when it should not be.");
                 Assertion.equalsFalse(true, "Expected: Element with attribute \"" + locatorPair.getKey() + "=" + locatorPair.getValue() + "\" should not be present. But element is present.");
             } catch (TimeoutException ignored) {
             }
@@ -98,11 +106,13 @@ public class PresenceValidation {
             try {
                 waits.waitForElementToDisplay(locatorPair, waitTime);
             } catch (TimeoutException e) {
+                logger.error("Expected element with attribute \"" + locatorPair.getKey() + "=" + locatorPair.getValue() + "\" to be present, but it is not.");
                 Assertion.equalsTrue(false, "Expected: Element with attribute \"" + locatorPair.getKey() + "=" + locatorPair.getValue() + "\" should be present. But element is not present.");
             }
         } else {
             try {
                 waits.waitForElementToDisplay(locatorPair, waitTime);
+                logger.info("Element with attribute \"" + locatorPair.getKey() + "=" + locatorPair.getValue() + "\" is present when it should not be.");
                 Assertion.equalsFalse(true, "Expected: Element with attribute \"" + locatorPair.getKey() + "=" + locatorPair.getValue() + "\" should not be present. But element is present.");
             } catch (TimeoutException ignored) {
             }

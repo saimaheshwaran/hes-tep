@@ -2,6 +2,9 @@ package com.tep.web.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.tep.web.validation.CheckBoxValidation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -17,6 +20,7 @@ import java.util.Map;
 public class PageObjects {
 
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, String>>> objects = new LinkedHashMap<>();
+    private static final Logger logger = LoggerFactory.getLogger(CheckBoxValidation.class);
 
     /**
      * Constructor to initialize and load page objects from a file based on the configured type (yaml or json).
@@ -29,16 +33,20 @@ public class PageObjects {
                 case "yaml", "yml" -> {
                     Yaml yaml = new Yaml();
                     objects = (LinkedHashMap) yaml.loadAs(readFile, LinkedHashMap.class);
+                    logger.info("PageObjects loaded from YAML file.");
                 }
                 case "json" -> {
                     ObjectMapper objectMapper = new ObjectMapper();
                     objects = (LinkedHashMap) objectMapper.readValue(readFile, LinkedHashMap.class);
+                    logger.info("PageObjects loaded from JSON file.");
                 }
                 default -> {
+                    logger.warn("Unsupported file extension for PageObjects: " + extension);
                 }
             }
             readFile.close();
         } catch (Exception ignored) {
+            logger.error("Error loading PageObjects.",ignored);
         }
 
         for (String page : objects.keySet())
@@ -61,6 +69,7 @@ public class PageObjects {
             if (!(locator.equalsIgnoreCase("value") || objects.get(page).get(element).get(locator).equalsIgnoreCase(""))) {
                 switch (locator.toLowerCase()) {
                     case "id", "css", "name", "xpath", "tagname", "linktest", "classname", "partiallinktest" -> {
+                        logger.info("Locator found for " + objName + ": " + locator);
                         return new Map.Entry<String, String>() {
                             @Override
                             public String getKey() {
@@ -112,8 +121,10 @@ public class PageObjects {
             String[] splitter = objName.split("\\.", 2);
             String page = splitter[0], element = splitter[1];
             objects.get(page).get(element).put(locator, locatorValue);
+            logger.info("Set operation successful for " + objName + " with locator: " + locator + " and locatorValue: " + locatorValue);
             return objects.get(page).get(element).get(locator);
         } catch (Exception e) {
+            logger.info("Error in set method for objName: " + objName + ", locator: " + locator + ", locatorValue: " + locatorValue, e);
             return "";
         }
     }
@@ -129,8 +140,10 @@ public class PageObjects {
         try {
             String[] splitter = objName.split("\\.", 2);
             String page = splitter[0], element = splitter[1];
+            logger.info("Retrieved value for " + objName + " with locator: " + locator + " is: " + objects.get(page).get(element).get(locator));
             return objects.get(page).get(element).get(locator);
         } catch (Exception e) {
+            logger.info("Error in get method for objName: " + objName + ", locator: " + locator, e);
             return "";
         }
     }
@@ -149,13 +162,17 @@ public class PageObjects {
             FileWriter yamlWriteFile = new FileWriter(Constants.TEST_DATA_OUTPUT_PATH + "PageObjects" + ".yaml");
             yaml.dump(objects, yamlWriteFile);
             yamlWriteFile.close();
+            logger.info("PageObjects YAML file written successfully.");
 
             objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
             objectMapper.writeValue(stringObj, objects);
             FileWriter jsonWriteFile = new FileWriter(Constants.TEST_DATA_OUTPUT_PATH + "PageObjects" + ".json");
             jsonWriteFile.write(stringObj.toString());
             jsonWriteFile.close();
+            logger.info("PageObjects JSON file written successfully.");
         } catch (Exception ignored) {
+            logger.error("Error occurred while unloading PageObjects",ignored);
+
         }
         objects.clear();
     }

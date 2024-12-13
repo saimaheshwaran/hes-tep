@@ -1,6 +1,5 @@
 package com.tep.web.browser;
 
-import com.tep.utilities.PropUtils;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
@@ -15,7 +14,7 @@ public class TabHandling {
 
     private WebDriver driver;
     // Logger for logging important events and errors
-    private static final Logger logger = LoggerFactory.getLogger(PropUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(TabHandling.class);
 
     /**
      * Constructor to initialize the TabHandling with a WebDriver instance.

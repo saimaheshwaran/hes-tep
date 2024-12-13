@@ -21,7 +21,7 @@ public class TextValidation {
     private WebDriver driver;
     private Element element;
     private PageObjects objects;
-    private static final Logger logger = LoggerFactory.getLogger(PropUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(TextValidation.class);
 
     /**
      * Constructor to initialize the TextValidation with a WebDriver instance.
@@ -70,10 +70,12 @@ public class TextValidation {
         WebElement attributeElement = element.get(locatorPair);
         if (condition) {
             if (!expectedText.equals(attributeElement.getText())) {
+                logger.info("Text mismatch: Expected '" + expectedText + "' but found '" + attributeElement.getText() + "'");
                 Assertion.equalsTrue(false, "Expected: \"" + expectedText + "\" should match with actual text \"" + attributeElement.getText() + "\". But text is not matched.");
             }
         } else {
             if (expectedText.equals(attributeElement.getText())) {
+                logger.info("Text should not match but does: Expected '" + expectedText + "' should not match with actual text '" + attributeElement.getText() + "'");
                 Assertion.equalsFalse(true, "Expected: \"" + expectedText + "\" should not match with actual text \"" + attributeElement.getText() + "\". But text is matched.");
             }
         }
@@ -105,11 +107,12 @@ public class TextValidation {
         WebElement attributeElement = element.get(locatorPair);
         if (condition) {
             if (!attributeElement.getText().toLowerCase().contains(expectedText.toLowerCase())) {
-
+                logger.info("Expected: Element should have partial text. But actual element text \"" + attributeElement.getText() + "\" does not contain \"" + expectedText + "\".");
                 Assertion.equalsTrue(false, "Expected: Element should have partial text. But actual element text \"" + attributeElement.getText() + "\" does not contain \"" + expectedText + "\".");
             }
         } else {
             if (attributeElement.getText().toLowerCase().contains(expectedText.toLowerCase())) {
+                logger.info("Expected: Element should not contain partial text. But actual element text \"" + attributeElement.getText() + "\" does contain \"" + expectedText + "\".");
                 Assertion.equalsFalse(true, "Expected: Element should not contain partial text. But actual element text \"" + attributeElement.getText() + "\" does contain \"" + expectedText + "\".");
             }
         }

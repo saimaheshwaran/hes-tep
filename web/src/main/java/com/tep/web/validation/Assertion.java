@@ -19,7 +19,7 @@ public class Assertion {
 
     protected WebDriver driver;
     protected Element element;
-    private static final Logger logger = LoggerFactory.getLogger(PropUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(Assertion.class);
     protected static SoftAssert softAssert = new SoftAssert();
 
     /**

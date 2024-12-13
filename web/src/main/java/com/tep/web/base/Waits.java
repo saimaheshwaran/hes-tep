@@ -1,6 +1,5 @@
 package com.tep.web.base;
 
-import com.tep.utilities.PropUtils;
 import com.tep.web.config.Constants;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -20,7 +19,7 @@ public class Waits {
 
     private WebDriver driver;
     private Element element;
-    private static final Logger logger = LoggerFactory.getLogger(PropUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(Waits.class);
 
     /**
      * Constructor to initialize the Waits with a WebDriver instance.
@@ -42,6 +41,7 @@ public class Waits {
             int duration = seconds;
             Thread.sleep(duration * 1000);
         } catch (InterruptedException ignored) {
+            logger.error("Sleep interrupted.", ignored);
         }
     }
 
@@ -67,7 +67,13 @@ public class Waits {
     public void waitForElementToDisplay(Map.Entry<String, String> locatorPair, int duration) {
         waitForAjaxCall(locatorPair);
         waitForJSandJQueryToLoad();
-        getWait(duration).until(ExpectedConditions.visibilityOfElementLocated(element.getBy(locatorPair)));
+        try {
+            getWait(duration).until(ExpectedConditions.visibilityOfElementLocated(element.getBy(locatorPair)));
+            logger.info("Element is now visible. Locator", locatorPair);
+        } catch (TimeoutException e) {
+            logger.error("Timed out after seconds waiting for element to become visible.", duration, locatorPair, e);
+            // Depending on your error handling strategy, you might want to rethrow the exception, return, or take other actions.
+        }
     }
 
     /**
@@ -79,7 +85,12 @@ public class Waits {
     public void waitForElementToClick(Map.Entry<String, String> locatorPair, int duration) {
         waitForAjaxCall(locatorPair);
         waitForJSandJQueryToLoad();
-        getWait(duration).until(ExpectedConditions.elementToBeClickable(element.getBy(locatorPair)));
+        try {
+            getWait(duration).until(ExpectedConditions.elementToBeClickable(element.getBy(locatorPair)));
+            logger.info("Element is now clickable.", locatorPair);
+        } catch (TimeoutException e) {
+            logger.error("Timed out after seconds waiting for element to become clickable. Locator: {}", duration, locatorPair, e);
+        }
     }
 
     /**
@@ -91,7 +102,12 @@ public class Waits {
     public void waitForElementNotToDisplay(Map.Entry<String, String> locatorPair, int duration) {
         waitForAjaxCall(locatorPair);
         waitForJSandJQueryToLoad();
-        getWait(duration).until(ExpectedConditions.invisibilityOfElementLocated(element.getBy(locatorPair)));
+        try {
+            getWait(duration).until(ExpectedConditions.invisibilityOfElementLocated(element.getBy(locatorPair)));
+            logger.info("Element is now visible. Locator: {}", locatorPair);
+        } catch (TimeoutException e) {
+            logger.error("Timed out after seconds waiting for element to become invisible.", duration, locatorPair, e);
+        }
     }
 
     /**
@@ -103,7 +119,12 @@ public class Waits {
     public void waitForElementNotToClick(Map.Entry<String, String> locatorPair, int duration) {
         waitForAjaxCall(locatorPair);
         waitForJSandJQueryToLoad();
-        getWait(duration).until(ExpectedConditions.not(ExpectedConditions.elementToBeClickable(element.getBy(locatorPair))));
+        try {
+            getWait(duration).until(ExpectedConditions.not(ExpectedConditions.elementToBeClickable(element.getBy(locatorPair))));
+            logger.info("Element is now non-clickable. Locator: {}", locatorPair);
+        } catch (TimeoutException e) {
+            logger.error("Timed out afterseconds waiting for element to become non-clickable.", duration, locatorPair, e);
+        }
     }
 
     /**
@@ -116,8 +137,14 @@ public class Waits {
     public void waitTillElementIsVisible(Map.Entry<String, String> locatorPair, WebElement element, int duration) {
         waitForAjaxCall(locatorPair);
         waitForJSandJQueryToLoad();
-        getWait(duration).until(ExpectedConditions.visibilityOf(element));
+        try {
+            getWait(duration).until(ExpectedConditions.visibilityOf(element));
+            logger.info("Element is now visible. Locator.", locatorPair);
+        } catch (TimeoutException e) {
+            logger.error("Timed out afterseconds waiting for element to be visible. Locator.", duration, locatorPair, e);
+        }
     }
+
 
     /**
      * Waits for the page title to contain the specified text.
@@ -132,7 +159,9 @@ public class Waits {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(duration));
         try {
             isPageTitleFound = wait.until(ExpectedConditions.titleContains(pageTitle));
+            logger.info("Page title now contains .", pageTitle);
         } catch (TimeoutException e) {
+            logger.error("Timed out after seconds waiting for the page title to contain.", duration, pageTitle, e);
             isPageTitleFound = false;
         }
         return isPageTitleFound;
@@ -148,13 +177,13 @@ public class Waits {
             Thread.sleep(100);
             By by = element.getBy(locatorPair);
             if (driver.findElements(by).size() > 0) {
-                logger.info("Element found by locator: {}", locatorPair.getValue());
+                logger.info("Element found by locator = " + locatorPair.getKey() + ":" + locatorPair.getValue());
                 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(Constants.DEFAULT_WAIT_TIME_SEC), Duration.ofMillis(30));
                 wait.until(ExpectedConditions.presenceOfElementLocated(by));
                 logger.info("Element is now present, AJAX call has completed.");
             }
         } catch (Exception ignored) {
-            logger.error("An error occurred while waiting for AJAX call: {}", ignored.getMessage());
+            logger.error("An error occurred while waiting for AJAX call.", ignored.getMessage());
         }
     }
 
@@ -169,8 +198,11 @@ public class Waits {
             @Override
             public Boolean apply(WebDriver driver) {
                 try {
-                    return ((Long) ((JavascriptExecutor) driver).executeScript("return jQuery.active") == 0);
+                    boolean isJQueryActive = ((Long) ((JavascriptExecutor) driver).executeScript("return jQuery.active") == 0);
+                    logger.debug("jQuery active check returned.", isJQueryActive);
+                    return isJQueryActive;
                 } catch (Exception ignored) {
+                    logger.error("Exception occurred while checking jQuery active status.", ignored);
                     return true;
                 }
             }
@@ -180,9 +212,12 @@ public class Waits {
             @Override
             public Boolean apply(WebDriver driver) {
                 try {
-                    return ((JavascriptExecutor) driver).executeScript("return document.readyState")
+                    boolean isDocumentReady = ((JavascriptExecutor) driver).executeScript("return document.readyState")
                             .toString().equals("complete");
+                    logger.debug("Document ready state check returned.", isDocumentReady);
+                    return isDocumentReady;
                 } catch (Exception ignored) {
+                    logger.error("Exception occurred while checking document ready state.", ignored);
                     return true;
                 }
             }
@@ -198,6 +233,7 @@ public class Waits {
      * @return the WebDriverWait instance.
      */
     public WebDriverWait getWait(int seconds) {
+        logger.debug("Creating WebDriverWait with a timeout of  seconds.", seconds);
         return new WebDriverWait(driver, Duration.ofSeconds(seconds));
     }
 }

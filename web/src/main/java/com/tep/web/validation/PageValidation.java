@@ -15,7 +15,7 @@ public class PageValidation {
 
     private Waits waits;
     private WebDriver driver;
-    private static final Logger logger = LoggerFactory.getLogger(PropUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(PageValidation.class);
 
     /**
      * Constructor to initialize the PageValidation with a WebDriver instance.
@@ -67,8 +67,10 @@ public class PageValidation {
         String pageTitle = getPageTitle();
 
         if (!titleMatched && testCase) {
+            logger.error("Partial Page Title Not Present: Expected partial title '" + partialTitle + "' in actual title '" + pageTitle + "'");
             Assertion.equalsTrue(false, "Expected: Actual Page Title \"" + pageTitle + "\" should contain partial page title \"" + partialTitle + "\". But Partial Page Title Not Present.");
         } else if (titleMatched && !testCase) {
+            logger.error("Partial Page Title is Present when it should not be: Expected partial title '" + partialTitle + "' not to be in actual title '" + pageTitle + "'");
             Assertion.equalsFalse(true, "Expected: Actual Page Title \"" + pageTitle + "\" should not contain partial page title \"" + partialTitle + "\". But Partial Page Title is Present.");
         }
     }
@@ -84,6 +86,7 @@ public class PageValidation {
         String jsCommand = "return document.readyState";
 
         if (js.executeScript(jsCommand).toString().equals("complete")) {
+            logger.info("Page loaded immediately.");
             return;
         }
 
@@ -91,6 +94,7 @@ public class PageValidation {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
+                logger.warn("Thread interrupted during sleep.", e);
                 e.printStackTrace();
             }
             if (js.executeScript(jsCommand).toString().equals("complete")) {
@@ -114,6 +118,7 @@ public class PageValidation {
         String jsCommand = "return document.readyState";
 
         if (js.executeScript(jsCommand).toString().equals("complete")) {
+            logger.info("Page loaded immediately.");
             return;
         }
 
@@ -121,6 +126,7 @@ public class PageValidation {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
+                logger.info("Thread interrupted during sleep.", e);
                 e.printStackTrace();
             }
             if (js.executeScript(jsCommand).toString().equals("complete")) {
