@@ -5,18 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="88b6db27-1269-41a8-8985-afd600e4168e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/test/resources/testProject/input/web/PageObjects.xlsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../api/.idea/artifacts/api_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../api/.idea/artifacts/api_1_0_5.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../api/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../api/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../api/src/test/java/TestCases.java" beforeDir="false" afterPath="$PROJECT_DIR$/../api/src/test/java/TestCases.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../api/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../api/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/testProject/TestCases.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/testProject/TestCases.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/testProject/input/web/PageObjects.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/testProject/input/web/PageObjects.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/testProject/input/web/PageObjects.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/testProject/input/web/PageObjects.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../web/.idea/artifacts/web_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../web/.idea/artifacts/web_1_0_0.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../web/src/main/java/com/tep/web/WebAppDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/../web/src/main/java/com/tep/web/WebAppDriver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../web/src/main/java/com/tep/web/base/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/../web/src/main/java/com/tep/web/base/Driver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/allure-results/6733b30f-36c8-4f5a-8913-526d76e15809-attachment.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/allure-results/6b198338-e17b-4e8e-a9e3-9775ffdf2882-attachment.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/allure-results/7fc95e1b-e65b-486f-a894-793b8e382f4e-attachment.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/allure-results/837cd7c0-cc10-4e5a-aa52-4b08d3f9551f-attachment.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/allure-results/da196514-07d3-49ce-8e03-bf13275965af-attachment.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../web/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../web/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../web/src/main/java/com/tep/web/config/Enums.java" beforeDir="false" afterPath="$PROJECT_DIR$/../web/src/main/java/com/tep/web/config/Enums.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -27,6 +25,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "saimaheshwaran"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/saimaheshwaran/hes-tep.git",
+    "accountId": "af9e8605-d7bc-4ea6-a9eb-2d1e6d4f1960"
+  }
+}]]></component>
   <component name="HighlightingSettingsPerFile">
     <setting file="jar://$PROJECT_DIR$/../api/out/api.jar!/com/tep/api/ApiDriver.class" root0="SKIP_INSPECTION" />
     <setting file="jar://$PROJECT_DIR$/../api/out/api.jar!/com/tep/api/config/ApiConfig.class" root0="SKIP_INSPECTION" />
@@ -55,6 +65,7 @@
     "Maven.core [validate].executor": "Run",
     "Maven.core [verify].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/SaiMaheshwaran.Rajan/Library/CloudStorage/OneDrive-EY/Documents/IdeaProjects/hes-tep/core/src/test/resources/testProject/input/web",
@@ -139,8 +150,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23726.103" />
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23726.103" />
+        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.21565.193" />
+        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-IU-243.21565.193" />
       </set>
     </attachedChunks>
   </component>
@@ -163,6 +174,7 @@
       <workItem from="1733756519560" duration="5585000" />
       <workItem from="1734457091237" duration="1252000" />
       <workItem from="1734458353144" duration="1455000" />
+      <workItem from="1734464869271" duration="1504000" />
     </task>
     <servers />
   </component>

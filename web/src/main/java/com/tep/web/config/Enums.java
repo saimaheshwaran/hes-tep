@@ -16,6 +16,5 @@ public class Enums {
         DEFAULT
     }
 
-    public enum
 }
 
