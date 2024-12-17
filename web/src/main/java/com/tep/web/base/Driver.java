@@ -1,7 +1,6 @@
 package com.tep.web.base;
 
 import com.tep.utilities.PropUtils;
-import com.tep.web.browser.BrowserHandling;
 import com.tep.web.config.Constants;
 import com.tep.web.config.Enums;
 import lombok.Data;
@@ -105,6 +104,10 @@ public class Driver {
                 .withSilent(true).usingAnyFreePort().build();
 
         driver = new ChromeDriver(chromeDriverService, chromeOptions);
+        if (Constants.BROWSER_MAXIMIZE) {
+            driver.manage().window().maximize();
+            logger.info("ChromeDriver window maximized.");
+        }
         logger.info("ChromeDriver initialized successfully.");
     }
 

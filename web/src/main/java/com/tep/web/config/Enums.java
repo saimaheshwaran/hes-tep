@@ -15,5 +15,7 @@ public class Enums {
         EDGE,
         DEFAULT
     }
+
+    public enum
 }
 

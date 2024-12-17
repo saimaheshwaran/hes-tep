@@ -1,27 +1,14 @@
 {
-  "EY" : {
-    "page" : {
-      "value" : "https://ey.corpmerchandise.com"
-    },
+  "Google" : {
     "searchBox" : {
-      "id" : "searchTextBox",
-      "value" : ""
+      "id" : "",
+      "xpath" : "//*[@title=\"Search\"]",
+      "value" : "fire"
     },
-    "pen" : {
-      "xpath" : "//ul//a[@id=\"linkProductName\"]//h4[contains(text(),\"Pen\")]",
-      "value" : ""
-    },
-    "quantity" : {
-      "id" : "Quantity",
-      "value" : ""
-    },
-    "addToCart" : {
-      "xpath" : "//button[contains(@id, \"button-addtocart\")]",
-      "value" : ""
-    },
-    "alert" : {
-      "xpath" : "//div[@id=\"messageBoxContainerId\"]",
-      "value" : ""
+    "searchButton" : {
+      "id" : "",
+      "value" : "mobile",
+      "xpath" : "//*[@value=\"Google Search\"]"
     }
   }
 }

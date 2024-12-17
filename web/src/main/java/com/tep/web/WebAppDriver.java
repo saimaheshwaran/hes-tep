@@ -1,6 +1,5 @@
 package com.tep.web;
 
-import com.tep.utilities.PropUtils;
 import com.tep.web.base.Driver;
 import com.tep.web.base.Waits;
 import com.tep.web.browser.*;

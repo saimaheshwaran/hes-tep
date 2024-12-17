@@ -2,6 +2,8 @@ package com.tep.web.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.tep.utilities.ExcelReader;
+import com.tep.utilities.YamlReader;
 import com.tep.web.validation.CheckBoxValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,23 +30,27 @@ public class PageObjects {
     public PageObjects() {
         try {
             String extension = Constants.PAGE_OBJECT_TYPE;
-            FileInputStream readFile = new FileInputStream(Constants.TEST_DATA_INPUT_PATH + "PageObjects." + extension);
             switch (extension) {
                 case "yaml", "yml" -> {
                     Yaml yaml = new Yaml();
-                    objects = (LinkedHashMap) yaml.loadAs(readFile, LinkedHashMap.class);
+                    YamlReader yamlReader = new YamlReader();
+                    objects = (LinkedHashMap) yamlReader.getYamlDataFromFolder(Constants.TEST_DATA_INPUT_PATH);
                     logger.info("PageObjects loaded from YAML file.");
                 }
                 case "json" -> {
                     ObjectMapper objectMapper = new ObjectMapper();
+                    FileInputStream readFile = new FileInputStream(Constants.TEST_DATA_INPUT_PATH + "PageObjects.json");
                     objects = (LinkedHashMap) objectMapper.readValue(readFile, LinkedHashMap.class);
+                    readFile.close();
                     logger.info("PageObjects loaded from JSON file.");
                 }
-                default -> {
-                    logger.warn("Unsupported file extension for PageObjects: " + extension);
+                case "xlsx", "excel", "xls" -> {
+                    ExcelReader excelReader = new ExcelReader();
+                    objects = excelReader.getPageObjects(Constants.TEST_DATA_INPUT_PATH + "PageObjects.xlsx");
+                    logger.info("PageObjects loaded from Excel file.");
                 }
+                default -> logger.warn("Unsupported file extension for PageObjects: " + extension);
             }
-            readFile.close();
         } catch (Exception ignored) {
             logger.error("Error loading PageObjects.",ignored);
         }

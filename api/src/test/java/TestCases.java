@@ -14,7 +14,6 @@ import static org.hamcrest.Matchers.equalTo;
 public class TestCases {
 
     ApiDriver apiDriver = new ApiDriver();
-    ApiDriverHelpers apiDriverHelpers = new ApiDriverHelpers();
 
     @Test
     public void api_basic_request_from_yaml() {

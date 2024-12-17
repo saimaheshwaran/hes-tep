@@ -1,4 +1,6 @@
+import com.tep.utilities.ExcelReader;
 import com.tep.web.WebAppDriver;
+import com.tep.web.config.Constants;
 import com.tep.web.config.Enums;
 import org.junit.Test;
 
@@ -45,5 +47,11 @@ public class TestCases {
 
         driver.close();
 
+    }
+
+    @Test
+    public void excelReadTest() {
+        ExcelReader excelReader = new ExcelReader();
+        System.out.println(excelReader.getPageObjects(Constants.TEST_DATA_INPUT_PATH + "PageObjects.xlsx"));
     }
 }
