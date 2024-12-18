@@ -76,4 +76,16 @@ public class CheckBoxValidation {
             Assertion.equalsFalse(true, "Expected: Checkbox (" + element.getBy(locatorPair) + ") should not be checked. But checkbox is checked.");
         }
     }
+
+    public void isChecked(WebElement webElement, boolean shouldBeChecked) {
+        waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+        WebElement checkBox = webElement;
+        if (!checkBox.isSelected() && shouldBeChecked) {
+            logger.error("Expected: Checkbox (" + webElement + ") should be checked. But checkbox is unchecked.");
+            Assertion.equalsTrue(false, "Expected: Checkbox (" + webElement + ") should be checked. But checkbox is unchecked.");
+        } else if (checkBox.isSelected() && !shouldBeChecked) {
+            logger.error("Expected: Checkbox (" + webElement + ") should not be checked. But checkbox is checked.");
+            Assertion.equalsFalse(true, "Expected: Checkbox (" + webElement + ") should not be checked. But checkbox is checked.");
+        }
+    }
 }

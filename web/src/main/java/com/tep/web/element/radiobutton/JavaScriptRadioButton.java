@@ -77,4 +77,16 @@ public class JavaScriptRadioButton {
             select(locatorPair);
         }
     }
+
+    public void select(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            executor.executeScript("var radio=arguments[0]; if(!radio.checked){radio.checked=true;}", webElement);
+            logger.info("Radio button selected successfully using JavaScript.");
+        } catch (StaleElementReferenceException e) {
+            logger.warn("StaleElementReferenceException occurred while selecting radio button using JavaScript.", e);
+            select(webElement);
+        }
+    }
 }

@@ -91,4 +91,25 @@ public class DropdownValidation {
             Assertion.equalsFalse(true, "Expected: " + option + " should not be selected from Dropdown. But " + actualValue + " is selected from Dropdown.");
         }
     }
+
+    public void isSelected(WebElement webElement, String type, String option, boolean shouldBeSelected) {
+        waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+        Select selectList = new Select(webElement);
+        String actualValue = "";
+
+        if (type.equals("text")) {
+            actualValue = selectList.getFirstSelectedOption().getText();
+        } else {
+            actualValue = selectList.getFirstSelectedOption().getAttribute("value");
+        }
+
+        if (!actualValue.equals(option) && shouldBeSelected) {
+            logger.error("Expected option '{}' should be selected, but found '{}'", option, actualValue);
+            Assertion.equalsTrue(false, "Expected: " + option + " should be selected from Dropdown. But " + actualValue + " is selected from Dropdown.");
+        } else if (actualValue.equals(option) && !shouldBeSelected) {
+            logger.error("Expected option '{}' should not be selected ", option);
+            Assertion.equalsFalse(true, "Expected: " + option + " should not be selected from Dropdown. But " + actualValue + " is selected from Dropdown.");
+        }
+    }
+
 }

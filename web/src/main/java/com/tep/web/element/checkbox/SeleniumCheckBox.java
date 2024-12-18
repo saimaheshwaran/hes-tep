@@ -54,6 +54,33 @@ public class SeleniumCheckBox {
     }
 
     /**
+     * Checks the checkbox identified by the object name.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     */
+    public void check(String objName) {
+        check(objects.get(objName));
+    }
+
+    /**
+     * Unchecks the checkbox identified by the object name.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     */
+    public void uncheck(String objName) {
+        uncheck(objects.get(objName));
+    }
+
+    /**
+     * Toggles the checkbox identified by the object name.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     */
+    public void toggle(String objName) {
+        toggle(objects.get(objName));
+    }
+
+    /**
      * Checks the checkbox identified by the locator pair.
      *
      * @param locatorPair a Map.Entry containing the locator type and value.
@@ -107,30 +134,41 @@ public class SeleniumCheckBox {
         }
     }
 
-    /**
-     * Checks the checkbox identified by the object name.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
-     */
-    public void check(String objName) {
-        check(objects.get(objName));
+    public void check(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            if (!webElement.isSelected()) {
+                actionClick.click(webElement);
+            }
+            logger.info("Checkbox is selected successfully.");
+        } catch (StaleElementReferenceException ignored) {
+            logger.error("StaleElementReferenceException caught, retrying check operation.");
+            check(webElement);
+        }
     }
 
-    /**
-     * Unchecks the checkbox identified by the object name.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
-     */
-    public void uncheck(String objName) {
-        uncheck(objects.get(objName));
+    public void uncheck(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            if (webElement.isSelected()) {
+                actionClick.click(webElement);
+            }
+            logger.info("Checkbox is un-checked successfully.");
+        } catch (StaleElementReferenceException ignored) {
+            logger.error("StaleElementReferenceException caught during uncheck, retrying.");
+            uncheck(webElement);
+        }
     }
 
-    /**
-     * Toggles the checkbox identified by the object name.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
-     */
-    public void toggle(String objName) {
-        toggle(objects.get(objName));
+    public void toggle(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            actionClick.click(webElement);
+            logger.info("Checkbox state toggled successfully.");
+        } catch (StaleElementReferenceException ignored) {
+            logger.error("StaleElementReferenceException caught during toggle, retrying.");
+            toggle(webElement);
+        }
     }
+
 }

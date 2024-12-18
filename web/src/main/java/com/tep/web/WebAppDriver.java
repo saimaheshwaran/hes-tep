@@ -182,6 +182,13 @@ public class WebAppDriver {
         waits = new Waits(driver);
     }
 
+    public WebDriver getBrowser() {
+        if(driver.getDriver() == null)
+            return null;
+        else
+            return driver.getDriver();
+    }
+
     /**
      * Closes the driver and unloads the PageObjects.
      */

@@ -5,6 +5,7 @@ import com.tep.web.base.Waits;
 import com.tep.web.config.PageObjects;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import com.tep.web.config.Constants;
 import org.slf4j.Logger;
@@ -50,6 +51,24 @@ public class ActionClick {
     }
 
     /**
+     * Clicks on the element identified by the object name.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     */
+    public void click(String objName) {
+        click(objects.get(objName));
+    }
+
+    /**
+     * Double-clicks on the element identified by the object name.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     */
+    public void doubleClick(String objName) {
+        doubleClick(objects.get(objName));
+    }
+
+    /**
      * Clicks on the element identified by the locator pair.
      *
      * @param locatorPair a Map.Entry containing the locator type and value.
@@ -85,21 +104,30 @@ public class ActionClick {
         }
     }
 
-    /**
-     * Clicks on the element identified by the object name.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
-     */
-    public void click(String objName) {
-        click(objects.get(objName));
+    public void click(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            Actions actions = new Actions(driver);
+            actions.moveToElement(webElement).click().perform();
+            actions.release().perform();
+            logger.info("Click action performed successfully.");
+        } catch (StaleElementReferenceException e) {
+            logger.error("StaleElementReferenceException caught, retrying click.", e);
+            click(webElement);
+        }
     }
 
-    /**
-     * Double-clicks on the element identified by the object name.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
-     */
-    public void doubleClick(String objName) {
-        doubleClick(objects.get(objName));
+    public void doubleClick(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            Actions actions = new Actions(driver);
+            actions.moveToElement(webElement).doubleClick().perform();
+            actions.release().perform();
+            logger.info("Double-click action performed successfully.");
+        } catch (StaleElementReferenceException e) {
+            logger.error("StaleElementReferenceException caught during double-click, retrying.", e);
+            doubleClick(webElement);
+        }
     }
+
 }

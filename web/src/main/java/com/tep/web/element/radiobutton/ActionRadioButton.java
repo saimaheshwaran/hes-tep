@@ -85,4 +85,20 @@ public class ActionRadioButton {
             select(locatorPair);
         }
     }
+
+    public void select(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            Actions actions = new Actions(driver);
+            actions.moveToElement(webElement).perform();
+            if (!webElement.isSelected()) {
+                actionClick.click(webElement);
+            }
+            logger.info("RadioButton is selected successfully.");
+            actions.release().perform();
+        } catch (StaleElementReferenceException ignored) {
+            logger.error("StaleElementReferenceException caught, retrying check operation.", ignored);
+            select(webElement);
+        }
+    }
 }

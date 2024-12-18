@@ -51,6 +51,46 @@ public class JavaScriptDropdown {
     }
 
     /**
+     * Selects an option from the dropdown identified by the object name using JavaScript.
+     *
+     * @param option   the option to select.
+     * @param optionBy the method to select the option (index, value, or text).
+     * @param objName  the name of the object whose locator is to be retrieved.
+     */
+    public void select(String option, String optionBy, String objName) {
+        select(option, optionBy, objects.get(objName));
+    }
+
+    /**
+     * Deselects an option from the dropdown identified by the object name using JavaScript.
+     *
+     * @param option   the option to deselect.
+     * @param optionBy the method to deselect the option (index, value, or text).
+     * @param objName  the name of the object whose locator is to be retrieved.
+     */
+    public void deselect(String option, String optionBy, String objName) {
+        deselect(option, optionBy, objects.get(objName));
+    }
+
+    /**
+     * Selects all options from the dropdown identified by the object name using JavaScript.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     */
+    public void selectAll(String objName) {
+        selectAll(objects.get(objName));
+    }
+
+    /**
+     * Deselects all options from the dropdown identified by the object name using JavaScript.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     */
+    public void deselectAll(String objName) {
+        deselectAll(objects.get(objName));
+    }
+
+    /**
      * Selects an option from the dropdown identified by the locator pair using JavaScript.
      *
      * @param option      the option to select.
@@ -154,43 +194,82 @@ public class JavaScriptDropdown {
         }
     }
 
-    /**
-     * Selects an option from the dropdown identified by the object name using JavaScript.
-     *
-     * @param option   the option to select.
-     * @param optionBy the method to select the option (index, value, or text).
-     * @param objName  the name of the object whose locator is to be retrieved.
-     */
-    public void select(String option, String optionBy, String objName) {
-        select(option, optionBy, objects.get(objName));
+    public void select(String option, String optionBy, WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            String script = null;
+            switch (optionBy) {
+                case "index" -> {
+                    int index = Integer.parseInt(option) - 1;
+                    script = "var select = arguments[0]; { select.options[" + index + "].selected = true;  }";
+                }
+                case "value" ->
+                        script = "var select = arguments[0]; for(var i = 0; i < select.options.length; i++){ if(select.options[i].value == arguments[1]){ select.options[i].selected = true; } }";
+                case "text" ->
+                        script = "var select = arguments[0]; for(var i = 0; i < select.options.length; i++){ if(select.options[i].text == arguments[1]){ select.options[i].selected = true; } }";
+            }
+            assert script != null;
+            executor.executeScript(script, webElement, option);
+            logger.info("Option selected successfully using JavaScript.");
+        } catch (StaleElementReferenceException ignored) {
+            logger.error("StaleElementReferenceException caught during select, retrying.");
+            select(option, optionBy, webElement);
+        }
     }
 
-    /**
-     * Deselects an option from the dropdown identified by the object name using JavaScript.
-     *
-     * @param option   the option to deselect.
-     * @param optionBy the method to deselect the option (index, value, or text).
-     * @param objName  the name of the object whose locator is to be retrieved.
-     */
-    public void deselect(String option, String optionBy, String objName) {
-        deselect(option, optionBy, objects.get(objName));
+    public void deselect(String option, String optionBy, WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            String script = null;
+            switch (optionBy) {
+                case "index" -> {
+                    int index = Integer.parseInt(option) - 1;
+                    script = "var select = arguments[0]; { select.options[" + index + "].selected = false;  }";
+                }
+                case "value" ->
+                        script = "var select = arguments[0]; for(var i = 0; i < select.options.length; i++){ if(select.options[i].value == arguments[1]){ select.options[i].selected = false; } }";
+                case "text" ->
+                        script = "var select = arguments[0]; for(var i = 0; i < select.options.length; i++){ if(select.options[i].text == arguments[1]){ select.options[i].selected = false; } }";
+            }
+            assert script != null;
+            executor.executeScript(script, webElement, option);
+            logger.info("Option deselected successfully using JavaScript.");
+        } catch (StaleElementReferenceException ignored) {
+            logger.error("StaleElementReferenceException caught during deselect, retrying.");
+            deselect(option, optionBy, webElement);
+        }
     }
 
-    /**
-     * Selects all options from the dropdown identified by the object name using JavaScript.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
-     */
-    public void selectAll(String objName) {
-        selectAll(objects.get(objName));
+    public void deselectAll(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            String script = "var select = arguments[0];" +
+                    "for(var i = 0; i < select.options.length; i++){ " +
+                    "if(select.options[i].selected){select.options[i].selected = false;}}";
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            executor.executeScript(script, webElement);
+            logger.info("All selected options have been deselected.");
+        } catch (StaleElementReferenceException ignored) {
+            logger.error("StaleElementReferenceException caught during deselectAll, retrying.");
+            deselectAll(webElement);
+        }
     }
 
-    /**
-     * Deselects all options from the dropdown identified by the object name using JavaScript.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
-     */
-    public void deselectAll(String objName) {
-        deselectAll(objects.get(objName));
+    public void selectAll(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            String script = "var select = arguments[0];" +
+                    "for(var i = 0; i < select.options.length; i++){ " +
+                    "if(!select.options[i].selected){select.options[i].selected = true;}}";
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            executor.executeScript(script, webElement);
+            logger.info("All options have been selected.");
+        } catch (StaleElementReferenceException ignored) {
+            logger.error("StaleElementReferenceException caught during selectAll, retrying.");
+            selectAll(webElement);
+        }
     }
+
 }

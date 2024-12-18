@@ -58,6 +58,12 @@ public class Waits {
         return getWait(duration).until(ExpectedConditions.presenceOfAllElementsLocatedBy(element.getBy(locatorPair)));
     }
 
+    public boolean waitForPresenceOfElementsLocated(WebElement webElement, int duration) {
+        waitForAjaxCall(webElement);
+        waitForJSandJQueryToLoad();
+        return getWait(duration).until(presenceOfElement(webElement));
+    }
+
     /**
      * Waits for an element to be displayed.
      *
@@ -72,6 +78,18 @@ public class Waits {
             logger.info("Element is now visible. Locator", locatorPair);
         } catch (TimeoutException e) {
             logger.error("Timed out after seconds waiting for element to become visible.", duration, locatorPair, e);
+            // Depending on your error handling strategy, you might want to rethrow the exception, return, or take other actions.
+        }
+    }
+
+    public void waitForElementToDisplay(WebElement webElement, int duration) {
+        waitForAjaxCall(webElement);
+        waitForJSandJQueryToLoad();
+        try {
+            getWait(duration).until(ExpectedConditions.visibilityOf(webElement));
+            logger.info("Element is now visible: " + webElement);
+        } catch (TimeoutException e) {
+            logger.error("Timed out after seconds waiting for element to become visible.", duration, webElement, e);
             // Depending on your error handling strategy, you might want to rethrow the exception, return, or take other actions.
         }
     }
@@ -185,6 +203,36 @@ public class Waits {
         } catch (Exception ignored) {
             logger.error("An error occurred while waiting for AJAX call.", ignored.getMessage());
         }
+    }
+
+    public void waitForAjaxCall(WebElement webElement) {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(Constants.DEFAULT_WAIT_TIME_SEC), Duration.ofMillis(30));
+            wait.until(presenceOfElement(webElement));
+            logger.info("Element is now present, AJAX call has completed.");
+        } catch (Exception ignored) {
+            logger.error("An error occurred while waiting for AJAX call.", ignored.getMessage());
+        }
+    }
+
+    public ExpectedCondition<Boolean> presenceOfElement(WebElement element) {
+        return new ExpectedCondition<>() {
+            @Override
+            public Boolean apply(WebDriver driver) {
+                try {
+                    // Interact with the element to ensure it exists
+                    element.isDisplayed();
+                    return true;
+                } catch (org.openqa.selenium.StaleElementReferenceException e) {
+                    return false;
+                }
+            }
+
+            @Override
+            public String toString() {
+                return "presence of the element located: " + element.toString();
+            }
+        };
     }
 
     /**

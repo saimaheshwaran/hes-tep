@@ -65,6 +65,17 @@ public class SeleniumRadioButton {
     }
 
     /**
+     * Selects a radio button from a group identified by the object name.
+     *
+     * @param option        the option to select.
+     * @param selectionType the method to select the option (value or text).
+     * @param objName       the name of the object whose locator is to be retrieved.
+     */
+    public void selectFromRadioButtonGroup(String option, String selectionType, String objName) {
+        selectFromRadioButtonGroup(option, selectionType, objects.get(objName));
+    }
+
+    /**
      * Selects the radio button identified by the locator pair.
      *
      * @param locatorPair a Map.Entry containing the locator type and value.
@@ -81,17 +92,6 @@ public class SeleniumRadioButton {
             logger.error("StaleElementReferenceException caught, retrying check operation.",ignored);
             select(locatorPair);
         }
-    }
-
-    /**
-     * Selects a radio button from a group identified by the object name.
-     *
-     * @param option        the option to select.
-     * @param selectionType the method to select the option (value or text).
-     * @param objName       the name of the object whose locator is to be retrieved.
-     */
-    public void selectFromRadioButtonGroup(String option, String selectionType, String objName) {
-        selectFromRadioButtonGroup(option, selectionType, objects.get(objName));
     }
 
     /**
@@ -123,4 +123,18 @@ public class SeleniumRadioButton {
             selectFromRadioButtonGroup(option, selectionType, locatorPair);
         }
     }
+
+    public void select(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            if (!webElement.isSelected()) {
+                seleniumClick.click(webElement);
+            }
+            logger.info("RadioButton is selected successfully.");
+        } catch (StaleElementReferenceException ignored) {
+            logger.error("StaleElementReferenceException caught, retrying check operation.",ignored);
+            select(webElement);
+        }
+    }
+
 }

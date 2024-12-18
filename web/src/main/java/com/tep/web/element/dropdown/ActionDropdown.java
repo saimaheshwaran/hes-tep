@@ -55,6 +55,56 @@ public class ActionDropdown {
     }
 
     /**
+     * Selects an option from the dropdown identified by the object name.
+     *
+     * @param option   the option to select.
+     * @param optionBy the method to select the option (index, value, or text).
+     * @param objName  the name of the object whose locator is to be retrieved.
+     */
+    public void select(String option, String optionBy, String objName) {
+        select(option, optionBy, objects.get(objName));
+    }
+
+    /**
+     * Deselects an option from the dropdown identified by the object name.
+     *
+     * @param option   the option to deselect.
+     * @param optionBy the method to deselect the option (index, value, or text).
+     * @param objName  the name of the object whose locator is to be retrieved.
+     */
+    public void deselect(String option, String optionBy, String objName) {
+        deselect(option, optionBy, objects.get(objName));
+    }
+
+    /**
+     * Selects all options from the dropdown identified by the object name.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     */
+    public void selectAll(String objName) {
+        selectAll(objects.get(objName));
+    }
+
+    /**
+     * Deselects all options from the dropdown identified by the object name.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     */
+    public void deselectAll(String objName) {
+        deselectAll(objects.get(objName));
+    }
+
+    /**
+     * Selects multiple options from the dropdown identified by the object name.
+     *
+     * @param options the options to select.
+     * @param objName the name of the object whose locator is to be retrieved.
+     */
+    public void multiSelect(String[] options, String objName) {
+        multiSelect(options, objects.get(objName));
+    }
+
+    /**
      * Selects an option from the dropdown identified by the locator pair.
      *
      * @param option      the option to select.
@@ -184,53 +234,99 @@ public class ActionDropdown {
         }
     }
 
-    /**
-     * Selects an option from the dropdown identified by the object name.
-     *
-     * @param option   the option to select.
-     * @param optionBy the method to select the option (index, value, or text).
-     * @param objName  the name of the object whose locator is to be retrieved.
-     */
-    public void select(String option, String optionBy, String objName) {
-        select(option, optionBy, objects.get(objName));
+    public void select(String option, String optionBy, WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            Select selectList = new Select(webElement);
+            Actions actions = new Actions(driver);
+            actions.moveToElement(webElement).perform();
+            switch (optionBy) {
+                case "index" -> selectList.selectByIndex(Integer.parseInt(option) - 1);
+                case "value" -> selectList.selectByValue(option);
+                case "text" -> selectList.selectByVisibleText(option);
+            }
+            logger.info("Option selected successfully.");
+        } catch (StaleElementReferenceException ignored) {
+            logger.error("StaleElementReferenceException caught during selection, retrying.");
+            select(option, optionBy, webElement);
+        }
     }
 
-    /**
-     * Deselects an option from the dropdown identified by the object name.
-     *
-     * @param option   the option to deselect.
-     * @param optionBy the method to deselect the option (index, value, or text).
-     * @param objName  the name of the object whose locator is to be retrieved.
-     */
-    public void deselect(String option, String optionBy, String objName) {
-        deselect(option, optionBy, objects.get(objName));
+    public void deselect(String option, String optionBy, WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            Select selectList = new Select(webElement);
+            Actions actions = new Actions(driver);
+            actions.moveToElement(webElement).perform();
+            switch (optionBy) {
+                case "index" -> selectList.deselectByIndex(Integer.parseInt(option) - 1);
+                case "value" -> selectList.deselectByValue(option);
+                case "text" -> selectList.deselectByVisibleText(option);
+            }
+            logger.info("Option deselected successfully.");
+        } catch (StaleElementReferenceException ignored) {
+            logger.error("StaleElementReferenceException caught during deselection, retrying.");
+            deselect(option, optionBy, webElement);
+        }
     }
 
-    /**
-     * Selects all options from the dropdown identified by the object name.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
-     */
-    public void selectAll(String objName) {
-        selectAll(objects.get(objName));
+    public void deselectAll(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            Select selectList = new Select(webElement);
+            List<WebElement> elementCount = selectList.getOptions();
+            Actions actions = new Actions(driver);
+            for (WebElement wbElement : elementCount) {
+                if (wbElement.isSelected()) {
+                    actions.keyDown(Keys.CONTROL).click(wbElement);
+                }
+            }
+            actions.build().perform();
+            logger.info("All selected options have been deselected.");
+        } catch (StaleElementReferenceException ignored) {
+            logger.error("StaleElementReferenceException caught during deselectAll, retrying.");
+            deselectAll(webElement);
+        }
     }
 
-    /**
-     * Deselects all options from the dropdown identified by the object name.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
-     */
-    public void deselectAll(String objName) {
-        deselectAll(objects.get(objName));
+    public void selectAll(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            Select selectList = new Select(webElement);
+            List<WebElement> elementCount = selectList.getOptions();
+            Actions actions = new Actions(driver);
+            for (WebElement wbElement : elementCount) {
+                if (!wbElement.isSelected()) {
+                    actions.keyDown(Keys.CONTROL).click(wbElement);
+                }
+            }
+            actions.build().perform();
+            logger.info("All options have been selected.");
+        } catch (StaleElementReferenceException ignored) {
+            logger.error("StaleElementReferenceException caught during selectAll, retrying.");
+            selectAll(webElement);
+        }
     }
 
-    /**
-     * Selects multiple options from the dropdown identified by the object name.
-     *
-     * @param options the options to select.
-     * @param objName the name of the object whose locator is to be retrieved.
-     */
-    public void multiSelect(String[] options, String objName) {
-        multiSelect(options, objects.get(objName));
+    public void multiSelect(String[] options, WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            Select selectList = new Select(webElement);
+            List<WebElement> elementCount = selectList.getOptions();
+            Actions action = new Actions(driver);
+            for (String option : options) {
+                for (WebElement wbElement : elementCount) {
+                    if (wbElement.getText().equals(option)) {
+                        action.keyDown(Keys.CONTROL).click(wbElement);
+                    }
+                }
+            }
+            action.build().perform();
+            logger.info("Multiple options selected successfully.");
+        } catch (StaleElementReferenceException e) {
+            logger.error("StaleElementReferenceException caught during multiSelect, retrying.", e);
+            multiSelect(options, webElement);
+        }
     }
+
 }

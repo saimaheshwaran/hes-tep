@@ -61,6 +61,18 @@ public class RadioButtonValidation {
     }
 
     /**
+     * Validates if the specified option is selected in the radio button group identified by the object name.
+     *
+     * @param objName          the name of the object whose locator is to be retrieved.
+     * @param option           the option to validate.
+     * @param selectionType    the type of selection (value or text).
+     * @param shouldBeSelected true if the option should be selected, false otherwise.
+     */
+    public void isSelectedFromRadioButtonGroup(String objName, String option, String selectionType, boolean shouldBeSelected) {
+        isSelectedFromRadioButtonGroup(objects.get(objName), option, selectionType, shouldBeSelected);
+    }
+
+    /**
      * Validates if the radio button identified by the locator pair is selected or not.
      *
      * @param locatorPair      a Map.Entry containing the locator type and value.
@@ -75,18 +87,6 @@ public class RadioButtonValidation {
         } else if (radioButton.isSelected() && !shouldBeSelected) {
             Assertion.equalsFalse(true, "Expected: Radio button (" + element.getBy(locatorPair) + ") should not be selected. But Radio button is selected.");
         }
-    }
-
-    /**
-     * Validates if the specified option is selected in the radio button group identified by the object name.
-     *
-     * @param objName          the name of the object whose locator is to be retrieved.
-     * @param option           the option to validate.
-     * @param selectionType    the type of selection (value or text).
-     * @param shouldBeSelected true if the option should be selected, false otherwise.
-     */
-    public void isSelectedFromRadioButtonGroup(String objName, String option, String selectionType, boolean shouldBeSelected) {
-        isSelectedFromRadioButtonGroup(objects.get(objName), option, selectionType, shouldBeSelected);
     }
 
     /**
@@ -121,4 +121,15 @@ public class RadioButtonValidation {
             logger.error("Option '{}' with selection type '{}' not found in radio button group with locator {}={}", option, selectionType, locatorPair.getKey(), locatorPair.getValue());
         }
     }
+
+    public void isSelected(WebElement webElement, boolean shouldBeSelected) {
+        waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+        if (!webElement.isSelected() && shouldBeSelected) {
+            logger.error("Expected radio button ({}) to be selected, but it is not", webElement);
+            Assertion.equalsTrue(false, "Expected: Radio button (" + webElement + ") should be selected. But Radio button is not selected.");
+        } else if (webElement.isSelected() && !shouldBeSelected) {
+            Assertion.equalsFalse(true, "Expected: Radio button (" + webElement + ") should not be selected. But Radio button is selected.");
+        }
+    }
+
 }

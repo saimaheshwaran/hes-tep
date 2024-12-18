@@ -6,6 +6,7 @@ import com.tep.web.config.PageObjects;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import com.tep.web.config.Constants;
+import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,6 +61,17 @@ public class PresenceValidation {
     }
 
     /**
+     * Verifies if the element identified by the object name is present or not within the specified wait time.
+     *
+     * @param objName       the name of the object whose locator is to be retrieved.
+     * @param elementPresent true if the element should be present, false otherwise.
+     * @param waitTime      the wait time in seconds.
+     */
+    public void verify(String objName, boolean elementPresent, int waitTime) {
+        verify(objects.get(objName), elementPresent, waitTime);
+    }
+
+    /**
      * Verifies if the element identified by the locator pair is present or not.
      *
      * @param locatorPair   a Map.Entry containing the locator type and value.
@@ -81,17 +93,6 @@ public class PresenceValidation {
             } catch (TimeoutException ignored) {
             }
         }
-    }
-
-    /**
-     * Verifies if the element identified by the object name is present or not within the specified wait time.
-     *
-     * @param objName       the name of the object whose locator is to be retrieved.
-     * @param elementPresent true if the element should be present, false otherwise.
-     * @param waitTime      the wait time in seconds.
-     */
-    public void verify(String objName, boolean elementPresent, int waitTime) {
-        verify(objects.get(objName), elementPresent, waitTime);
     }
 
     /**
@@ -118,4 +119,41 @@ public class PresenceValidation {
             }
         }
     }
+
+    public void verify(WebElement webElement, boolean elementPresent) {
+        if (elementPresent) {
+            try {
+                waits.waitForElementToDisplay(webElement, Constants.DEFAULT_WAIT_TIME_SEC);
+            } catch (TimeoutException e) {
+                logger.error("Expected element " + webElement + " to be present, but it is not.");
+                Assertion.equalsTrue(false, "Expected: Element " + webElement + " should be present. But element is not present.");
+            }
+        } else {
+            try {
+                waits.waitForElementToDisplay(webElement, Constants.DEFAULT_WAIT_TIME_SEC);
+                logger.info("Element " + webElement + " is present when it should not be.");
+                Assertion.equalsFalse(true, "Expected: Element " + webElement + " should not be present. But element is present.");
+            } catch (TimeoutException ignored) {
+            }
+        }
+    }
+
+    public void verify(WebElement webElement, boolean elementPresent, int waitTime) {
+        if (elementPresent) {
+            try {
+                waits.waitForElementToDisplay(webElement, waitTime);
+            } catch (TimeoutException e) {
+                logger.error("Expected element " + webElement + " to be present, but it is not.");
+                Assertion.equalsTrue(false, "Expected: Element " + webElement + " should be present. But element is not present.");
+            }
+        } else {
+            try {
+                waits.waitForElementToDisplay(webElement, waitTime);
+                logger.info("Element " + webElement + " is present when it should not be.");
+                Assertion.equalsFalse(true, "Expected: Element " + webElement + " should not be present. But element is present.");
+            } catch (TimeoutException ignored) {
+            }
+        }
+    }
+
 }

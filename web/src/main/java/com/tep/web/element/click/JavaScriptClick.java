@@ -22,6 +22,7 @@ public class JavaScriptClick {
     private Element element;
     private PageObjects objects;
     private static final Logger logger = LoggerFactory.getLogger(JavaScriptClick.class);
+
     /**
      * Constructor to initialize the JavaScriptClick with a WebDriver instance.
      *
@@ -46,6 +47,24 @@ public class JavaScriptClick {
         this.waits = new Waits(driver);
         this.element = new Element(driver);
         logger.info("WebDriver, PageObjects, Waits, and Element instances have been initialized.");
+    }
+
+    /**
+     * Clicks on the element identified by the object name using JavaScript.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     */
+    public void click(String objName) {
+        click(objects.get(objName));
+    }
+
+    /**
+     * Double-clicks on the element identified by the object name using JavaScript.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     */
+    public void doubleClick(String objName) {
+        doubleClick(objects.get(objName));
     }
 
     /**
@@ -88,21 +107,32 @@ public class JavaScriptClick {
         }
     }
 
-    /**
-     * Clicks on the element identified by the object name using JavaScript.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
-     */
-    public void click(String objName) {
-        click(objects.get(objName));
+    public void click(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            if (webElement.isEnabled()) {
+                JavascriptExecutor executor = (JavascriptExecutor) driver;
+                executor.executeScript("arguments[0].click();", webElement);
+                logger.info("Element is enabled, executed JavaScript for click action.");
+            }
+        } catch (StaleElementReferenceException e) {
+            logger.error("StaleElementReferenceException caught, retrying click.", e);
+            click(webElement);
+        }
     }
 
-    /**
-     * Double-clicks on the element identified by the object name using JavaScript.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
-     */
-    public void doubleClick(String objName) {
-        doubleClick(objects.get(objName));
+    public void doubleClick(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            if (webElement.isEnabled()) {
+                JavascriptExecutor executor = (JavascriptExecutor) driver;
+                executor.executeScript("arguments[0].click(); arguments[0].click();", webElement);
+                logger.info("Element is enabled, executed JavaScript for double click.");
+            }
+        } catch (StaleElementReferenceException e) {
+            logger.error("StaleElementReferenceException caught, retrying click.", e);
+            doubleClick(webElement);
+        }
     }
+
 }

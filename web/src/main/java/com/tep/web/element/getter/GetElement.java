@@ -53,6 +53,56 @@ public class GetElement {
     }
 
     /**
+     * Fetches the web element identified by the object name.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     * @return the web element.
+     */
+    public WebElement fetch(String objName) {
+        return fetch(objects.get(objName));
+    }
+
+    /**
+     * Fetches all web elements identified by the object name.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     * @return the list of web elements.
+     */
+    public List<WebElement> fetchAll(String objName) {
+        return fetchAll(objects.get(objName));
+    }
+
+    /**
+     * Checks if the web element identified by the object name is selected.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     * @return true if the element is selected, false otherwise.
+     */
+    public boolean isSelected(String objName) {
+        return isSelected(objects.get(objName));
+    }
+
+    /**
+     * Checks if the web element identified by the object name is enabled.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     * @return true if the element is enabled, false otherwise.
+     */
+    public boolean isEnabled(String objName) {
+        return isEnabled(objects.get(objName));
+    }
+
+    /**
+     * Checks if the web element identified by the object name is displayed.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     * @return true if the element is displayed, false otherwise.
+     */
+    public boolean isDisplayed(String objName) {
+        return isDisplayed(objects.get(objName));
+    }
+
+    /**
      * Fetches the web element identified by the locator pair.
      *
      * @param locatorPair a Map.Entry containing the locator type and value.
@@ -132,53 +182,43 @@ public class GetElement {
         return elementDisplayed;
     }
 
-    /**
-     * Fetches the web element identified by the object name.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
-     * @return the web element.
-     */
-    public WebElement fetch(String objName) {
-        return fetch(objects.get(objName));
+    public boolean isSelected(WebElement webElement) {
+        boolean elementSelected = false;
+        try {
+            elementSelected = webElement.isSelected();
+            logger.info("Element selected status", elementSelected);
+        } catch (StaleElementReferenceException e) {
+            logger.error("StaleElementReferenceException occurred while checking if element is selected.", e);
+            elementSelected = isSelected(webElement);
+        }
+        return elementSelected;
     }
 
-    /**
-     * Fetches all web elements identified by the object name.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
-     * @return the list of web elements.
-     */
-    public List<WebElement> fetchAll(String objName) {
-        return fetchAll(objects.get(objName));
+    public boolean isEnabled(WebElement webElement) {
+        boolean elementEnabled = false;
+        try {
+            elementEnabled = webElement.isEnabled();
+            logger.info("Element enabled status.", elementEnabled);
+        } catch (StaleElementReferenceException e) {
+            logger.warn("StaleElementReferenceException occurred while checking if element is enabled.", e);
+            elementEnabled = isEnabled(webElement);
+        }
+        return elementEnabled;
     }
 
-    /**
-     * Checks if the web element identified by the object name is selected.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
-     * @return true if the element is selected, false otherwise.
-     */
-    public boolean isSelected(String objName) {
-        return isSelected(objects.get(objName));
+    public boolean isDisplayed(WebElement webElement) {
+        boolean elementDisplayed = false;
+        try {
+            elementDisplayed = webElement.isDisplayed();
+            logger.info("Element displayed status.", elementDisplayed);
+        } catch (StaleElementReferenceException e) {
+            logger.warn("StaleElementReferenceException occurred while checking if element is displayed.", e);
+            elementDisplayed = isDisplayed(webElement);
+        } catch (NoSuchElementException e) {
+            logger.warn("NoSuchElementException occurred while checking if element is displayed.", e);
+            elementDisplayed = false;
+        }
+        return elementDisplayed;
     }
 
-    /**
-     * Checks if the web element identified by the object name is enabled.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
-     * @return true if the element is enabled, false otherwise.
-     */
-    public boolean isEnabled(String objName) {
-        return isEnabled(objects.get(objName));
-    }
-
-    /**
-     * Checks if the web element identified by the object name is displayed.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
-     * @return true if the element is displayed, false otherwise.
-     */
-    public boolean isDisplayed(String objName) {
-        return isDisplayed(objects.get(objName));
-    }
 }

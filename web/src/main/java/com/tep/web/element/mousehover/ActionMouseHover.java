@@ -6,6 +6,7 @@ import com.tep.web.config.PageObjects;
 import com.tep.web.element.checkbox.ActionCheckBox;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import com.tep.web.config.Constants;
 import org.slf4j.Logger;
@@ -51,6 +52,15 @@ public class ActionMouseHover {
     }
 
     /**
+     * Performs a mouse hover action on the element identified by the object name.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     */
+    public void mouseHover(String objName) {
+        mouseHover(objects.get(objName));
+    }
+
+    /**
      * Performs a mouse hover action on the element identified by the locator pair.
      *
      * @param locatorPair a Map.Entry containing the locator type and value.
@@ -67,12 +77,16 @@ public class ActionMouseHover {
         }
     }
 
-    /**
-     * Performs a mouse hover action on the element identified by the object name.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
-     */
-    public void mouseHover(String objName) {
-        mouseHover(objects.get(objName));
+    public void mouseHover(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            Actions actions = new Actions(driver);
+            actions.moveToElement(webElement).perform();
+            logger.info("Mouse hover performed on element: {}", webElement);
+        } catch (StaleElementReferenceException e) {
+            logger.error("StaleElementReferenceException occurred while performing mouse hover. Retrying..{}", webElement, e);
+            mouseHover(webElement);
+        }
     }
+
 }

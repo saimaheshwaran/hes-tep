@@ -51,6 +51,33 @@ public class JavaScriptCheckBox {
     }
 
     /**
+     * Checks the checkbox identified by the object name using JavaScript.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     */
+    public void check(String objName) {
+        check(objects.get(objName));
+    }
+
+    /**
+     * Unchecks the checkbox identified by the object name using JavaScript.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     */
+    public void uncheck(String objName) {
+        uncheck(objects.get(objName));
+    }
+
+    /**
+     * Toggles the checkbox identified by the object name using JavaScript.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     */
+    public void toggle(String objName) {
+        toggle(objects.get(objName));
+    }
+
+    /**
      * Checks the checkbox identified by the locator pair using JavaScript.
      *
      * @param locatorPair a Map.Entry containing the locator type and value.
@@ -104,30 +131,40 @@ public class JavaScriptCheckBox {
         }
     }
 
-    /**
-     * Checks the checkbox identified by the object name using JavaScript.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
-     */
-    public void check(String objName) {
-        check(objects.get(objName));
+    public void check(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            executor.executeScript("var checkbox=arguments[0]; if(!checkbox.checked){checkbox.checked=true;}", webElement);
+            logger.info("Checkbox checked successfully using JavaScript.");
+        } catch (StaleElementReferenceException e) {
+            logger.error("StaleElementReferenceException caught during check, retrying.", e);
+            check(webElement);
+        }
     }
 
-    /**
-     * Unchecks the checkbox identified by the object name using JavaScript.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
-     */
-    public void uncheck(String objName) {
-        uncheck(objects.get(objName));
+    public void uncheck(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            executor.executeScript("var checkbox=arguments[0]; if(checkbox.checked){checkbox.checked=false;}", webElement);
+            logger.info("Checkbox unchecked successfully using JavaScript.");
+        } catch (StaleElementReferenceException e) {
+            logger.error("StaleElementReferenceException caught during uncheck, retrying.", e);
+            uncheck(webElement);
+        }
     }
 
-    /**
-     * Toggles the checkbox identified by the object name using JavaScript.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
-     */
-    public void toggle(String objName) {
-        toggle(objects.get(objName));
+    public void toggle(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            executor.executeScript("var checkbox=arguments[0]; checkbox.checked=!checkbox.checked;", webElement);
+            logger.info("Checkbox state toggled successfully using JavaScript.");
+        } catch (StaleElementReferenceException e) {
+            logger.error("StaleElementReferenceException caught during toggle, retrying.", e);
+            toggle(webElement);
+        }
     }
+
 }

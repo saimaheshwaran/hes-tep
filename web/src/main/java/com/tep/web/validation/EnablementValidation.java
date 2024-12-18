@@ -76,4 +76,16 @@ public class EnablementValidation {
             Assertion.equalsFalse(attributeElement.isEnabled(), "Expected: Element with attribute \"" + locatorPair.getKey() + "=" + locatorPair.getValue() + "\" should not be enabled. But element is enabled.");
         }
     }
+
+    public void verify(WebElement webElement, boolean elementEnabled) {
+        waits.waitForPresenceOfElementsLocated(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+        if (!webElement.isEnabled() && elementEnabled) {
+            logger.error("Element " + webElement + "=" + " should be enabled, but it is not.");
+            Assertion.equalsTrue(webElement.isEnabled(), "Expected: Element " + webElement + " should be enabled. But element is not enabled.");
+        } else if (webElement.isEnabled() && !elementEnabled) {
+            logger.error ("Element " + webElement + " should not be enabled, but it is.");
+            Assertion.equalsFalse(webElement.isEnabled(), "Expected: Element " + webElement + " should not be enabled. But element is enabled.");
+        }
+    }
+
 }

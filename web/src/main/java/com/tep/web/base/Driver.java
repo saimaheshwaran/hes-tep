@@ -81,10 +81,6 @@ public class Driver {
             chromeOptions.addArguments("--disable-gpu");
         }
 
-        if (Constants.BROWSER_MAXIMIZE) {
-            logger.info("Maximizing Chrome window on start.");
-            chromeOptions.addArguments("start-maximized");
-        }
         logger.info("Adding Chrome arguments for automation, sandbox, infobars and other settings.");
         chromeOptions.addArguments("enable-automation");
         chromeOptions.addArguments("--no-sandbox");
@@ -104,9 +100,10 @@ public class Driver {
                 .withSilent(true).usingAnyFreePort().build();
 
         driver = new ChromeDriver(chromeDriverService, chromeOptions);
+
         if (Constants.BROWSER_MAXIMIZE) {
             driver.manage().window().maximize();
-            logger.info("ChromeDriver window maximized.");
+            logger.info("Maximizing Chrome window on start.");
         }
         logger.info("ChromeDriver initialized successfully.");
     }

@@ -7,6 +7,7 @@ import com.tep.web.element.checkbox.ActionCheckBox;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import com.tep.web.config.Constants;
+import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +59,15 @@ public class SeleniumSendKeys {
      */
     public void sendKeys(String objName, String text) {
         sendKeys(objects.get(objName), text);
+    }
 
+    /**
+     * Clears the input field identified by the object name.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     */
+    public void clearInputs(String objName) {
+        clearInputs(objects.get(objName));
     }
 
     /**
@@ -79,15 +88,6 @@ public class SeleniumSendKeys {
     }
 
     /**
-     * Clears the input field identified by the object name.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
-     */
-    public void clearInputs(String objName) {
-        clearInputs(objects.get(objName));
-    }
-
-    /**
      * Clears the input field identified by the locator pair.
      *
      * @param locatorPair a Map.Entry containing the locator type and value.
@@ -100,6 +100,28 @@ public class SeleniumSendKeys {
         } catch (StaleElementReferenceException e) {
             logger.warn("StaleElementReferenceException occurred while clearing input field.", e);
             clearInputs(locatorPair);
+        }
+    }
+
+    public void sendKeys(WebElement webElement, String value) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            webElement.sendKeys(value);
+            logger.info("Keys sent to element: " + webElement + " value: " + value);
+        } catch (StaleElementReferenceException e) {
+            logger.warn("StaleElementReferenceException occurred while sending keys.", e);
+            webElement.sendKeys(value);
+        }
+    }
+
+    public void clearInputs(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            webElement.clear();
+            logger.info("Input field cleared with element.", webElement);
+        } catch (StaleElementReferenceException e) {
+            logger.warn("StaleElementReferenceException occurred while clearing input field.", e);
+            clearInputs(webElement);
         }
     }
 }

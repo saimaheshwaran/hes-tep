@@ -84,4 +84,20 @@ public class AttributeValidation {
             }
         }
     }
+
+    public void verify(WebElement webElement, String attributeName, String expectedAttributeValue, boolean shouldBeMatched) {
+        waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+        String displayedAttributeValue = webElement.getAttribute(attributeName);
+
+        if (shouldBeMatched) {
+            if (!displayedAttributeValue.equals(expectedAttributeValue)) {
+                logger.info("Attribute value does not match. Expected: " + expectedAttributeValue + ", Actual: " + displayedAttributeValue);
+                Assertion.equalsTrue(false, "Expected: Attribute value \"" + expectedAttributeValue + "\" should match with actual attribute value \"" + displayedAttributeValue + "\". But attribute value is not matched.");
+            }
+        } else {
+            if (displayedAttributeValue.equals(expectedAttributeValue)) {
+                Assertion.equalsFalse(true, "Expected: Attribute value \"" + expectedAttributeValue + "\" should not match with actual attribute value \"" + displayedAttributeValue + "\". But attribute value is matched.");
+            }
+        }
+    }
 }

@@ -52,6 +52,15 @@ public class JavaScriptMouseHover {
     }
 
     /**
+     * Performs a mouse hover action on the element identified by the object name using JavaScript.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     */
+    public void mouseHover(String objName) {
+        mouseHover(objects.get(objName));
+    }
+
+    /**
      * Performs a mouse hover action on the element identified by the locator pair using JavaScript.
      *
      * @param locatorPair a Map.Entry containing the locator type and value.
@@ -73,12 +82,20 @@ public class JavaScriptMouseHover {
         }
     }
 
-    /**
-     * Performs a mouse hover action on the element identified by the object name using JavaScript.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
-     */
-    public void mouseHover(String objName) {
-        mouseHover(objects.get(objName));
+    public void mouseHover(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            String mouseOverScript = "if(document.createEvent){var evObj = document.createEvent('MouseEvents');" +
+                    "evObj.initEvent('mouseover',true, false); arguments[0].dispatchEvent(evObj);} " +
+                    "else if(document.createEventObject) { arguments[0].fireEvent('onmouseover');}";
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            executor.executeScript(mouseOverScript, webElement);
+            waits.sleep(5);
+            logger.info("Mouse hover performed on element: {}", webElement);
+        } catch (StaleElementReferenceException e) {
+            logger.error("StaleElementReferenceException occurred while performing mouse hover. Retrying.. {}", webElement, e);
+            mouseHover(webElement);
+        }
     }
+
 }

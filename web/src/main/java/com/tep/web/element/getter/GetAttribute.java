@@ -6,6 +6,7 @@ import com.tep.web.config.PageObjects;
 import com.tep.web.element.checkbox.ActionCheckBox;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,6 +50,37 @@ public class GetAttribute {
     }
 
     /**
+     * Retrieves the text of the element identified by the object name.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     * @return the text of the element.
+     */
+    public String text(String objName) {
+        return text(objects.get(objName));
+    }
+
+    /**
+     * Retrieves the By locator for the element identified by the object name.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     * @return the By locator of the element.
+     */
+    public By by(String objName) {
+        return by(objects.get(objName));
+    }
+
+    /**
+     * Fetches the specified attribute value of the element identified by the object name.
+     *
+     * @param objName       the name of the object whose locator is to be retrieved.
+     * @param attributeName the name of the attribute to fetch.
+     * @return the attribute value of the element.
+     */
+    public String fetch(String objName, String attributeName) {
+        return fetch(objects.get(objName), attributeName);
+    }
+
+    /**
      * Retrieves the text of the element identified by the locator pair.
      *
      * @param locatorPair a Map.Entry containing the locator type and value.
@@ -79,34 +111,10 @@ public class GetAttribute {
         return element.get(locatorPair).getAttribute(attributeName);
     }
 
-    /**
-     * Retrieves the text of the element identified by the object name.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
-     * @return the text of the element.
-     */
-    public String text(String objName) {
-        return text(objects.get(objName));
+    public String text(WebElement webElement) { return webElement.getText(); }
+
+    public String fetch(WebElement webElement, String attributeName) {
+        return webElement.getAttribute(attributeName);
     }
 
-    /**
-     * Retrieves the By locator for the element identified by the object name.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
-     * @return the By locator of the element.
-     */
-    public By by(String objName) {
-        return by(objects.get(objName));
-    }
-
-    /**
-     * Fetches the specified attribute value of the element identified by the object name.
-     *
-     * @param objName       the name of the object whose locator is to be retrieved.
-     * @param attributeName the name of the attribute to fetch.
-     * @return the attribute value of the element.
-     */
-    public String fetch(String objName, String attributeName) {
-        return fetch(objects.get(objName), attributeName);
-    }
 }

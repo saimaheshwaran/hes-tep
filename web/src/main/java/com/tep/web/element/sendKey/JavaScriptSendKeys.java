@@ -81,4 +81,19 @@ public class JavaScriptSendKeys {
             sendKeys(locatorPair, text);
         }
     }
+
+    public void sendKeys(WebElement webElement, String text) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            if (webElement.isEnabled()) {
+                JavascriptExecutor executor = (JavascriptExecutor) driver;
+                executor.executeScript("arguments[0].setAttribute('value', arguments[1])", webElement, text);
+                logger.info("Text {} sent to element {}}.", text, webElement);
+            }
+        } catch (StaleElementReferenceException e) {
+            logger.error("StaleElementReferenceException occurred while sending keys.", e);
+            sendKeys(webElement, text);
+        }
+    }
+
 }
