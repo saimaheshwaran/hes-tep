@@ -1,15 +1,15 @@
 import com.tep.api.ApiDriver;
 import com.tep.api.config.ApiEnums;
-import com.tep.api.support.ApiDriverHelpers;
 import com.tep.utilities.Enums;
+import com.tep.utilities.DatabaseConfig;
 import io.qameta.allure.Allure;
 import org.junit.Assert;
 import org.junit.Test;
-
 import java.util.HashMap;
-
+import java.util.List;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
+import org.bson.Document;
 
 public class TestCases {
 
@@ -22,7 +22,7 @@ public class TestCases {
         int code = apiDriver.Response().get().statusCode();
         Assert.assertEquals(200, code);
         Allure.addAttachment("Status Code", String.valueOf(apiDriver.Response().get().statusCode()));
-       }
+    }
 
     @Test
     public void api_basic_request_from_yaml_with_query_params() {
@@ -54,6 +54,7 @@ public class TestCases {
         apiDriver.getResponse().then().body("headers.Header1", equalTo("headerValue1"));
         Allure.addAttachment("Status Code", String.valueOf(apiDriver.Response().get().statusCode()));
     }
+
     /**
      * Test to setup parameters with mode
      */
@@ -77,9 +78,7 @@ public class TestCases {
         apiDriver.getResponse().then().body("args.param1", equalTo("paramValue1"));
         apiDriver.getResponse().then().body("headers.Cookie", equalTo("cookie1=cookieValue1; MyCookie=MyCookieValue1"));
         apiDriver.getResponse().then().body("headers.Header1", equalTo("headerValue1"));
-
         apiDriver.getResponse().then().body("headers.Cookie", containsString("cookie1=cookieValue1"));
-
     }
 
     /**
@@ -109,6 +108,7 @@ public class TestCases {
         apiDriver.getResponse().then().body("headers.Cookie", equalTo("cookie1=cookieValue1"));
         apiDriver.getResponse().then().body("headers.Header1", equalTo("headerValue1"));
     }
+
     /**
      * Test to check as string method
      */
@@ -166,7 +166,7 @@ public class TestCases {
      * Test headers and authorization from request
      */
     @Test
-    public void test_retrieve_header_and_authorization () {
+    public void test_retrieve_header_and_authorization() {
         apiDriver.setConfigFromYaml("base_param_post");
         System.out.println(apiDriver);
         apiDriver.executeRequest(ApiEnums.Http_Method.POST);
@@ -180,9 +180,9 @@ public class TestCases {
     public void test_proxy_from_config_user() {
         apiDriver.setConfigFromYaml("api_proxy_with_creds");
         System.out.println("apidriver.Response = " + apiDriver.getProxyUsername());
-        Assert.assertEquals("user",apiDriver.getProxyUsername());
-
+        Assert.assertEquals("user", apiDriver.getProxyUsername());
     }
+
     /**
      * Test to setup form parameters
      */
@@ -192,6 +192,7 @@ public class TestCases {
         apiDriver.executeRequest(ApiEnums.Http_Method.POST);
         apiDriver.getResponse().then().statusCode(200);
     }
+
     /**
      * Test to setup form parameters with mode
      */
@@ -227,20 +228,79 @@ public class TestCases {
         apiDriver.setHeaders(new HashMap<>() {{
             put("header1", "headerValue1");
         }});
-        apiDriver.updateRequestBody(apiDriver.getBody().toString(),"my_integer","333","Integer", Enums.Manipulation_Mode.UPDATE);
-        apiDriver.updateRequestBody(apiDriver.getBody().toString(),"nest.c[0]","12","Integer", Enums.Manipulation_Mode.UPDATE);
-        apiDriver.updateRequestBody(apiDriver.getBody().toString(),"nest.c[1]","111","Integer", Enums.Manipulation_Mode.UPDATE);
-        apiDriver.updateRequestBody(apiDriver.getBody().toString(),"nest.c[2]","","", Enums.Manipulation_Mode.DELETE);
-        apiDriver.updateRequestBody(apiDriver.getBody().toString(),"my_unset_variable","","", Enums.Manipulation_Mode.DELETE);
-        apiDriver.updateRequestBody(apiDriver.getBody().toString(),"nest.pankaj","Tester","String", Enums.Manipulation_Mode.UPDATE);
-        apiDriver.updateRequestBody(apiDriver.getBody().toString(),"my_string_array[2]","Shakeer","String", Enums.Manipulation_Mode.UPDATE);
-        apiDriver.updateRequestBody(apiDriver.getBody().toString(),"my_boolean_array[2]","","", Enums.Manipulation_Mode.DELETE);
+        apiDriver.updateRequestBody(apiDriver.getBody().toString(), "my_integer", "333", "Integer", Enums.Manipulation_Mode.UPDATE);
+        apiDriver.updateRequestBody(apiDriver.getBody().toString(), "nest.c[0]", "12", "Integer", Enums.Manipulation_Mode.UPDATE);
+        apiDriver.updateRequestBody(apiDriver.getBody().toString(), "nest.c[1]", "111", "Integer", Enums.Manipulation_Mode.UPDATE);
+        apiDriver.updateRequestBody(apiDriver.getBody().toString(), "nest.c[2]", "", "", Enums.Manipulation_Mode.DELETE);
+        apiDriver.updateRequestBody(apiDriver.getBody().toString(), "my_unset_variable", "", "", Enums.Manipulation_Mode.DELETE);
+        apiDriver.updateRequestBody(apiDriver.getBody().toString(), "nest.pankaj", "Tester", "String", Enums.Manipulation_Mode.UPDATE);
+        apiDriver.updateRequestBody(apiDriver.getBody().toString(), "my_string_array[2]", "Shakeer", "String", Enums.Manipulation_Mode.UPDATE);
+        apiDriver.updateRequestBody(apiDriver.getBody().toString(), "my_boolean_array[2]", "", "", Enums.Manipulation_Mode.DELETE);
         apiDriver.executeRequest(ApiEnums.Http_Method.POST);
-        apiDriver.Response().validateStringFieldByPath("args.param1", Enums.Comparison_Type.EQUAL,"paramValue1");
-        apiDriver.Response().validateStringFieldByPath("headers.Cookie", Enums.Comparison_Type.EQUAL,"cookie1=cookieValue1");
-        apiDriver.Response().validateStringFieldByPath("headers.Header1", Enums.Comparison_Type.EQUAL,"headerValue1");
+        apiDriver.Response().validateStringFieldByPath("args.param1", Enums.Comparison_Type.EQUAL, "paramValue1");
+        apiDriver.Response().validateStringFieldByPath("headers.Cookie", Enums.Comparison_Type.EQUAL, "cookie1=cookieValue1");
+        apiDriver.Response().validateStringFieldByPath("headers.Header1", Enums.Comparison_Type.EQUAL, "headerValue1");
     }
 
+    @Test
+    public void test_endpoint_MongoDB_InsertData() {
+        apiDriver.setBaseUri("https://catfact.ninja");
+        apiDriver.setEndPoint("fact");
+        apiDriver.executeRequest(ApiEnums.Http_Method.GET);
+        Assert.assertEquals(200, apiDriver.getResponse().statusCode());
+        String factFromApi = apiDriver.getResponse().jsonPath().getString("fact");
+        DatabaseConfig.connectDatabase("MongoDB");
+        Document document = new Document("fact", factFromApi);
+        DatabaseConfig.insertData("cat_data_insert", document);
+    }
+
+    @Test
+    public void test_endpoint_MongoDB_Fetch_First_Row_Data() {
+        DatabaseConfig.connectDatabase("mongodb://localhost:27017", "API", "cat_data_insert");
+        List<Document> document = DatabaseConfig.getFirstRowData("MongoDB", "cat_data_insert");
+        Assert.assertTrue(document.getFirst().containsKey("fact"));
+        String expectedFact = "The way you treat kittens in the early stages of it's life will render it's personality traits later in life.";
+        String actualFact = document.getFirst().getString("fact");
+        Assert.assertEquals(expectedFact, actualFact);
+    }
+
+    @Test
+    public void test_endpoint_MongoDB_Fetch_All_Data() {
+        DatabaseConfig.connectDatabase("mongodb://localhost:27017", "API", "cat_data_insert");
+        List<Document> documents = DatabaseConfig.getAllData("MongoDB", "cat_data_insert");
+        Assert.assertEquals(5, documents.size());
+    }
+
+    @Test
+    public void test_endpoint_MongoDB_Fetch_Data_With_Query() {
+        DatabaseConfig.connectDatabase("mongodb://localhost:27017", "API", "cat_data_insert");
+        List<Document> documents = DatabaseConfig.getDataWithQuery("MongoDB", "cat_data_insert", "{ \"_id\": { $ne: ObjectId(\"676173fcb0b2f013b419f0c1\") } }");
+        Assert.assertEquals(4, documents.size());
+    }
+
+    @Test
+    public void test_MySQL_Fetch_First_Row_Data() {
+        DatabaseConfig.connectDatabase("MySQL");
+        List<Document> document = DatabaseConfig.getFirstRowData("MySQL", "city");
+        Assert.assertTrue(document.getFirst().containsKey("Name"));
+        int expectedPopulation = 1780000;
+        int actualPopulation = document.getFirst().getInteger("Population");
+        Assert.assertEquals(expectedPopulation, actualPopulation);
+    }
+
+    @Test
+    public void test_MySQL_Fetch_All_Data() {
+        DatabaseConfig.connectDatabase("MySQL");
+        List<Document> documents = DatabaseConfig.getAllData("MySQL", "city");
+        Assert.assertEquals(4079, documents.size());
+    }
+
+    @Test
+    public void test_MySQL_Fetch_Data_With_Query() {
+        DatabaseConfig.connectDatabase("MySQL");
+        List<Document> documents = DatabaseConfig.getDataWithQuery("MySQL", "city", "SELECT * FROM world.city LIMIT 10;");
+        Assert.assertEquals(10, documents.size());
+    }
 }
 
 
