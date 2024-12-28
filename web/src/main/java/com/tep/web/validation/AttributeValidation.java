@@ -1,6 +1,5 @@
 package com.tep.web.validation;
 
-import com.tep.utilities.PropUtils;
 import com.tep.web.base.Element;
 import com.tep.web.base.Waits;
 import com.tep.web.config.PageObjects;

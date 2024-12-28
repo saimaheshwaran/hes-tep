@@ -1,6 +1,5 @@
 package com.tep.web.validation;
 
-import com.tep.utilities.PropUtils;
 import com.tep.web.base.Element;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;

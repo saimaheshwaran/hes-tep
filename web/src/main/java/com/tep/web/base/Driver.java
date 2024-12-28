@@ -21,6 +21,7 @@ import org.openqa.selenium.safari.SafariOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.HashMap;
 
 /**
@@ -74,13 +75,11 @@ public class Driver {
     private void initializeChromeDriver(DesiredCapabilities capabilities) {
         logger.info("Initializing Chrome Driver...");
         ChromeOptions chromeOptions = new ChromeOptions();
-
         if (Constants.BROWSER_HEADLESS) {
             logger.info("Running Chrome in headless mode.");
             chromeOptions.addArguments("--headless");
             chromeOptions.addArguments("--disable-gpu");
         }
-
         logger.info("Adding Chrome arguments for automation, sandbox, infobars and other settings.");
         chromeOptions.addArguments("enable-automation");
         chromeOptions.addArguments("--no-sandbox");
@@ -232,4 +231,5 @@ public class Driver {
             logger.error("An error occurred while closing the browser: ", ignored);
         }
     }
+
 }

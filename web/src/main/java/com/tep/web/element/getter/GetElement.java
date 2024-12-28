@@ -171,12 +171,9 @@ public class GetElement {
         try {
             WebElement element = fetch(locatorPair);
             elementDisplayed = element.isDisplayed();
-            logger.info("Element displayed status.", elementDisplayed);
         } catch (StaleElementReferenceException e) {
-            logger.warn("StaleElementReferenceException occurred while checking if element is displayed.", e);
             elementDisplayed = isDisplayed(locatorPair);
         } catch (NoSuchElementException e) {
-            logger.warn("NoSuchElementException occurred while checking if element is displayed.", e);
             elementDisplayed = false;
         }
         return elementDisplayed;

@@ -1,12 +1,11 @@
-package com.tep.pages.eymerchandise;
+package pages.eymerchandise;
 
-import com.tep.pages.BasePage;
 import lombok.Data;
+import pages.BasePage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 @Data
 public class ProductPage extends BasePage {
@@ -20,8 +19,9 @@ public class ProductPage extends BasePage {
     @FindBy(xpath = "//div[@id=\"messageBoxContainerId\"]")
     private WebElement alert;
 
-    public ProductPage(WebDriver driver, WebDriverWait wait) {
-        super(driver, wait);
+    public ProductPage(WebDriver driver) {
+        super(driver);
         PageFactory.initElements(driver, this);
     }
+
 }

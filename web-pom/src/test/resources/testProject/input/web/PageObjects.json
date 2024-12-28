@@ -1,0 +1,14 @@
+{
+  "Google" : {
+    "searchBox" : {
+      "id" : "",
+      "xpath" : "//*[@title=\"Search\"]",
+      "value" : "fire"
+    },
+    "searchButton" : {
+      "id" : "",
+      "value" : "mobile",
+      "xpath" : "//*[@value=\"Google Search\"]"
+    }
+  }
+}
