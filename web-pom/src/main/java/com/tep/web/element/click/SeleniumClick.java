@@ -1,87 +1,126 @@
 package com.tep.web.element.click;
 
-import com.tep.web.base.SeleniumWaits;
-import org.openqa.selenium.WebElement;
-import com.tep.web.base.SeleniumDriver;
+import com.tep.web.base.Element;
+import com.tep.web.base.Waits;
+import com.tep.web.config.PageObjects;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebDriver;
+import com.tep.web.config.Constants;
+import org.openqa.selenium.WebElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 /**
- * This class provides methods for performing click and double-click actions on WebElements
- * using standard Selenium interactions. The actions will be retried if the element becomes stale
- * during the interaction.
+ * SeleniumClick class to handle click actions on web elements using Selenium.
  */
 public class SeleniumClick {
 
-    /**
-     * An instance of SeleniumWaits used to apply explicit waits on elements before interacting with them.
-     */
-    private final SeleniumWaits wait;
+    private Waits waits;
+    private WebDriver driver;
+    private Element element;
+    private PageObjects objects;
+    private static final Logger logger = LoggerFactory.getLogger(SeleniumClick.class);
 
     /**
-     * An instance of SeleniumDriver used to interact with the browser and locate elements.
-     */
-    private final SeleniumDriver seleniumDriver;
-
-    /**
-     * Constructor for the SeleniumClick class. Initializes instances of SeleniumWaits and SeleniumDriver.
+     * Constructor to initialize the SeleniumClick with a WebDriver instance.
      *
-     * @param seleniumDriver The SeleniumDriver instance used to interact with the browser.
+     * @param driver the WebDriver instance to interact with.
      */
-    public SeleniumClick(SeleniumDriver seleniumDriver) {
-        this.seleniumDriver = seleniumDriver;
-        this.wait = new SeleniumWaits(seleniumDriver);
+    public SeleniumClick(WebDriver driver) {
+        this.driver = driver;
+        this.waits = new Waits(driver);
+        this.element = new Element(driver);
+        logger.info("WebDriver, Waits, and Element instances have been initialized.");
     }
 
     /**
-     * Clicks the element identified by its object name.
-     * It waits for the element to be displayed before performing the click action.
+     * Constructor to initialize the SeleniumClick with a WebDriver instance and PageObjects.
      *
-     * @param objName The object name of the element to be clicked.
+     * @param driver  the WebDriver instance to interact with.
+     * @param objects the PageObjects instance to retrieve element locators.
+     */
+    public SeleniumClick(WebDriver driver, PageObjects objects) {
+        this.driver = driver;
+        this.objects = objects;
+        this.waits = new Waits(driver);
+        this.element = new Element(driver);
+        logger.info("WebDriver, PageObjects, Waits, and Element instances have been initialized.");
+    }
+
+    /**
+     * Clicks on the element identified by the object name.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
      */
     public void click(String objName) {
-        click(seleniumDriver.getElement(objName));
+        click(objects.get(objName));
     }
 
     /**
-     * Clicks the provided WebElement.
-     * It waits for the element to be displayed before performing the click action.
-     * In case the element becomes stale, it retries the click action.
+     * Double-clicks on the element identified by the object name.
      *
-     * @param element The WebElement to be clicked.
-     */
-    public void click(WebElement element) {
-        try {
-            wait.untilElementDisplayed(element);  // Wait for the element to be displayed
-            element.click();  // Perform the click action
-        } catch (StaleElementReferenceException e) {
-            click(element);  // Retry the click action if the element becomes stale
-        }
-    }
-
-    /**
-     * Double-clicks the element identified by its object name.
-     * It waits for the element to be displayed before performing the double-click action.
-     *
-     * @param objName The object name of the element to be double-clicked.
+     * @param objName the name of the object whose locator is to be retrieved.
      */
     public void doubleClick(String objName) {
-        doubleClick(seleniumDriver.getElement(objName));
+        doubleClick(objects.get(objName));
     }
 
     /**
-     * Double-clicks the provided WebElement.
-     * It waits for the element to be displayed before performing the double-click action.
-     * In case the element becomes stale, it retries the double-click action.
+     * Clicks on the element identified by the locator pair.
      *
-     * @param element The WebElement to be double-clicked.
+     * @param locatorPair a Map.Entry containing the locator type and value.
      */
-    public void doubleClick(WebElement element) {
+    public void click(Map.Entry<String, String> locatorPair) {
         try {
-            wait.untilElementDisplayed(element);  // Wait for the element to be displayed
-            element.click();  // Perform the first click
-            element.click();  // Perform the second click to complete the double-click action
+            waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
+            element.get(locatorPair).click();
+            logger.info("Click action performed successfully.");
         } catch (StaleElementReferenceException e) {
-            doubleClick(element);  // Retry the double-click action if the element becomes stale
+            logger.error("StaleElementReferenceException caught during click, retrying.", e);
+            click(locatorPair);
         }
     }
+
+    /**
+     * Double-clicks on the element identified by the locator pair.
+     *
+     * @param locatorPair a Map.Entry containing the locator type and value.
+     */
+    public void doubleClick(Map.Entry<String, String> locatorPair) {
+        try {
+            waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
+            element.get(locatorPair).click();
+            element.get(locatorPair).click();
+            logger.info("Double-click action performed successfully.");
+        } catch (StaleElementReferenceException e) {
+            logger.error("StaleElementReferenceException caught during double-click, retrying.", e);
+            doubleClick(locatorPair);
+        }
+    }
+
+    public void click(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            webElement.click();
+            logger.info("Click action performed successfully.");
+        } catch (StaleElementReferenceException e) {
+            logger.error("StaleElementReferenceException caught during click, retrying.", e);
+            click(webElement);
+        }
+    }
+
+    public void doubleClick(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            webElement.click();
+            webElement.click();
+            logger.info("Double-click action performed successfully.");
+        } catch (StaleElementReferenceException e) {
+            logger.error("StaleElementReferenceException caught during double-click, retrying.", e);
+            doubleClick(webElement);
+        }
+    }
+
 }

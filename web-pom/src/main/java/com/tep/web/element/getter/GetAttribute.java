@@ -1,68 +1,120 @@
 package com.tep.web.element.getter;
 
+import com.tep.web.base.Element;
+import com.tep.web.base.Waits;
+import com.tep.web.config.PageObjects;
+import com.tep.web.element.checkbox.ActionCheckBox;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import com.tep.web.base.SeleniumDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 /**
- * The GetAttribute class provides methods to fetch the text or attribute value of a given WebElement.
- * This class helps interact with elements and retrieve specific properties such as the text content
- * or other attributes of the elements.
+ * GetAttribute class to handle retrieving attributes and text from web elements.
  */
 public class GetAttribute {
 
-    /**
-     * An instance of SeleniumDriver used to interact with the browser and locate elements.
-     */
-    private final SeleniumDriver seleniumDriver;
+    private Waits waits;
+    private WebDriver driver;
+    private Element element;
+    private PageObjects objects;
+    private static final Logger logger = LoggerFactory.getLogger(GetAttribute.class);
 
     /**
-     * Constructor for the GetAttribute class. Initializes the SeleniumDriver instance.
+     * Constructor to initialize the GetAttribute with a WebDriver instance.
      *
-     * @param seleniumDriver The SeleniumDriver instance used to interact with the browser.
+     * @param driver the WebDriver instance to interact with.
      */
-    public GetAttribute(SeleniumDriver seleniumDriver) {
-        this.seleniumDriver = seleniumDriver;
+    public GetAttribute(WebDriver driver) {
+        this.driver = driver;
+        this.waits = new Waits(driver);
+        this.element = new Element(driver);
+        logger.info("GetAttribute initialized with WebDriver, Waits, and Element.");
     }
 
     /**
-     * Retrieves the text content of the element identified by its object name.
+     * Constructor to initialize the GetAttribute with a WebDriver instance and PageObjects.
      *
-     * @param objName The object name of the element.
-     * @return The text content of the element.
+     * @param driver  the WebDriver instance to interact with.
+     * @param objects the PageObjects instance to retrieve element locators.
+     */
+    public GetAttribute(WebDriver driver, PageObjects objects) {
+        this.driver = driver;
+        this.objects = objects;
+        this.waits = new Waits(driver);
+        this.element = new Element(driver);
+        logger.info("GetAttribute initialized with WebDriver, PageObjects, Waits, and Element.");
+    }
+
+    /**
+     * Retrieves the text of the element identified by the object name.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     * @return the text of the element.
      */
     public String text(String objName) {
-        return text(seleniumDriver.getElement(objName));
+        return text(objects.get(objName));
     }
 
     /**
-     * Retrieves the text content of the provided WebElement.
+     * Retrieves the By locator for the element identified by the object name.
      *
-     * @param webElement The WebElement whose text content is to be fetched.
-     * @return The text content of the WebElement.
+     * @param objName the name of the object whose locator is to be retrieved.
+     * @return the By locator of the element.
      */
-    public String text(WebElement webElement) {
-        return webElement.getText();  // Returns the visible text of the element.
+    public By by(String objName) {
+        return by(objects.get(objName));
     }
 
     /**
-     * Retrieves the value of a specific attribute of the element identified by its object name.
+     * Fetches the specified attribute value of the element identified by the object name.
      *
-     * @param objName       The object name of the element.
-     * @param attributeName The name of the attribute whose value is to be fetched.
-     * @return The value of the specified attribute.
+     * @param objName       the name of the object whose locator is to be retrieved.
+     * @param attributeName the name of the attribute to fetch.
+     * @return the attribute value of the element.
      */
     public String fetch(String objName, String attributeName) {
-        return fetch(seleniumDriver.getElement(objName), attributeName);
+        return fetch(objects.get(objName), attributeName);
     }
 
     /**
-     * Retrieves the value of a specific attribute of the provided WebElement.
+     * Retrieves the text of the element identified by the locator pair.
      *
-     * @param webElement    The WebElement whose attribute value is to be fetched.
-     * @param attributeName The name of the attribute whose value is to be fetched.
-     * @return The value of the specified attribute.
+     * @param locatorPair a Map.Entry containing the locator type and value.
+     * @return the text of the element.
      */
-    public String fetch(WebElement webElement, String attributeName) {
-        return webElement.getAttribute(attributeName);  // Returns the value of the specified attribute.
+    public String text(Map.Entry<String, String> locatorPair) {
+        return element.get(locatorPair).getText();
     }
+
+    /**
+     * Retrieves the By locator for the element identified by the locator pair.
+     *
+     * @param locatorPair a Map.Entry containing the locator type and value.
+     * @return the By locator of the element.
+     */
+    public By by(Map.Entry<String, String> locatorPair) {
+        return element.getBy(locatorPair);
+    }
+
+    /**
+     * Fetches the specified attribute value of the element identified by the locator pair.
+     *
+     * @param locatorPair    a Map.Entry containing the locator type and value.
+     * @param attributeName  the name of the attribute to fetch.
+     * @return the attribute value of the element.
+     */
+    public String fetch(Map.Entry<String, String> locatorPair, String attributeName) {
+        return element.get(locatorPair).getAttribute(attributeName);
+    }
+
+    public String text(WebElement webElement) { return webElement.getText(); }
+
+    public String fetch(WebElement webElement, String attributeName) {
+        return webElement.getAttribute(attributeName);
+    }
+
 }

@@ -1,101 +1,57 @@
 package com.tep.web.element.mousehover;
 
-import com.tep.web.base.Element;
-import com.tep.web.base.Waits;
-import com.tep.web.config.PageObjects;
-import com.tep.web.element.checkbox.ActionCheckBox;
+import com.tep.web.base.SeleniumWaits;
+import org.openqa.selenium.WebElement;
+import com.tep.web.base.SeleniumDriver;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import com.tep.web.config.Constants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 /**
- * JavaScriptMouseHover class to handle mouse hover actions on web elements using JavaScript.
+ * The JavaScriptMouseHover class provides a method to simulate a mouse hover over an element using JavaScript.
+ * This method executes a custom JavaScript snippet to trigger the 'mouseover' event on the specified WebElement.
  */
 public class JavaScriptMouseHover {
 
-    private Waits waits;
-    private WebDriver driver;
-    private Element element;
-    private PageObjects objects;
-    private static final Logger logger = LoggerFactory.getLogger(JavaScriptMouseHover.class);
+    /** The instance of SeleniumWaits used for waiting until elements are displayed. */
+    private final SeleniumWaits seleniumWaits;
+
+    /** The instance of SeleniumDriver used to interact with the browser. */
+    private final SeleniumDriver seleniumDriver;
 
     /**
-     * Constructor to initialize the JavaScriptMouseHover with a WebDriver instance.
+     * Constructor to initialize the JavaScriptMouseHover class with a SeleniumDriver instance.
      *
-     * @param driver the WebDriver instance to interact with.
+     * @param seleniumDriver The SeleniumDriver instance to interact with the browser.
      */
-    public JavaScriptMouseHover(WebDriver driver) {
-        this.driver = driver;
-        this.waits = new Waits(driver);
-        this.element = new Element(driver);
-        logger.info("JavaScriptMouseHover initialized with WebDriver, Waits, and Element.");
+    public JavaScriptMouseHover(SeleniumDriver seleniumDriver) {
+        this.seleniumDriver = seleniumDriver;
+        this.seleniumWaits = new SeleniumWaits(seleniumDriver);
     }
 
     /**
-     * Constructor to initialize the JavaScriptMouseHover with a WebDriver instance and PageObjects.
+     * Simulates a mouse hover over an element identified by its object name using JavaScript.
      *
-     * @param driver  the WebDriver instance to interact with.
-     * @param objects the PageObjects instance to retrieve element locators.
+     * @param objName The name of the element to hover over.
      */
-    public JavaScriptMouseHover(WebDriver driver, PageObjects objects) {
-        this.driver = driver;
-        this.objects = objects;
-        this.waits = new Waits(driver);
-        this.element = new Element(driver);
-        logger.info("JavaScriptMouseHover initialized with WebDriver, PageObjects, Waits, and Element.");
-    }
+    public void mouseHover(String objName) { mouseHover(seleniumDriver.getElement(objName)); }
 
     /**
-     * Performs a mouse hover action on the element identified by the object name using JavaScript.
+     * Simulates a mouse hover over the specified WebElement using JavaScript.
+     * A custom 'mouseover' event is triggered using JavaScript execution.
      *
-     * @param objName the name of the object whose locator is to be retrieved.
+     * @param webElement The WebElement to hover over.
      */
-    public void mouseHover(String objName) {
-        mouseHover(objects.get(objName));
-    }
-
-    /**
-     * Performs a mouse hover action on the element identified by the locator pair using JavaScript.
-     *
-     * @param locatorPair a Map.Entry containing the locator type and value.
-     */
-    public void mouseHover(Map.Entry<String, String> locatorPair) {
-        try {
-            waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
-            WebElement element = this.element.get(locatorPair);
-            String mouseOverScript = "if(document.createEvent){var evObj = document.createEvent('MouseEvents');" +
-                    "evObj.initEvent('mouseover',true, false); arguments[0].dispatchEvent(evObj);} " +
-                    "else if(document.createEventObject) { arguments[0].fireEvent('onmouseover');}";
-            JavascriptExecutor executor = (JavascriptExecutor) driver;
-            executor.executeScript(mouseOverScript, element);
-            waits.sleep(5);
-            logger.info("Mouse hover performed on element with locator", locatorPair);
-        } catch (StaleElementReferenceException e) {
-            logger.error("StaleElementReferenceException occurred while performing mouse hover. Retrying..", locatorPair, e);
-            mouseHover(locatorPair);
-        }
-    }
-
     public void mouseHover(WebElement webElement) {
         try {
-            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            seleniumWaits.untilElementDisplayed(webElement);  // Waits for the element to be displayed.
             String mouseOverScript = "if(document.createEvent){var evObj = document.createEvent('MouseEvents');" +
                     "evObj.initEvent('mouseover',true, false); arguments[0].dispatchEvent(evObj);} " +
-                    "else if(document.createEventObject) { arguments[0].fireEvent('onmouseover');}";
-            JavascriptExecutor executor = (JavascriptExecutor) driver;
-            executor.executeScript(mouseOverScript, webElement);
-            waits.sleep(5);
-            logger.info("Mouse hover performed on element: {}", webElement);
+                    "else if(document.createEventObject) { arguments[0].fireEvent('onmouseover');}";  // JavaScript to trigger mouseover event.
+            JavascriptExecutor executor = (JavascriptExecutor) seleniumDriver.getBrowser();  // Get the browser instance.
+            executor.executeScript(mouseOverScript, webElement);  // Executes the JavaScript code on the WebElement.
+            seleniumWaits.sleep(5);  // Waits for 5 seconds after the hover to simulate user behavior.
         } catch (StaleElementReferenceException e) {
-            logger.error("StaleElementReferenceException occurred while performing mouse hover. Retrying.. {}", webElement, e);
-            mouseHover(webElement);
+            mouseHover(webElement);  // Retries if the element reference becomes stale.
         }
     }
-
 }

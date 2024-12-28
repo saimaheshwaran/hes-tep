@@ -1,59 +1,92 @@
 package com.tep.web.element.radiobutton;
 
-import com.tep.web.base.SeleniumWaits;
-import org.openqa.selenium.WebElement;
-import com.tep.web.base.SeleniumDriver;
+import com.tep.web.base.Element;
+import com.tep.web.base.Waits;
+import com.tep.web.config.PageObjects;
+import com.tep.web.element.checkbox.ActionCheckBox;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import com.tep.web.config.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 /**
- * The JavaScriptRadioButton class allows selecting a radio button element using JavaScript.
- * It executes a script to check the radio button if it is not already selected.
+ * JavaScriptRadioButton class to handle radio button interactions using JavaScript.
  */
 public class JavaScriptRadioButton {
 
-    /** The instance of SeleniumWaits used for waiting until elements are displayed. */
-    private final SeleniumWaits seleniumWaits;
-
-    /** The instance of SeleniumDriver used to interact with the browser. */
-    private final SeleniumDriver seleniumDriver;
+    private Waits waits;
+    private WebDriver driver;
+    private Element element;
+    private PageObjects objects;
+    private static final Logger logger = LoggerFactory.getLogger(JavaScriptRadioButton.class);
 
     /**
-     * Constructor to initialize the JavaScriptRadioButton class with a SeleniumDriver instance.
+     * Constructor to initialize the JavaScriptRadioButton with a WebDriver instance.
      *
-     * @param seleniumDriver The SeleniumDriver instance to interact with the browser.
+     * @param driver the WebDriver instance to interact with.
      */
-    public JavaScriptRadioButton(SeleniumDriver seleniumDriver) {
-        this.seleniumDriver = seleniumDriver;
-        this.seleniumWaits = new SeleniumWaits(seleniumDriver);
+    public JavaScriptRadioButton(WebDriver driver) {
+        this.driver = driver;
+        this.waits = new Waits(driver);
+        this.element = new Element(driver);
+        logger.info("JavaScriptRadioButton initialized with WebDriver, Waits, and Element helpers.");
     }
 
     /**
-     * Selects the radio button identified by its object name using JavaScript.
-     * It waits for the element to be displayed, and then executes a JavaScript script
-     * to check the radio button if it is not already selected.
+     * Constructor to initialize the JavaScriptRadioButton with a WebDriver instance and PageObjects.
      *
-     * @param objName The name of the radio button element.
+     * @param driver  the WebDriver instance to interact with.
+     * @param objects the PageObjects instance to retrieve element locators.
+     */
+    public JavaScriptRadioButton(WebDriver driver, PageObjects objects) {
+        this.driver = driver;
+        this.objects = objects;
+        this.waits = new Waits(driver);
+        this.element = new Element(driver);
+        logger.info("JavaScriptRadioButton initialized with WebDriver, PageObjects, Waits, and Element helpers.");
+    }
+
+    /**
+     * Selects the radio button identified by the object name using JavaScript.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
      */
     public void select(String objName) {
-        select(seleniumDriver.getElement(objName));
+        select(objects.get(objName));
     }
 
     /**
-     * Selects the radio button represented by the provided WebElement using JavaScript.
-     * It waits for the element to be displayed, and then executes a JavaScript script
-     * to check the radio button if it is not already selected.
+     * Selects the radio button identified by the locator pair using JavaScript.
      *
-     * @param webElement The WebElement representing the radio button.
+     * @param locatorPair a Map.Entry containing the locator type and value.
      */
-    public void select(WebElement webElement) {
+    public void select(Map.Entry<String, String> locatorPair) {
         try {
-            seleniumWaits.untilElementDisplayed(webElement);  // Waits for the radio button to be visible.
-            JavascriptExecutor executor = (JavascriptExecutor) seleniumDriver.getBrowser();  // Casts browser to JavascriptExecutor.
-            executor.executeScript("var radio=arguments[0]; if(!radio.checked){radio.checked=true;}", webElement);  // Executes JavaScript to check the radio button.
-        } catch (StaleElementReferenceException ignored) {
-            select(webElement);  // Retries the operation if the element reference becomes stale.
+            waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
+            WebElement radioButton = this.element.get(locatorPair);
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            executor.executeScript("var radio=arguments[0]; if(!radio.checked){radio.checked=true;}", radioButton);
+            logger.info("Radio button selected successfully using JavaScript.");
+        } catch (StaleElementReferenceException e) {
+            logger.warn("StaleElementReferenceException occurred while selecting radio button using JavaScript.", e);
+            select(locatorPair);
         }
     }
 
+    public void select(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            executor.executeScript("var radio=arguments[0]; if(!radio.checked){radio.checked=true;}", webElement);
+            logger.info("Radio button selected successfully using JavaScript.");
+        } catch (StaleElementReferenceException e) {
+            logger.warn("StaleElementReferenceException occurred while selecting radio button using JavaScript.", e);
+            select(webElement);
+        }
+    }
 }

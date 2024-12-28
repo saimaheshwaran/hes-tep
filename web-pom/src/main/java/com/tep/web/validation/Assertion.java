@@ -1,6 +1,9 @@
 package com.tep.web.validation;
 
-import com.tep.web.base.SeleniumDriver;
+import com.tep.web.base.Element;
+import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.asserts.SoftAssert;
 
@@ -9,143 +12,147 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 /**
- * The Assertion class provides methods for both hard and soft assertions.
- * It allows switching between different assertion types and helps in validating
- * expected conditions during test execution. Soft assertions do not stop the test execution
- * immediately upon failure, whereas hard assertions halt the execution when a failure occurs.
+ * Assertion class to handle different types of assertions.
  */
 public class Assertion {
 
-    /** The instance of SeleniumDriver used to interact with the browser. */
-    protected SeleniumDriver seleniumDriver;
-
-    /** The instance of SoftAssert used for soft assertions in tests. */
+    protected WebDriver driver;
+    protected Element element;
+    private static final Logger logger = LoggerFactory.getLogger(Assertion.class);
     protected static SoftAssert softAssert = new SoftAssert();
 
     /**
-     * Static block to set the default assertion type to soft.
-     * The system property "default_assertion" is set to "soft" by default.
+     * Static constructor to initialize the default assertion type.
      */
     static {
         System.setProperty("default_assertion", "soft");
     }
 
     /**
-     * Constructor to initialize the Assertion class with a SeleniumDriver instance.
+     * Constructor to initialize the Assertion with a WebDriver instance.
      *
-     * @param seleniumDriver The SeleniumDriver instance used to interact with the browser.
+     * @param driver the WebDriver instance to interact with.
      */
-    public Assertion(SeleniumDriver seleniumDriver) {
-        this.seleniumDriver = seleniumDriver;
+    public Assertion(WebDriver driver) {
+        this.driver = driver;
+        this.element = new Element(driver);
+        logger.info("Assertion instance created successfully");
     }
 
     /**
-     * Sets the SoftAssert instance to be used for soft assertions.
+     * Sets the SoftAssert instance for soft assertions.
      *
-     * @param softAssert The SoftAssert instance to set.
+     * @param softAssert the SoftAssert instance to set.
      */
     public static void setSoftAssert(SoftAssert softAssert) {
         Assertion.softAssert = softAssert;
+        logger.info("SoftAssert instance set successfully");
     }
 
     /**
-     * Switches the type of assertion to be used (hard or soft).
-     * This method updates the "default_assertion" system property to either "soft" or another value.
+     * Switches the assertion type between "soft" and "hard".
      *
-     * @param assertionType The type of assertion to be used ("soft" or "hard").
+     * @param assertionType the type of assertion to switch to ("soft" or "hard").
      */
     public void switchAssertion(String assertionType) {
         System.setProperty("default_assertion", assertionType);
     }
 
     /**
-     * Asserts that the provided condition is true.
-     * If the default assertion type is soft, a soft assertion is used; otherwise, a hard assertion is used.
+     * Asserts that a condition is true.
      *
-     * @param condition The condition to assert as true.
-     * @param message The message to display if the assertion fails.
+     * @param condition the condition to check.
+     * @param message   the message to display if the assertion fails.
      */
     public static void equalsTrue(boolean condition, String message) {
         if (getProperty("default_assertion").equals("soft")) {
             softAssert.assertTrue(condition, message);
+            logger.info("Soft assertion performed: " + message);
         } else {
             assertTrue(condition, message);
+            logger.info("Hard assertion performed: " + message);
         }
     }
 
     /**
-     * Asserts that the provided condition is false.
-     * If the default assertion type is soft, a soft assertion is used; otherwise, a hard assertion is used.
+     * Asserts that a condition is false.
      *
-     * @param condition The condition to assert as false.
-     * @param message The message to display if the assertion fails.
+     * @param condition the condition to check.
+     * @param message   the message to display if the assertion fails.
      */
     public static void equalsFalse(boolean condition, String message) {
         if (getProperty("default_assertion").equals("soft")) {
             softAssert.assertFalse(condition, message);
+            logger.info("Soft assertion that condition is false performed: " + message);
         } else {
             assertFalse(condition, message);
+            logger.info("Hard assertion that condition is false performed: " + message);
         }
     }
 
     /**
-     * Asserts that the actual value equals the expected value.
-     * If the default assertion type is soft, a soft assertion is used; otherwise, a hard assertion is used.
+     * Asserts that two strings are equal.
      *
-     * @param actualValue The actual value to compare.
-     * @param expectedValue The expected value to compare against.
-     * @param message The message to display if the assertion fails.
+     * @param actualValue   the actual value.
+     * @param expectedValue the expected value.
+     * @param message       the message to display if the assertion fails.
      */
     public static void equals(String actualValue, String expectedValue, String message) {
         if (getProperty("default_assertion").equals("soft")) {
             softAssert.assertEquals(actualValue, expectedValue, message);
+            logger.info("Soft assertion for equal performed: " + message);
         } else {
             Assert.assertEquals(actualValue, expectedValue, message);
+            logger.info("Hard assertion for equal performed: " + message);
         }
     }
 
     /**
-     * Asserts that the actual value does not equal the expected value.
-     * If the default assertion type is soft, a soft assertion is used; otherwise, a hard assertion is used.
+     * Asserts that two strings are not equal.
      *
-     * @param actualValue The actual value to compare.
-     * @param expectedValue The expected value to compare against.
-     * @param message The message to display if the assertion fails.
+     * @param actualValue   the actual value.
+     * @param expectedValue the expected value.
+     * @param message       the message to display if the assertion fails.
      */
     public static void notEquals(String actualValue, String expectedValue, String message) {
         if (getProperty("default_assertion").equals("soft")) {
+            logger.info("Using soft assertion" + message);
             softAssert.assertNotEquals(actualValue, expectedValue, message);
         } else {
+            logger.info("Using hard assertion" + message);
             Assert.assertNotEquals(actualValue, expectedValue, message);
         }
+        logger.info("Assertion completed: " + message);
     }
 
     /**
-     * Asserts that the actual object equals the expected object.
-     * If the default assertion type is soft, a soft assertion is used; otherwise, a hard assertion is used.
+     * Asserts that two objects are equal.
      *
-     * @param actualValue The actual object to compare.
-     * @param expectedValue The expected object to compare against.
+     * @param actualValue   the actual value.
+     * @param expectedValue the expected value.
      */
     public static void equals(Object actualValue, Object expectedValue) {
         if (getProperty("default_assertion").equals("soft")) {
+            logger.info("Using soft assertion");
             softAssert.assertEquals(actualValue, expectedValue);
         } else {
+            logger.info("Using hard assertion");
             Assert.assertEquals(actualValue, expectedValue);
         }
     }
 
     /**
-     * Asserts that the actual object does not equal the expected object.
-     * If the default assertion type is soft, a soft assertion is used; otherwise, a hard assertion is used.
+     * Asserts that two objects are not equal.
      *
-     * @param actualValue The actual object to compare.
-     * @param expectedValue The expected object to compare against.
+     * @param actualValue   the actual value.
+     * @param expectedValue the expected value.
      */
     public static void notEquals(Object actualValue, Object expectedValue) {
         if (getProperty("default_assertion").equals("soft")) {
+            logger.info("Using soft assertion");
             softAssert.assertNotEquals(actualValue, expectedValue);
         } else {
+            logger.info("Using hard assertion");
             Assert.assertNotEquals(actualValue, expectedValue);
         }
     }

@@ -1,120 +1,95 @@
 package com.tep.web.browser;
 
-import com.tep.web.base.Element;
-import com.tep.web.base.Waits;
-import com.tep.web.config.PageObjects;
 import org.openqa.selenium.*;
+import com.tep.web.base.SeleniumWaits;
+import com.tep.web.base.SeleniumDriver;
 import org.openqa.selenium.interactions.Actions;
-import com.tep.web.config.Constants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 /**
- * WindowManipulation class to handle browser window manipulations and interactions.
+ * The WindowManipulation class provides methods to manipulate the browser window,
+ * such as zooming in and out, resizing the browser, maximizing the browser window,
+ * and interacting with specific elements to adjust the zoom level until they become visible.
  */
 public class WindowManipulation {
 
-    // Logger for logging important events and errors
-    private static final Logger logger = LoggerFactory.getLogger(WindowManipulation.class);
-    private WebDriver driver;
-    private Waits waits;
-    private Element element;
-    private PageObjects objects;
+    /**
+     * The SeleniumWaits instance used to wait for elements to be visible before interacting with them.
+     */
+    private final SeleniumWaits seleniumWaits;
 
     /**
-     * Constructor to initialize the WindowManipulation with a WebDriver instance.
-     *
-     * @param driver the WebDriver instance to interact with.
+     * The SeleniumDriver instance used to interact with the browser.
      */
-    public WindowManipulation(WebDriver driver) {
-        this.driver = driver;
-        this.waits = new Waits(driver);
-        this.element = new Element(driver);
-        logger.info("WindowManipulation instance created with WebDriver");
+    private final SeleniumDriver seleniumDriver;
+
+    /**
+     * Constructor that initializes the WindowManipulation with the provided SeleniumDriver.
+     * @param seleniumDriver The SeleniumDriver instance used to interact with the browser.
+     */
+    public WindowManipulation(SeleniumDriver seleniumDriver) {
+        this.seleniumDriver = seleniumDriver;
+        this.seleniumWaits = new SeleniumWaits(seleniumDriver);
     }
 
     /**
-     * Constructor to initialize the WindowManipulation with a WebDriver instance and PageObjects.
+     * Retrieves the appropriate key for performing key combinations based on the operating system.
+     * This method returns either the "Control" key for Windows/Linux or the "Command" key for macOS.
      *
-     * @param driver  the WebDriver instance to interact with.
-     * @param objects the PageObjects instance to retrieve element locators.
-     */
-    public WindowManipulation(WebDriver driver, PageObjects objects) {
-        this.driver = driver;
-        this.objects = objects;
-        this.waits = new Waits(driver);
-        this.element = new Element(driver);
-        logger.info("WindowManipulation instance created");
-    }
-
-    /**
-     * Retrieves the appropriate key for the operating system.
-     *
-     * @return the control key (CTRL for Windows/Linux, COMMAND for Mac).
+     * @return The appropriate modifier key for the current operating system.
      */
     public Keys getKey() {
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("win") || os.contains("nux") || os.contains("nix")) {
-            logger.debug("Detected OS: {}, using CONTROL key for zooming", os);
             return Keys.CONTROL;
         } else if (os.contains("mac")) {
-            logger.debug("Detected OS: Mac, using COMMAND key for zooming");
             return Keys.COMMAND;
         } else {
-            logger.error("Unrecognized OS: {}, unable to determine the modifier key for zooming", os);
             return null;
         }
     }
 
     /**
-     * Zooms in or out the browser window based on the specified action.
+     * Zooms in, zooms out, or resets the zoom level of the browser window.
+     * The zoom action is triggered by sending key combinations to the "html" element.
      *
-     * @param inOut the action to perform (ADD to zoom in, SUBTRACT to zoom out, reset to reset zoom).
+     * @param inOut The zoom action. Can be "ADD" to zoom in, "SUBTRACT" to zoom out, or "reset" to reset zoom.
      */
     public void zoomInOut(String inOut) {
-        WebElement element = driver.findElement(By.tagName("html"));
+        WebElement element = seleniumDriver.getBrowser().findElement(By.tagName("html"));
         if ("ADD".equalsIgnoreCase(inOut)) {
-            logger.info("Zooming in");
             element.sendKeys(Keys.chord(getKey(), Keys.ADD));
         } else if ("SUBTRACT".equalsIgnoreCase(inOut)) {
-            logger.info("Zooming out");
             element.sendKeys(Keys.chord(getKey(), Keys.SUBTRACT));
         } else if ("reset".equalsIgnoreCase(inOut)) {
-            logger.info("Resetting zoom");
             element.sendKeys(Keys.chord(getKey(), Keys.NUMPAD0));
-        } else {
-            logger.warn("Invalid zoom command: {}", inOut);
         }
     }
 
     /**
-     * Zooms in or out the browser window until the specified element is displayed.
+     * Zooms in or out until the specified element is displayed on the screen.
+     * This method repeatedly performs zoom actions until the element becomes visible.
      *
-     * @param objName the name of the object whose locator is to be retrieved.
-     * @param inOut   the action to perform (ADD to zoom in, SUBTRACT to zoom out).
+     * @param objName The name of the object (web element) to be located.
+     * @param inOut The zoom action. Can be "ADD" to zoom in or "SUBTRACT" to zoom out.
      */
     public void zoomInOutTillElementDisplay(String objName, String inOut) {
-        logger.info("Attempting to zoom '{}' until element '{}' is displayed", inOut, objName);
-        zoomInOutTillElementDisplay(objects.get(objName), inOut);
+        zoomInOutTillElementDisplay(seleniumDriver.getElement(objName), inOut);
     }
 
     /**
-     * Zooms in or out the browser window until the specified element is displayed.
+     * Zooms in or out until the specified WebElement is displayed on the screen.
+     * This method repeatedly performs zoom actions until the element becomes visible.
      *
-     * @param locatorPair a Map.Entry containing the locator type and value.
-     * @param inOut       the action to perform (ADD to zoom in, SUBTRACT to zoom out).
+     * @param webElement The WebElement to be located and interacted with.
+     * @param inOut The zoom action. Can be "ADD" to zoom in or "SUBTRACT" to zoom out.
      */
-    public void zoomInOutTillElementDisplay(Map.Entry<String, String> locatorPair, String inOut) {
-        Actions action = new Actions(driver);
-        waits.waitForPresenceOfElementsLocated(locatorPair, Constants.DEFAULT_WAIT_TIME_SEC);
+    public void zoomInOutTillElementDisplay(WebElement webElement, String inOut) {
+        Actions action = new Actions(seleniumDriver.getBrowser());
+        seleniumWaits.untilElementDisplayed(webElement);
         while (true) {
-            if (element.get(locatorPair).isDisplayed()) {
-                logger.info("Element is now displayed with locator:", locatorPair);
+            if (webElement.isDisplayed()) {
                 break;
             } else {
-                logger.info("Zooming {} to display element with locator: {}", inOut, locatorPair);
                 action.keyDown(getKey()).sendKeys(inOut).keyUp(getKey()).perform();
             }
         }
@@ -123,29 +98,29 @@ public class WindowManipulation {
     /**
      * Resizes the browser window to the specified width and height.
      *
-     * @param width  the width to resize to.
-     * @param height the height to resize to.
+     * @param width The desired width of the browser window in pixels.
+     * @param height The desired height of the browser window in pixels.
      */
     public void resizeBrowser(int width, int height) {
-        logger.info("Resizing browser to width: {} and height: {}", width, height);
-        driver.manage().window().setSize(new Dimension(width, height));
+        seleniumDriver.getBrowser().manage().window().setSize(new Dimension(width, height));
     }
 
     /**
      * Maximizes the browser window.
+     * This method ensures the browser window is in its maximized state.
      */
     public void maximizeBrowser() {
-        driver.manage().window().maximize();
+        seleniumDriver.getBrowser().manage().window().maximize();
     }
 
     /**
-     * Zooms in or out the browser window by the specified percentage value.
+     * Sets the zoom level of the page using a percentage value.
+     * This method directly adjusts the document body's zoom style via JavaScript.
      *
-     * @param value the percentage value to zoom in or out.
+     * @param value The desired zoom value in percentage (e.g., "100" for 100% zoom).
      */
     public void zoomInAndOut(String value) {
-        logger.info("Zooming to {}%", value);
-        JavascriptExecutor executor = (JavascriptExecutor) driver;
+        JavascriptExecutor executor = (JavascriptExecutor) seleniumDriver;
         executor.executeScript("document.body.style.zoom = '" + value + "%'");
     }
 }

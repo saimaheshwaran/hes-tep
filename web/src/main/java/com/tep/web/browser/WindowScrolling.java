@@ -1,111 +1,97 @@
 package com.tep.web.browser;
 
-import com.tep.web.base.Element;
-import com.tep.web.base.Waits;
-import com.tep.web.config.PageObjects;
+import com.tep.web.base.SeleniumWaits;
+import org.openqa.selenium.WebElement;
+import com.tep.web.base.SeleniumDriver;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import com.tep.web.config.Constants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 /**
- * WindowScrolling class to handle browser window scrolling operations.
+ * The WindowScrolling class provides methods to manipulate the scrolling behavior of a web page.
+ * It allows scrolling to the top, bottom, specific elements, or by specific pixel amounts (vertically and horizontally).
  */
 public class WindowScrolling {
 
-    // Logger for logging important events and errors
-    private static final Logger logger = LoggerFactory.getLogger(WindowScrolling.class);
-    private WebDriver driver;
-    private PageObjects objects;
-    private Waits waits;
-    private Element element;
-    private JavascriptExecutor js;
+    /**
+     * The SeleniumWaits instance used to wait for elements to be displayed before interacting with them.
+     */
+    private final SeleniumWaits seleniumWaits;
 
     /**
-     * Constructor to initialize the WindowScrolling with a WebDriver instance.
-     *
-     * @param driver the WebDriver instance to interact with.
+     * The SeleniumDriver instance used to interact with the browser.
      */
-    public WindowScrolling(WebDriver driver) {
-        this.driver = driver;
-        this.waits = new Waits(driver);
-        this.element = new Element(driver);
-        this.js = (JavascriptExecutor) driver;
-        logger.info("WindowScrolling object created with the provided WebDriver instance.");
+    private final SeleniumDriver seleniumDriver;
+
+    /**
+     * The JavascriptExecutor instance used to execute JavaScript for scrolling actions.
+     */
+    private final JavascriptExecutor js;
+
+    /**
+     * Constructor that initializes the WindowScrolling with the provided SeleniumDriver.
+     *
+     * @param seleniumDriver The SeleniumDriver instance used to interact with the browser.
+     */
+    public WindowScrolling(SeleniumDriver seleniumDriver) {
+        this.seleniumDriver = seleniumDriver;
+        this.seleniumWaits = new SeleniumWaits(seleniumDriver);
+        this.js = (JavascriptExecutor) seleniumDriver.getBrowser();
     }
 
     /**
-     * Constructor to initialize the WindowScrolling with a WebDriver instance and PageObjects.
-     *
-     * @param driver  the WebDriver instance to interact with.
-     * @param objects the PageObjects instance to retrieve element locators.
-     */
-    public WindowScrolling(WebDriver driver, PageObjects objects) {
-        this.driver = driver;
-        this.objects = objects;
-        this.waits = new Waits(driver);
-        this.element = new Element(driver);
-        this.js = (JavascriptExecutor) driver;
-        logger.info("WindowScrolling object created with provided WebDriver and PageObjects.");
-    }
-
-    /**
-     * Scrolls to the end of the page.
+     * Scrolls to the bottom of the page.
+     * This method scrolls the window to the end of the page by setting the scroll position
+     * to the maximum scroll height of the document body.
      */
     public void scrollToEnd() {
-        logger.info("Scrolling to the end of the page");
         js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
     }
 
     /**
      * Scrolls to the top of the page.
+     * This method scrolls the window back to the top by setting the scroll position to (0, 0).
      */
     public void scrollToTop() {
-        logger.info("Scrolling to the top of the page");
         js.executeScript("window.scrollTo(0, 0)");
     }
 
     /**
-     * Scrolls to the specified element by its object name.
+     * Scrolls to the specific WebElement on the page.
+     * This method waits for the element to be displayed, then scrolls the window to bring the element into view.
      *
-     * @param objName the name of the object whose locator is to be retrieved.
+     * @param objName The name of the object (web element) to be located and scrolled to.
      */
     public void scrollToElement(String objName) {
-        logger.info("Scrolling to element with object name: {}", objName);
-        scrollToElement(objects.get(objName));
+        scrollToElement(seleniumDriver.getElement(objName));
     }
 
     /**
-     * Scrolls to the specified element by its locator pair.
+     * Scrolls to the specific WebElement on the page.
+     * This method waits for the element to be displayed, then scrolls the window to bring the element into view.
      *
-     * @param locatorPair a Map.Entry containing the locator type and value.
+     * @param element The WebElement to be located and scrolled to.
      */
-    public void scrollToElement(Map.Entry<String, String> locatorPair) {
-        logger.info("Scrolling to element with locator: {}", locatorPair);
-        waits.waitForPresenceOfElementsLocated(locatorPair, Constants.DEFAULT_WAIT_TIME_SEC);
-        js.executeScript("arguments[0].scrollIntoView();", element.get(locatorPair));
+    public void scrollToElement(WebElement element) {
+        seleniumWaits.untilElementDisplayed(element);
+        js.executeScript("arguments[0].scrollIntoView();", element);
     }
 
     /**
-     * Scrolls vertically by the specified number of pixels.
+     * Scrolls the window vertically by a specified number of pixels.
+     * Positive values scroll down, while negative values scroll up.
      *
-     * @param pixelsToScroll the number of pixels to scroll vertically.
+     * @param pixelsToScroll The number of pixels to scroll vertically. Positive values scroll down, negative values scroll up.
      */
     public void scrollVerticalPixels(int pixelsToScroll) {
-        logger.info("Scrolling vertically by {} pixels", pixelsToScroll);
         js.executeScript("window.scrollBy(0," + pixelsToScroll + ")");
     }
 
     /**
-     * Scrolls horizontally by the specified number of pixels.
+     * Scrolls the window horizontally by a specified number of pixels.
+     * Positive values scroll to the right, while negative values scroll to the left.
      *
-     * @param pixelsToScroll the number of pixels to scroll horizontally.
+     * @param pixelsToScroll The number of pixels to scroll horizontally. Positive values scroll right, negative values scroll left.
      */
     public void scrollHorizontalPixels(int pixelsToScroll) {
-        logger.info("Scrolling horizontally by {} pixels", pixelsToScroll);
         js.executeScript("window.scrollBy(" + pixelsToScroll + ", 0)");
     }
 }

@@ -1,90 +1,54 @@
 package com.tep.web.validation;
 
-import com.tep.utilities.PropUtils;
-import com.tep.web.base.Element;
-import com.tep.web.base.Waits;
-import com.tep.web.config.PageObjects;
-import org.openqa.selenium.WebDriver;
+import com.tep.web.base.SeleniumWaits;
 import org.openqa.selenium.WebElement;
-import com.tep.web.config.Constants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Map;
+import com.tep.web.base.SeleniumDriver;
 
 /**
- * CheckBoxValidation class to handle validation of checkbox elements.
+ * The CheckBoxValidation class provides methods to verify the state of a checkbox element.
+ * It checks whether a checkbox is selected or not, and asserts if the actual state matches the expected state.
  */
 public class CheckBoxValidation {
 
-    private Waits waits;
-    private WebDriver driver;
-    private Element element;
-    private PageObjects objects;
-    private static final Logger logger = LoggerFactory.getLogger(CheckBoxValidation.class);
+    /** The instance of SeleniumWaits used to wait for elements to be displayed. */
+    private final SeleniumWaits seleniumWaits;
+
+    /** The instance of SeleniumDriver used to interact with the browser. */
+    private final SeleniumDriver seleniumDriver;
 
     /**
-     * Constructor to initialize the CheckBoxValidation with a WebDriver instance.
+     * Constructor to initialize the CheckBoxValidation class with a SeleniumDriver instance.
      *
-     * @param driver the WebDriver instance to interact with.
+     * @param seleniumDriver The SeleniumDriver instance used to interact with the browser.
      */
-    public CheckBoxValidation(WebDriver driver) {
-        this.driver = driver;
-        this.waits = new Waits(driver);
-        this.element = new Element(driver);
-        logger.info("CheckBoxValidation initialized successfully");
+    public CheckBoxValidation(SeleniumDriver seleniumDriver) {
+        this.seleniumDriver = seleniumDriver;
+        this.seleniumWaits = new SeleniumWaits(seleniumDriver);
     }
 
     /**
-     * Constructor to initialize the CheckBoxValidation with a WebDriver instance and PageObjects.
+     * Verifies whether a checkbox identified by its object name is in the expected state (checked or unchecked).
      *
-     * @param driver  the WebDriver instance to interact with.
-     * @param objects the PageObjects instance to retrieve element locators.
-     */
-    public CheckBoxValidation(WebDriver driver, PageObjects objects) {
-        this.driver = driver;
-        this.objects = objects;
-        this.waits = new Waits(driver);
-        this.element = new Element(driver);
-        logger.info("CheckBoxValidation initialized successfully");
-    }
-
-    /**
-     * Validates if the checkbox identified by the object name is checked or unchecked.
-     *
-     * @param objName          the name of the object whose locator is to be retrieved.
-     * @param shouldBeChecked  true if the checkbox should be checked, false otherwise.
+     * @param objName The object name used to locate the checkbox element.
+     * @param shouldBeChecked A boolean indicating whether the checkbox should be checked or unchecked.
      */
     public void isChecked(String objName, boolean shouldBeChecked) {
-        isChecked(objects.get(objName), shouldBeChecked);
+        isChecked(seleniumDriver.getElement(objName), shouldBeChecked);
     }
 
     /**
-     * Validates if the checkbox identified by the locator pair is checked or unchecked.
+     * Verifies whether a checkbox WebElement is in the expected state (checked or unchecked).
      *
-     * @param locatorPair      a Map.Entry containing the locator type and value.
-     * @param shouldBeChecked  true if the checkbox should be checked, false otherwise.
+     * @param webElement The WebElement representing the checkbox.
+     * @param shouldBeChecked A boolean indicating whether the checkbox should be checked or unchecked.
      */
-    public void isChecked(Map.Entry<String, String> locatorPair, boolean shouldBeChecked) {
-        waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
-        WebElement checkBox = element.get(locatorPair);
-        if (!checkBox.isSelected() && shouldBeChecked) {
-            logger.error("Expected: Checkbox (" + element.getBy(locatorPair) + ") should be checked. But checkbox is unchecked.");
-            Assertion.equalsTrue(false, "Expected: Checkbox (" + element.getBy(locatorPair) + ") should be checked. But checkbox is unchecked.");
-        } else if (checkBox.isSelected() && !shouldBeChecked) {
-            logger.error("Expected: Checkbox (" + element.getBy(locatorPair) + ") should not be checked. But checkbox is checked.");
-            Assertion.equalsFalse(true, "Expected: Checkbox (" + element.getBy(locatorPair) + ") should not be checked. But checkbox is checked.");
-        }
-    }
-
     public void isChecked(WebElement webElement, boolean shouldBeChecked) {
-        waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
-        WebElement checkBox = webElement;
-        if (!checkBox.isSelected() && shouldBeChecked) {
-            logger.error("Expected: Checkbox (" + webElement + ") should be checked. But checkbox is unchecked.");
+        seleniumWaits.untilElementDisplayed(webElement);
+
+        // Assert that the checkbox is in the expected state
+        if (!webElement.isSelected() && shouldBeChecked) {
             Assertion.equalsTrue(false, "Expected: Checkbox (" + webElement + ") should be checked. But checkbox is unchecked.");
-        } else if (checkBox.isSelected() && !shouldBeChecked) {
-            logger.error("Expected: Checkbox (" + webElement + ") should not be checked. But checkbox is checked.");
+        } else if (webElement.isSelected() && !shouldBeChecked) {
             Assertion.equalsFalse(true, "Expected: Checkbox (" + webElement + ") should not be checked. But checkbox is checked.");
         }
     }

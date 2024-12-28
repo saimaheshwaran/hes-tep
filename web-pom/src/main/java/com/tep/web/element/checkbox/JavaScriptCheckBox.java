@@ -1,116 +1,170 @@
 package com.tep.web.element.checkbox;
 
-import com.tep.web.base.SeleniumWaits;
-import org.openqa.selenium.WebElement;
-import com.tep.web.base.SeleniumDriver;
+import com.tep.web.base.Element;
+import com.tep.web.base.Waits;
+import com.tep.web.config.PageObjects;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import com.tep.web.config.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 /**
- * This class provides actions to interact with checkboxes on a webpage using JavaScript execution.
- * It includes methods to check, uncheck, and toggle the checkbox elements using JavaScript.
+ * JavaScriptCheckBox class to handle checkbox interactions using JavaScript.
  */
 public class JavaScriptCheckBox {
 
-    /**
-     * An instance of SeleniumWaits to handle explicit waits for elements.
-     */
-    private final SeleniumWaits seleniumWaits;
+    private Waits waits;
+    private WebDriver driver;
+    private Element element;
+    private PageObjects objects;
+    private static final Logger logger = LoggerFactory.getLogger(JavaScriptCheckBox.class);
 
     /**
-     * An instance of SeleniumDriver to interact with the browser.
-     */
-    private final SeleniumDriver seleniumDriver;
-
-    /**
-     * Constructor for JavaScriptCheckBox class. Initializes the instances of
-     * SeleniumWaits and SeleniumDriver.
+     * Constructor to initialize the JavaScriptCheckBox with a WebDriver instance.
      *
-     * @param seleniumDriver The SeleniumDriver instance that provides the browser interaction.
+     * @param driver the WebDriver instance to interact with.
      */
-    public JavaScriptCheckBox(SeleniumDriver seleniumDriver) {
-        this.seleniumDriver = seleniumDriver;
-        this.seleniumWaits = new SeleniumWaits(seleniumDriver);
+    public JavaScriptCheckBox(WebDriver driver) {
+        this.driver = driver;
+        this.waits = new Waits(driver);
+        this.element = new Element(driver);
+        logger.info("JavaScriptCheckBox initialized with WebDriver, Waits and Element helpers.");
     }
 
     /**
-     * Checks a checkbox identified by its object name using JavaScript.
-     * It sets the checkbox to be selected if it is not already selected.
+     * Constructor to initialize the JavaScriptCheckBox with a WebDriver instance and PageObjects.
      *
-     * @param objName The object name of the checkbox element.
+     * @param driver  the WebDriver instance to interact with.
+     * @param objects the PageObjects instance to retrieve element locators.
+     */
+    public JavaScriptCheckBox(WebDriver driver, PageObjects objects) {
+        this.driver = driver;
+        this.objects = objects;
+        this.waits = new Waits(driver);
+        this.element = new Element(driver);
+        logger.info("JavaScriptCheckBox initialized with WebDriver, Waits, PageObjects and Element helpers.");
+    }
+
+    /**
+     * Checks the checkbox identified by the object name using JavaScript.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
      */
     public void check(String objName) {
-        check(seleniumDriver.getElement(objName));
+        check(objects.get(objName));
     }
 
     /**
-     * Checks the provided checkbox WebElement using JavaScript.
-     * It sets the checkbox to be selected if it is not already selected.
+     * Unchecks the checkbox identified by the object name using JavaScript.
      *
-     * @param webElement The WebElement representing the checkbox.
-     */
-    public void check(WebElement webElement) {
-        try {
-            seleniumWaits.untilElementDisplayed(webElement);
-            JavascriptExecutor executor = (JavascriptExecutor) seleniumDriver.getBrowser();
-            // Executes JavaScript to check the checkbox
-            executor.executeScript("var checkbox=arguments[0]; if(!checkbox.checked){checkbox.checked=true;}", webElement);
-        } catch (StaleElementReferenceException e) {
-            check(webElement);  // Retry if the element becomes stale
-        }
-    }
-
-    /**
-     * Unchecks a checkbox identified by its object name using JavaScript.
-     * It sets the checkbox to be unselected if it is already selected.
-     *
-     * @param objName The object name of the checkbox element.
+     * @param objName the name of the object whose locator is to be retrieved.
      */
     public void uncheck(String objName) {
-        uncheck(seleniumDriver.getElement(objName));
+        uncheck(objects.get(objName));
     }
 
     /**
-     * Unchecks the provided checkbox WebElement using JavaScript.
-     * It sets the checkbox to be unselected if it is already selected.
+     * Toggles the checkbox identified by the object name using JavaScript.
      *
-     * @param webElement The WebElement representing the checkbox.
-     */
-    public void uncheck(WebElement webElement) {
-        try {
-            seleniumWaits.untilElementDisplayed(webElement);
-            JavascriptExecutor executor = (JavascriptExecutor) seleniumDriver.getBrowser();
-            // Executes JavaScript to uncheck the checkbox
-            executor.executeScript("var checkbox=arguments[0]; if(checkbox.checked){checkbox.checked=false;}", webElement);
-        } catch (StaleElementReferenceException e) {
-            uncheck(webElement);  // Retry if the element becomes stale
-        }
-    }
-
-    /**
-     * Toggles the checkbox identified by its object name using JavaScript.
-     * It will check the checkbox if it is unchecked and uncheck it if it is checked.
-     *
-     * @param objName The object name of the checkbox element.
+     * @param objName the name of the object whose locator is to be retrieved.
      */
     public void toggle(String objName) {
-        toggle(seleniumDriver.getElement(objName));
+        toggle(objects.get(objName));
     }
 
     /**
-     * Toggles the provided checkbox WebElement using JavaScript.
-     * It will check the checkbox if it is unchecked and uncheck it if it is checked.
+     * Checks the checkbox identified by the locator pair using JavaScript.
      *
-     * @param webElement The WebElement representing the checkbox.
+     * @param locatorPair a Map.Entry containing the locator type and value.
      */
-    public void toggle(WebElement webElement) {
+    public void check(Map.Entry<String, String> locatorPair) {
         try {
-            seleniumWaits.untilElementDisplayed(webElement);
-            JavascriptExecutor executor = (JavascriptExecutor) seleniumDriver.getBrowser();
-            // Executes JavaScript to toggle the checkbox
-            executor.executeScript("var checkbox=arguments[0]; checkbox.checked=!checkbox.checked;", webElement);
+            waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
+            WebElement checkBox = this.element.get(locatorPair);
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            executor.executeScript("var checkbox=arguments[0]; if(!checkbox.checked){checkbox.checked=true;}", checkBox);
+            logger.info("Checkbox checked successfully using JavaScript.");
         } catch (StaleElementReferenceException e) {
-            toggle(webElement);  // Retry if the element becomes stale
+            logger.error("StaleElementReferenceException caught during check, retrying.", e);
+            check(locatorPair);
         }
     }
+
+    /**
+     * Unchecks the checkbox identified by the locator pair using JavaScript.
+     *
+     * @param locatorPair a Map.Entry containing the locator type and value.
+     */
+    public void uncheck(Map.Entry<String, String> locatorPair) {
+        try {
+            waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
+            WebElement checkBox = this.element.get(locatorPair);
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            executor.executeScript("var checkbox=arguments[0]; if(checkbox.checked){checkbox.checked=false;}", checkBox);
+            logger.info("Checkbox unchecked successfully using JavaScript.");
+        } catch (StaleElementReferenceException e) {
+            logger.error("StaleElementReferenceException caught during uncheck, retrying.", e);
+            uncheck(locatorPair);
+        }
+    }
+
+    /**
+     * Toggles the checkbox identified by the locator pair using JavaScript.
+     *
+     * @param locatorPair a Map.Entry containing the locator type and value.
+     */
+    public void toggle(Map.Entry<String, String> locatorPair) {
+        try {
+            waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
+            WebElement checkBox = this.element.get(locatorPair);
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            executor.executeScript("var checkbox=arguments[0]; checkbox.checked=!checkbox.checked;", checkBox);
+            logger.info("Checkbox state toggled successfully using JavaScript.");
+        } catch (StaleElementReferenceException e) {
+            logger.error("StaleElementReferenceException caught during toggle, retrying.", e);
+            toggle(locatorPair);
+        }
+    }
+
+    public void check(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            executor.executeScript("var checkbox=arguments[0]; if(!checkbox.checked){checkbox.checked=true;}", webElement);
+            logger.info("Checkbox checked successfully using JavaScript.");
+        } catch (StaleElementReferenceException e) {
+            logger.error("StaleElementReferenceException caught during check, retrying.", e);
+            check(webElement);
+        }
+    }
+
+    public void uncheck(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            executor.executeScript("var checkbox=arguments[0]; if(checkbox.checked){checkbox.checked=false;}", webElement);
+            logger.info("Checkbox unchecked successfully using JavaScript.");
+        } catch (StaleElementReferenceException e) {
+            logger.error("StaleElementReferenceException caught during uncheck, retrying.", e);
+            uncheck(webElement);
+        }
+    }
+
+    public void toggle(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            executor.executeScript("var checkbox=arguments[0]; checkbox.checked=!checkbox.checked;", webElement);
+            logger.info("Checkbox state toggled successfully using JavaScript.");
+        } catch (StaleElementReferenceException e) {
+            logger.error("StaleElementReferenceException caught during toggle, retrying.", e);
+            toggle(webElement);
+        }
+    }
+
 }

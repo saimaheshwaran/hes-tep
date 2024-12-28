@@ -1,115 +1,71 @@
 package com.tep.web.validation;
 
-import com.tep.utilities.PropUtils;
-import com.tep.web.base.Element;
-import com.tep.web.base.Waits;
-import com.tep.web.config.PageObjects;
-import org.openqa.selenium.WebDriver;
+import com.tep.web.base.SeleniumWaits;
 import org.openqa.selenium.WebElement;
+import com.tep.web.base.SeleniumDriver;
 import org.openqa.selenium.support.ui.Select;
-import com.tep.web.config.Constants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 /**
- * DropdownValidation class to handle validation of dropdown elements.
+ * The DropdownValidation class provides methods to verify the selected option in a dropdown element.
+ * It checks whether a specific option is selected or not, and asserts if the actual selection matches the expected selection.
  */
 public class DropdownValidation {
 
-    private Waits waits;
-    private WebDriver driver;
-    private Element element;
-    private PageObjects objects;
-    private static final Logger logger = LoggerFactory.getLogger(DropdownValidation.class);
+    /** The instance of SeleniumWaits used to wait for elements to be displayed. */
+    private final SeleniumWaits seleniumWaits;
+
+    /** The instance of SeleniumDriver used to interact with the browser. */
+    private final SeleniumDriver seleniumDriver;
 
     /**
-     * Constructor to initialize the DropdownValidation with a WebDriver instance.
+     * Constructor to initialize the DropdownValidation class with a SeleniumDriver instance.
      *
-     * @param driver the WebDriver instance to interact with.
+     * @param seleniumDriver The SeleniumDriver instance used to interact with the browser.
      */
-    public DropdownValidation(WebDriver driver) {
-        this.driver = driver;
-        this.waits = new Waits(driver);
-        this.element = new Element(driver);
-        logger.info("DropdownValidation with webdriver initialized successfully");
+    public DropdownValidation(SeleniumDriver seleniumDriver) {
+        this.seleniumDriver = seleniumDriver;
+        this.seleniumWaits = new SeleniumWaits(seleniumDriver);
     }
 
     /**
-     * Constructor to initialize the DropdownValidation with a WebDriver instance and PageObjects.
+     * Verifies whether a specific option is selected from a dropdown element identified by its object name.
      *
-     * @param driver  the WebDriver instance to interact with.
-     * @param objects the PageObjects instance to retrieve element locators.
-     */
-    public DropdownValidation(WebDriver driver, PageObjects objects) {
-        this.driver = driver;
-        this.objects = objects;
-        this.waits = new Waits(driver);
-        this.element = new Element(driver);
-        logger.info("DropdownValidation with Webdriver and Pageobject initialized successfully");
-    }
-
-    /**
-     * Validates if the specified option is selected in the dropdown identified by the object name.
-     *
-     * @param objName           the name of the object whose locator is to be retrieved.
-     * @param type              the type of selection (text or value).
-     * @param option            the option to validate.
-     * @param shouldBeSelected  true if the option should be selected, false otherwise.
+     * @param objName The object name used to locate the dropdown element.
+     * @param type The type of the value to compare ("text" or "value").
+     * @param option The option to check if it's selected in the dropdown.
+     * @param shouldBeSelected A boolean indicating whether the option should be selected or not.
      */
     public void isSelected(String objName, String type, String option, boolean shouldBeSelected) {
-        logger.info("Verifying if the option '" + option + "' of the " + type + " '" + objName + "' is selected as expected");
-        isSelected(objects.get(objName), type, option, shouldBeSelected);
+        isSelected(seleniumDriver.getElement(objName), type, option, shouldBeSelected);
     }
 
     /**
-     * Validates if the specified option is selected in the dropdown identified by the locator pair.
+     * Verifies whether a specific option is selected from a dropdown WebElement.
      *
-     * @param locatorPair       a Map.Entry containing the locator type and value.
-     * @param type              the type of selection (text or value).
-     * @param option            the option to validate.
-     * @param shouldBeSelected  true if the option should be selected, false otherwise.
+     * @param webElement The WebElement representing the dropdown element.
+     * @param type The type of the value to compare ("text" or "value").
+     * @param option The option to check if it's selected in the dropdown.
+     * @param shouldBeSelected A boolean indicating whether the option should be selected or not.
      */
-    public void isSelected(Map.Entry<String, String> locatorPair, String type, String option, boolean shouldBeSelected) {
-        waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
-        WebElement dropDown = element.get(locatorPair);
-        Select selectList = new Select(dropDown);
-        String actualValue = "";
-
-        if (type.equals("text")) {
-            actualValue = selectList.getFirstSelectedOption().getText();
-        } else {
-            actualValue = selectList.getFirstSelectedOption().getAttribute("value");
-        }
-
-        if (!actualValue.equals(option) && shouldBeSelected) {
-            logger.error("Expected option '{}' should be selected, but found '{}'", option, actualValue);
-            Assertion.equalsTrue(false, "Expected: " + option + " should be selected from Dropdown. But " + actualValue + " is selected from Dropdown.");
-        } else if (actualValue.equals(option) && !shouldBeSelected) {
-            logger.error("Expected option '{}' should not be selected ", option);
-            Assertion.equalsFalse(true, "Expected: " + option + " should not be selected from Dropdown. But " + actualValue + " is selected from Dropdown.");
-        }
-    }
-
     public void isSelected(WebElement webElement, String type, String option, boolean shouldBeSelected) {
-        waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+        seleniumWaits.untilElementDisplayed(webElement);
         Select selectList = new Select(webElement);
         String actualValue = "";
 
+        // Get the selected option text or value based on the provided type
         if (type.equals("text")) {
             actualValue = selectList.getFirstSelectedOption().getText();
         } else {
             actualValue = selectList.getFirstSelectedOption().getAttribute("value");
         }
 
+        assert actualValue != null;
+
+        // Assert if the selected option matches the expected value
         if (!actualValue.equals(option) && shouldBeSelected) {
-            logger.error("Expected option '{}' should be selected, but found '{}'", option, actualValue);
             Assertion.equalsTrue(false, "Expected: " + option + " should be selected from Dropdown. But " + actualValue + " is selected from Dropdown.");
         } else if (actualValue.equals(option) && !shouldBeSelected) {
-            logger.error("Expected option '{}' should not be selected ", option);
             Assertion.equalsFalse(true, "Expected: " + option + " should not be selected from Dropdown. But " + actualValue + " is selected from Dropdown.");
         }
     }
-
 }

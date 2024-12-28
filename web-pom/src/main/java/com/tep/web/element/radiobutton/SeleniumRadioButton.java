@@ -1,63 +1,140 @@
 package com.tep.web.element.radiobutton;
 
-import com.tep.web.base.SeleniumWaits;
-import org.openqa.selenium.WebElement;
-import com.tep.web.base.SeleniumDriver;
+import com.tep.web.base.Element;
+import com.tep.web.base.Waits;
+import com.tep.web.config.PageObjects;
+import com.tep.web.element.checkbox.SeleniumCheckBox;
 import com.tep.web.element.click.SeleniumClick;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import com.tep.web.config.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Map;
 
 /**
- * The SeleniumRadioButton class provides a method to select a radio button element.
- * It checks if the radio button is selected, and if not, it clicks on it using Selenium's WebDriver.
+ * SeleniumRadioButton class to handle radio button interactions using Selenium.
  */
 public class SeleniumRadioButton {
 
-    /** The instance of SeleniumWaits used for waiting until elements are displayed. */
-    private final SeleniumWaits seleniumWaits;
-
-    /** The instance of SeleniumDriver used to interact with the browser. */
-    private final SeleniumDriver seleniumDriver;
-
-    /** The instance of SeleniumClick used to perform click actions. */
-    private final SeleniumClick seleniumClick;
+    private Waits waits;
+    private WebDriver driver;
+    private Element element;
+    private PageObjects objects;
+    private SeleniumClick seleniumClick;
+    private static final Logger logger = LoggerFactory.getLogger(SeleniumRadioButton.class);
 
     /**
-     * Constructor to initialize the SeleniumRadioButton class with a SeleniumDriver instance.
+     * Constructor to initialize the SeleniumRadioButton with a WebDriver instance.
      *
-     * @param seleniumDriver The SeleniumDriver instance to interact with the browser.
+     * @param driver the WebDriver instance to interact with.
      */
-    public SeleniumRadioButton(SeleniumDriver seleniumDriver) {
-        this.seleniumDriver = seleniumDriver;
-        this.seleniumWaits = new SeleniumWaits(seleniumDriver);
-        this.seleniumClick = new SeleniumClick(seleniumDriver);
+    public SeleniumRadioButton(WebDriver driver) {
+        this.driver = driver;
+        this.waits = new Waits(driver);
+        this.element = new Element(driver);
+        this.seleniumClick = new SeleniumClick(driver);
+        logger.info("SeleniumRadioButton initialized with WebDriver, Waits, Element, and SeleniumClick helpers.");
     }
 
     /**
-     * Selects the radio button identified by its object name.
-     * It waits for the element to be displayed, checks if it is selected,
-     * and clicks it if it is not already selected.
+     * Constructor to initialize the SeleniumRadioButton with a WebDriver instance and PageObjects.
      *
-     * @param objName The name of the radio button element.
+     * @param driver  the WebDriver instance to interact with.
+     * @param objects the PageObjects instance to retrieve element locators.
+     */
+    public SeleniumRadioButton(WebDriver driver, PageObjects objects) {
+        this.driver = driver;
+        this.objects = objects;
+        this.waits = new Waits(driver);
+        this.element = new Element(driver);
+        this.seleniumClick = new SeleniumClick(driver);
+        logger.info("SeleniumRadioButton initialized with WebDriver, PageObjects, Waits, Element, and SeleniumClick helpers.");
+    }
+
+    /**
+     * Selects the radio button identified by the object name.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
      */
     public void select(String objName) {
-        select(seleniumDriver.getElement(objName));
+        select(objects.get(objName));
     }
 
     /**
-     * Selects the radio button represented by the provided WebElement.
-     * It waits for the element to be displayed, checks if it is selected,
-     * and clicks it if it is not already selected.
+     * Selects a radio button from a group identified by the object name.
      *
-     * @param webElement The WebElement representing the radio button.
+     * @param option        the option to select.
+     * @param selectionType the method to select the option (value or text).
+     * @param objName       the name of the object whose locator is to be retrieved.
      */
-    public void select(WebElement webElement) {
+    public void selectFromRadioButtonGroup(String option, String selectionType, String objName) {
+        selectFromRadioButtonGroup(option, selectionType, objects.get(objName));
+    }
+
+    /**
+     * Selects the radio button identified by the locator pair.
+     *
+     * @param locatorPair a Map.Entry containing the locator type and value.
+     */
+    public void select(Map.Entry<String, String> locatorPair) {
         try {
-            seleniumWaits.untilElementDisplayed(webElement);  // Waits for the radio button to be visible.
-            if (!webElement.isSelected()) {  // Checks if the radio button is not already selected.
-                seleniumClick.click(webElement);  // Clicks the radio button if it is not selected.
+            waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
+            WebElement radioButton = this.element.get(locatorPair);
+            if (!radioButton.isSelected()) {
+                seleniumClick.click(locatorPair);
             }
+            logger.info("RadioButton is selected successfully.");
         } catch (StaleElementReferenceException ignored) {
-            select(webElement);  // Retries the operation if the element reference becomes stale.
+            logger.error("StaleElementReferenceException caught, retrying check operation.",ignored);
+            select(locatorPair);
         }
     }
+
+    /**
+     * Selects a radio button from a group identified by the locator pair.
+     *
+     * @param option        the option to select.
+     * @param selectionType the method to select the option (value or text).
+     * @param locatorPair   a Map.Entry containing the locator type and value.
+     */
+    public void selectFromRadioButtonGroup(String option, String selectionType, Map.Entry<String, String> locatorPair) {
+        try {
+            waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
+            List<WebElement> radioButtonGroup = driver.findElements(this.element.getBy(locatorPair));
+            for (WebElement radioButton : radioButtonGroup) {
+                if (selectionType.equals("value")) {
+                    if (radioButton.getAttribute("value").equals(option) && !radioButton.isSelected()) {
+                        radioButton.click();
+                        logger.info("Radio button with value selected.", option);
+                    }
+                } else if (selectionType.equals("text")) {
+                    if (radioButton.getText().equals(option) && !radioButton.isSelected()) {
+                        radioButton.click();
+                        logger.info("Radio button with text selected.", option);
+                    }
+                }
+            }
+          } catch (StaleElementReferenceException e) {
+            logger.warn("StaleElementReferenceException occurred while selecting from radio button group. Retrying...", option, selectionType, locatorPair, e);
+            selectFromRadioButtonGroup(option, selectionType, locatorPair);
+        }
+    }
+
+    public void select(WebElement webElement) {
+        try {
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            if (!webElement.isSelected()) {
+                seleniumClick.click(webElement);
+            }
+            logger.info("RadioButton is selected successfully.");
+        } catch (StaleElementReferenceException ignored) {
+            logger.error("StaleElementReferenceException caught, retrying check operation.",ignored);
+            select(webElement);
+        }
+    }
+
 }

@@ -1,54 +1,55 @@
 package com.tep.web.validation;
 
-import com.tep.web.base.SeleniumWaits;
-import com.tep.web.base.SeleniumDriver;
+import com.tep.utilities.PropUtils;
+import com.tep.web.base.Waits;
+import com.tep.web.config.Constants;
 import org.openqa.selenium.JavascriptExecutor;
-
-import java.util.Objects;
+import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * The PageValidation class provides methods for validating page titles and ensuring a page is fully loaded.
- * It contains methods to check the title of the page and wait for the page to load.
+ * PageValidation class to handle validation of web pages.
  */
 public class PageValidation {
 
-    /** The instance of SeleniumWaits used for waiting on elements and JavaScript/jQuery to load. */
-    private final SeleniumWaits seleniumWaits;
-
-    /** The instance of SeleniumDriver used to interact with the browser. */
-    private final SeleniumDriver seleniumDriver;
+    private Waits waits;
+    private WebDriver driver;
+    private static final Logger logger = LoggerFactory.getLogger(PageValidation.class);
 
     /**
-     * Constructor to initialize the PageValidation class with a SeleniumDriver instance.
+     * Constructor to initialize the PageValidation with a WebDriver instance.
      *
-     * @param seleniumDriver The SeleniumDriver instance used to interact with the browser.
+     * @param driver the WebDriver instance to interact with.
      */
-    public PageValidation(SeleniumDriver seleniumDriver) {
-        this.seleniumDriver = seleniumDriver;
-        this.seleniumWaits = new SeleniumWaits(seleniumDriver);
+    public PageValidation(WebDriver driver) {
+        this.driver = driver;
+        this.waits = new Waits(driver);
     }
 
     /**
-     * Retrieves the title of the current page after ensuring that the JavaScript and jQuery are fully loaded.
+     * Retrieves the title of the current page.
      *
-     * @return The title of the current page.
+     * @return the title of the current page.
      */
     public String getPageTitle() {
-        seleniumWaits.untilJSandJQueryToLoad();
-        return seleniumDriver.getBrowser().getTitle();
+        waits.waitForJSandJQueryToLoad();
+        return driver.getTitle();
     }
 
     /**
-     * Verifies whether the page title matches the expected title.
+     * Checks if the title of the current page matches the expected title.
      *
-     * @param title The expected page title.
-     * @param testCase A boolean indicating whether the test case expects the title to match (true) or not (false).
+     * @param title    the expected title of the page.
+     * @param testCase true if the title should match, false otherwise.
      */
     public void checkPageTitle(String title, boolean testCase) {
-        seleniumWaits.untilJSandJQueryToLoad();
+        waits.waitForJSandJQueryToLoad();
         String pageTitle = getPageTitle();
         Boolean titleMatched = title.equals(pageTitle);
+
         if (!titleMatched && testCase) {
+            logger.error("Page Title Not Matched: Expected '{}' but found '{}'", title, pageTitle);
             Assertion.equalsTrue(false, "Page Title Not Matched: Expected Page Title is '" + title + "' but Displayed Page Title is '" + pageTitle + "'.");
         } else if (titleMatched && !testCase) {
             Assertion.equalsFalse(true, "Page Title Matched: Expected Page Title is '" + title + "' and Displayed Page Title is '" + pageTitle + "'.");
@@ -56,37 +57,44 @@ public class PageValidation {
     }
 
     /**
-     * Verifies whether the page title contains the specified partial title.
+     * Checks if the partial title is contained in the title of the current page.
      *
-     * @param partialTitle The partial title expected to be contained in the page title.
-     * @param testCase A boolean indicating whether the test case expects the title to contain the partial title (true) or not (false).
+     * @param partialTitle the partial title to check.
+     * @param testCase     true if the partial title should be contained, false otherwise.
      */
     public void checkPartialPageTitle(String partialTitle, boolean testCase) {
-        Boolean titleMatched = seleniumWaits.untilTitleContains(partialTitle);
+        Boolean titleMatched = waits.waitForTitleContains(partialTitle, Constants.DEFAULT_WAIT_TIME_SEC);
         String pageTitle = getPageTitle();
+
         if (!titleMatched && testCase) {
+            logger.error("Partial Page Title Not Present: Expected partial title '" + partialTitle + "' in actual title '" + pageTitle + "'");
             Assertion.equalsTrue(false, "Expected: Actual Page Title \"" + pageTitle + "\" should contain partial page title \"" + partialTitle + "\". But Partial Page Title Not Present.");
         } else if (titleMatched && !testCase) {
+            logger.error("Partial Page Title is Present when it should not be: Expected partial title '" + partialTitle + "' not to be in actual title '" + pageTitle + "'");
             Assertion.equalsFalse(true, "Expected: Actual Page Title \"" + pageTitle + "\" should not contain partial page title \"" + partialTitle + "\". But Partial Page Title is Present.");
         }
     }
 
     /**
-     * Waits for the page to be fully loaded by checking the document's readyState.
+     * Checks if the page is fully loaded within the specified timeout.
      *
-     * @param timeOutInSeconds The timeout in seconds to wait for the page to load.
+     * @param timeOutInSeconds the timeout in seconds.
      */
     public void isPageLoaded(int timeOutInSeconds) {
         boolean isPageLoaded = false;
-        JavascriptExecutor js = (JavascriptExecutor) seleniumDriver.getBrowser();
+        JavascriptExecutor js = (JavascriptExecutor) driver;
         String jsCommand = "return document.readyState";
-        if (Objects.requireNonNull(js.executeScript(jsCommand)).toString().equals("complete")) {
+
+        if (js.executeScript(jsCommand).toString().equals("complete")) {
+            logger.info("Page loaded immediately.");
             return;
         }
+
         for (int i = 0; i < timeOutInSeconds; i++) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
+                logger.warn("Thread interrupted during sleep.", e);
                 e.printStackTrace();
             }
             if (js.executeScript(jsCommand).toString().equals("complete")) {
@@ -94,26 +102,31 @@ public class PageValidation {
                 break;
             }
         }
-        Assertion.equalsTrue(isPageLoaded, "Page '" + seleniumDriver.getBrowser().getTitle() + "' is not Loaded.");
+
+        Assertion.equalsTrue(isPageLoaded, "Page '" + driver.getTitle() + "' is not Loaded.");
     }
 
     /**
-     * Uses JavaScript to wait for the page to be fully loaded by checking the document's readyState.
+     * Waits for the page to load using JavaScript within the specified timeout.
      *
-     * @param timeOutInSeconds The timeout in seconds to wait for the page to load.
-     * @param shouldBeLoaded A boolean indicating whether the page should be loaded (true) or not (false).
+     * @param timeOutInSeconds the timeout in seconds.
+     * @param shouldBeLoaded   true if the page should be loaded, false otherwise.
      */
     public void javaScriptWaitForPageToLoad(int timeOutInSeconds, boolean shouldBeLoaded) {
         boolean isPageLoaded = false;
-        JavascriptExecutor js = (JavascriptExecutor) seleniumDriver;
+        JavascriptExecutor js = (JavascriptExecutor) driver;
         String jsCommand = "return document.readyState";
-        if (Objects.requireNonNull(js.executeScript(jsCommand)).toString().equals("complete")) {
+
+        if (js.executeScript(jsCommand).toString().equals("complete")) {
+            logger.info("Page loaded immediately.");
             return;
         }
+
         for (int i = 0; i < timeOutInSeconds; i++) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
+                logger.info("Thread interrupted during sleep.", e);
                 e.printStackTrace();
             }
             if (js.executeScript(jsCommand).toString().equals("complete")) {
@@ -121,6 +134,7 @@ public class PageValidation {
                 break;
             }
         }
+
         Assertion.equalsTrue(isPageLoaded, "Page is Not Loaded.");
     }
 }

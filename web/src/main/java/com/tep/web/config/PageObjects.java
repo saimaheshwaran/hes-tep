@@ -1,75 +1,71 @@
 package com.tep.web.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import org.yaml.snakeyaml.Yaml;
 import com.tep.utilities.ExcelReader;
 import com.tep.utilities.YamlReader;
-import com.tep.web.validation.CheckBoxValidation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.util.Map;
 import java.io.FileWriter;
 import java.io.StringWriter;
+import java.io.FileInputStream;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
- * PageObjects class to manage page objects and their locators.
+ * This class manages the loading, retrieval, modification, and saving of Page Object data from various file formats.
+ * Supported file formats include YAML, JSON, and Excel.
+ * It provides methods for retrieving and updating locators for elements defined in the Page Object model.
  */
 public class PageObjects {
 
+    /**
+     * A map that stores the page object data, where each page contains elements, and each element has locators
+     * (such as id, xpath, etc.) associated with it.
+     */
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, String>>> objects = new LinkedHashMap<>();
-    private static final Logger logger = LoggerFactory.getLogger(CheckBoxValidation.class);
 
     /**
-     * Constructor to initialize and load page objects from a file based on the configured type (yaml or json).
+     * Constructor that initializes the page objects by loading data from the configured file format (YAML, JSON, Excel).
+     * It detects the file type based on a constant configuration and loads the page objects accordingly.
      */
     public PageObjects() {
         try {
             String extension = Constants.PAGE_OBJECT_TYPE;
             switch (extension) {
                 case "yaml", "yml" -> {
-                    Yaml yaml = new Yaml();
                     YamlReader yamlReader = new YamlReader();
                     objects = (LinkedHashMap) yamlReader.getYamlDataFromFolder(Constants.TEST_DATA_INPUT_PATH);
-                    logger.info("PageObjects loaded from YAML file.");
                 }
                 case "json" -> {
                     ObjectMapper objectMapper = new ObjectMapper();
                     FileInputStream readFile = new FileInputStream(Constants.TEST_DATA_INPUT_PATH + "PageObjects.json");
                     objects = (LinkedHashMap) objectMapper.readValue(readFile, LinkedHashMap.class);
                     readFile.close();
-                    logger.info("PageObjects loaded from JSON file.");
                 }
                 case "xlsx", "excel", "xls" -> {
                     ExcelReader excelReader = new ExcelReader();
                     objects = excelReader.getPageObjects(Constants.TEST_DATA_INPUT_PATH + "PageObjects.xlsx");
-                    logger.info("PageObjects loaded from Excel file.");
                 }
-                case "POM", "pom" -> {
-                    logger.info("PageObjects will be loaded from selenium pom classes.");
-                }
-                default -> logger.warn("Unsupported file extension for PageObjects: " + extension);
+                default -> objects = null;
             }
         } catch (Exception ignored) {
-            logger.error("Error loading PageObjects.",ignored);
         }
 
+        // Ensure that every element has a default "value" key if not present
+        assert objects != null;
         for (String page : objects.keySet())
             for (String element : objects.get(page).keySet())
                 if (!objects.get(page).get(element).containsKey("value"))
                     objects.get(page).get(element).put("value", "");
-
     }
 
     /**
-     * Retrieves the locator for the specified object name.
+     * Retrieves the locator (key-value pair) for a given element on a page.
      *
-     * @param objName the name of the object to retrieve the locator for.
-     * @return a Map.Entry containing the locator type and value.
+     * @param objName The name of the object in the format "page.element".
+     * @return A Map.Entry representing the locator key and value, or a null entry if no locator is found.
      */
     public Map.Entry<String, String> get(String objName) {
         String[] splitter = objName.split("\\.", 2);
@@ -78,7 +74,6 @@ public class PageObjects {
             if (!(locator.equalsIgnoreCase("value") || objects.get(page).get(element).get(locator).equalsIgnoreCase(""))) {
                 switch (locator.toLowerCase()) {
                     case "id", "css", "name", "xpath", "tagname", "linktest", "classname", "partiallinktest" -> {
-                        logger.info("Locator found for " + objName + ": " + locator);
                         return new Map.Entry<String, String>() {
                             @Override
                             public String getKey() {
@@ -118,47 +113,44 @@ public class PageObjects {
     }
 
     /**
-     * Sets the locator value for the specified object name and locator type.
+     * Sets the value of a specific locator for a given element.
      *
-     * @param objName      the name of the object.
-     * @param locator      the type of the locator.
-     * @param locatorValue the value of the locator.
-     * @return the set locator value.
+     * @param objName The name of the object in the format "page.element".
+     * @param locator The type of locator (e.g., "xpath", "css", etc.).
+     * @param locatorValue The value of the locator (e.g., the actual XPath or CSS selector).
+     * @return The value of the locator that was set.
      */
     public String set(String objName, String locator, String locatorValue) {
         try {
             String[] splitter = objName.split("\\.", 2);
             String page = splitter[0], element = splitter[1];
             objects.get(page).get(element).put(locator, locatorValue);
-            logger.info("Set operation successful for " + objName + " with locator: " + locator + " and locatorValue: " + locatorValue);
             return objects.get(page).get(element).get(locator);
         } catch (Exception e) {
-            logger.info("Error in set method for objName: " + objName + ", locator: " + locator + ", locatorValue: " + locatorValue, e);
             return "";
         }
     }
 
     /**
-     * Retrieves the locator value for the specified object name and locator type.
+     * Retrieves the value of a specific locator for a given element.
      *
-     * @param objName the name of the object.
-     * @param locator the type of the locator.
-     * @return the locator value.
+     * @param objName The name of the object in the format "page.element".
+     * @param locator The type of locator (e.g., "xpath", "css", etc.).
+     * @return The value of the locator, or an empty string if no locator is found.
      */
     public String get(String objName, String locator) {
         try {
             String[] splitter = objName.split("\\.", 2);
             String page = splitter[0], element = splitter[1];
-            logger.info("Retrieved value for " + objName + " with locator: " + locator + " is: " + objects.get(page).get(element).get(locator));
             return objects.get(page).get(element).get(locator);
         } catch (Exception e) {
-            logger.info("Error in get method for objName: " + objName + ", locator: " + locator, e);
             return "";
         }
     }
 
     /**
-     * Unloads the page objects to yaml and json files.
+     * Saves the current page objects to both YAML and JSON formats.
+     * This method is used to persist the updated page object data back to the filesystem.
      */
     public void unload() {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -168,21 +160,18 @@ public class PageObjects {
             File outputDirectory = new File(Constants.TEST_DATA_OUTPUT_PATH);
             if(!outputDirectory.exists()) outputDirectory.mkdirs();
 
+            // Write YAML file
             FileWriter yamlWriteFile = new FileWriter(Constants.TEST_DATA_OUTPUT_PATH + "PageObjects" + ".yaml");
             yaml.dump(objects, yamlWriteFile);
             yamlWriteFile.close();
-            logger.info("PageObjects YAML file written successfully.");
 
+            // Write JSON file
             objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
             objectMapper.writeValue(stringObj, objects);
             FileWriter jsonWriteFile = new FileWriter(Constants.TEST_DATA_OUTPUT_PATH + "PageObjects" + ".json");
             jsonWriteFile.write(stringObj.toString());
             jsonWriteFile.close();
-            logger.info("PageObjects JSON file written successfully.");
         } catch (Exception ignored) {
-            logger.error("Error occurred while unloading PageObjects",ignored);
-
         }
-        objects.clear();
     }
 }

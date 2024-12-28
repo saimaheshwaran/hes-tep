@@ -1,104 +1,69 @@
 package com.tep.web.element.radiobutton;
 
-import com.tep.web.base.Element;
-import com.tep.web.base.Waits;
-import com.tep.web.config.PageObjects;
-import com.tep.web.element.checkbox.ActionCheckBox;
-import com.tep.web.element.click.ActionClick;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebDriver;
+import com.tep.web.base.SeleniumWaits;
 import org.openqa.selenium.WebElement;
+import com.tep.web.base.SeleniumDriver;
+import com.tep.web.element.click.ActionClick;
 import org.openqa.selenium.interactions.Actions;
-import com.tep.web.config.Constants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Map;
+import org.openqa.selenium.StaleElementReferenceException;
 
 /**
- * ActionRadioButton class to handle radio button interactions.
+ * The ActionRadioButton class provides a method to select a radio button element.
+ * It uses Selenium's Actions class to move the mouse to the radio button and clicks on it
+ * if it is not already selected.
  */
 public class ActionRadioButton {
 
-    private Waits waits;
-    private WebDriver driver;
-    private Element element;
-    private PageObjects objects;
-    private ActionClick actionClick;
-    private static final Logger logger = LoggerFactory.getLogger(ActionRadioButton.class);
+    /** The instance of SeleniumWaits used for waiting until elements are displayed. */
+    private final SeleniumWaits seleniumWaits;
+
+    /** The instance of SeleniumDriver used to interact with the browser. */
+    private final SeleniumDriver seleniumDriver;
+
+    /** The instance of ActionClick used to perform the click action on the radio button. */
+    private final ActionClick actionClick;
 
     /**
-     * Constructor to initialize the ActionRadioButton with a WebDriver instance.
+     * Constructor to initialize the ActionRadioButton class with a SeleniumDriver instance.
      *
-     * @param driver the WebDriver instance to interact with.
+     * @param seleniumDriver The SeleniumDriver instance to interact with the browser.
      */
-    public ActionRadioButton(WebDriver driver) {
-        this.driver = driver;
-        this.waits = new Waits(driver);
-        this.element = new Element(driver);
-        this.actionClick = new ActionClick(driver);
-        logger.info("ActionRadioButton initialized with WebDriver, Waits, Element, and ActionClick helpers.");
+    public ActionRadioButton(SeleniumDriver seleniumDriver) {
+        this.seleniumDriver = seleniumDriver;
+        this.seleniumWaits = new SeleniumWaits(seleniumDriver);
+        this.actionClick = new ActionClick(seleniumDriver);
     }
 
     /**
-     * Constructor to initialize the ActionRadioButton with a WebDriver instance and PageObjects.
+     * Selects the radio button identified by its object name.
+     * It waits for the element to be displayed, moves the mouse to it,
+     * and clicks it if it is not already selected.
      *
-     * @param driver  the WebDriver instance to interact with.
-     * @param objects the PageObjects instance to retrieve element locators.
-     */
-    public ActionRadioButton(WebDriver driver, PageObjects objects) {
-        this.driver = driver;
-        this.objects = objects;
-        this.waits = new Waits(driver);
-        this.element = new Element(driver);
-        this.actionClick = new ActionClick(driver);
-        logger.info("ActionRadioButton initialized with WebDriver, PageObjects, Waits, Element, and ActionClick helpers.");
-    }
-
-    /**
-     * Selects the radio button identified by the object name.
-     *
-     * @param objName the name of the object whose locator is to be retrieved.
+     * @param objName The name of the radio button element.
      */
     public void select(String objName) {
-        select(objects.get(objName));
+        select(seleniumDriver.getElement(objName));
     }
 
     /**
-     * Selects the radio button identified by the locator pair.
+     * Selects the radio button represented by the provided WebElement.
+     * It waits for the element to be displayed, moves the mouse to it,
+     * and clicks it if it is not already selected.
      *
-     * @param locatorPair a Map.Entry containing the locator type and value.
+     * @param webElement The WebElement representing the radio button.
      */
-    public void select(Map.Entry<String, String> locatorPair) {
+    public void select(WebElement webElement) {
         try {
-            waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
-            Actions actions = new Actions(driver);
-            WebElement radioButton = this.element.get(locatorPair);
-            actions.moveToElement(radioButton).perform();
-            if (!radioButton.isSelected()) {
-                actionClick.click(locatorPair);
+            seleniumWaits.untilElementDisplayed(webElement);  // Waits for the element to be visible.
+            Actions actions = new Actions(seleniumDriver.getBrowser());  // Creates an Actions instance for mouse actions.
+            actions.moveToElement(webElement).perform();  // Moves the mouse to the radio button.
+            if (!webElement.isSelected()) {  // Checks if the radio button is not already selected.
+                actionClick.click(webElement);  // Clicks the radio button if it is not selected.
             }
-            logger.info("RadioButton is selected successfully.");
-            actions.release().perform();
+            actions.release().perform();  // Releases the action after clicking.
         } catch (StaleElementReferenceException ignored) {
-            logger.error("StaleElementReferenceException caught, retrying check operation.", ignored);
-            select(locatorPair);
+            select(webElement);  // Retries the operation if the element reference becomes stale.
         }
     }
 
-    public void select(WebElement webElement) {
-        try {
-            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
-            Actions actions = new Actions(driver);
-            actions.moveToElement(webElement).perform();
-            if (!webElement.isSelected()) {
-                actionClick.click(webElement);
-            }
-            logger.info("RadioButton is selected successfully.");
-            actions.release().perform();
-        } catch (StaleElementReferenceException ignored) {
-            logger.error("StaleElementReferenceException caught, retrying check operation.", ignored);
-            select(webElement);
-        }
-    }
 }

@@ -1,5 +1,6 @@
 package pages;
 
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openqa.selenium.WebDriver;
 
@@ -11,5 +12,4 @@ public abstract class BasePage {
     public BasePage(WebDriver driver) {
         BasePage.driver = driver;
     }
-
 }

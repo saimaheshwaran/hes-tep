@@ -1,67 +1,99 @@
 package com.tep.web.validation;
 
-import com.tep.web.base.SeleniumWaits;
+import com.tep.web.base.Element;
+import com.tep.web.base.Waits;
+import com.tep.web.config.PageObjects;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import com.tep.web.base.SeleniumDriver;
+import com.tep.web.config.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 /**
- * The AttributeValidation class provides methods to verify the value of an element's attribute.
- * It allows you to compare the actual value of an attribute with the expected value,
- * and assert whether they should match or not.
+ * AttributeValidation class to handle attribute validation of web elements.
  */
 public class AttributeValidation {
 
-    /** The instance of SeleniumWaits used to wait for elements to be displayed. */
-    private final SeleniumWaits seleniumWaits;
-
-    /** The instance of SeleniumDriver used to interact with the browser. */
-    private final SeleniumDriver seleniumDriver;
+    private Waits waits;
+    private WebDriver driver;
+    private Element element;
+    private PageObjects objects;
+    private static final Logger logger = LoggerFactory.getLogger(AttributeValidation.class);
 
     /**
-     * Constructor to initialize the AttributeValidation class with a SeleniumDriver instance.
+     * Constructor to initialize the AttributeValidation with a WebDriver instance.
      *
-     * @param seleniumDriver The SeleniumDriver instance used to interact with the browser.
+     * @param driver the WebDriver instance to interact with.
      */
-    public AttributeValidation(SeleniumDriver seleniumDriver) {
-        this.seleniumDriver = seleniumDriver;
-        this.seleniumWaits = new SeleniumWaits(seleniumDriver);
+    public AttributeValidation(WebDriver driver) {
+        this.driver = driver;
+        this.waits = new Waits(driver);
+        this.element = new Element(driver);
     }
 
     /**
-     * Verifies the value of an element's attribute against an expected value.
-     * This method checks whether the actual attribute value matches the expected value or not,
-     * based on the value of the `shouldBeMatched` parameter.
+     * Constructor to initialize the AttributeValidation with a WebDriver instance and PageObjects.
      *
-     * @param objName The object name used to locate the element.
-     * @param attributeName The name of the attribute to verify.
-     * @param expectedAttributeValue The expected value of the attribute.
-     * @param shouldBeMatched A boolean indicating whether the attribute value should match the expected value.
+     * @param driver  the WebDriver instance to interact with.
+     * @param objects the PageObjects instance to retrieve element locators.
+     */
+    public AttributeValidation(WebDriver driver, PageObjects objects) {
+        this.driver = driver;
+        this.objects = objects;
+        this.waits = new Waits(driver);
+        this.element = new Element(driver);
+    }
+
+    /**
+     * Verifies the attribute value of the element identified by the object name.
+     *
+     * @param objName                the name of the object whose locator is to be retrieved.
+     * @param attributeName          the name of the attribute to verify.
+     * @param expectedAttributeValue the expected value of the attribute.
+     * @param shouldBeMatched        true if the attribute value should match, false otherwise.
      */
     public void verify(String objName, String attributeName, String expectedAttributeValue, boolean shouldBeMatched) {
-        verify(seleniumDriver.getElement(objName), attributeName, expectedAttributeValue, shouldBeMatched);
+        logger.info("Verifying attribute value for object: " + objName);
+        verify(objects.get(objName), attributeName, expectedAttributeValue, shouldBeMatched);
     }
 
     /**
-     * Verifies the value of an element's attribute against an expected value.
-     * This method checks whether the actual attribute value matches the expected value or not,
-     * based on the value of the `shouldBeMatched` parameter.
+     * Verifies the attribute value of the element identified by the locator pair.
      *
-     * @param webElement The WebElement whose attribute is being verified.
-     * @param attributeName The name of the attribute to verify.
-     * @param expectedAttributeValue The expected value of the attribute.
-     * @param shouldBeMatched A boolean indicating whether the attribute value should match the expected value.
+     * @param locatorPair            a Map.Entry containing the locator type and value.
+     * @param attributeName          the name of the attribute to verify.
+     * @param expectedAttributeValue the expected value of the attribute.
+     * @param shouldBeMatched        true if the attribute value should match, false otherwise.
      */
-    public void verify(WebElement webElement, String attributeName, String expectedAttributeValue, boolean shouldBeMatched) {
-        seleniumWaits.untilElementDisplayed(webElement);
-        String displayedAttributeValue = webElement.getAttribute(attributeName);
+    public void verify(Map.Entry<String, String> locatorPair, String attributeName, String expectedAttributeValue, boolean shouldBeMatched) {
+        waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
+        WebElement attributeElement = element.get(locatorPair);
+        String displayedAttributeValue = attributeElement.getAttribute(attributeName);
 
         if (shouldBeMatched) {
-            assert displayedAttributeValue != null;
             if (!displayedAttributeValue.equals(expectedAttributeValue)) {
+                logger.info("Attribute value does not match. Expected: " + expectedAttributeValue + ", Actual: " + displayedAttributeValue);
                 Assertion.equalsTrue(false, "Expected: Attribute value \"" + expectedAttributeValue + "\" should match with actual attribute value \"" + displayedAttributeValue + "\". But attribute value is not matched.");
             }
         } else {
-            assert displayedAttributeValue != null;
+            if (displayedAttributeValue.equals(expectedAttributeValue)) {
+                Assertion.equalsFalse(true, "Expected: Attribute value \"" + expectedAttributeValue + "\" should not match with actual attribute value \"" + displayedAttributeValue + "\". But attribute value is matched.");
+            }
+        }
+    }
+
+    public void verify(WebElement webElement, String attributeName, String expectedAttributeValue, boolean shouldBeMatched) {
+        waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+        String displayedAttributeValue = webElement.getAttribute(attributeName);
+
+        if (shouldBeMatched) {
+            if (!displayedAttributeValue.equals(expectedAttributeValue)) {
+                logger.info("Attribute value does not match. Expected: " + expectedAttributeValue + ", Actual: " + displayedAttributeValue);
+                Assertion.equalsTrue(false, "Expected: Attribute value \"" + expectedAttributeValue + "\" should match with actual attribute value \"" + displayedAttributeValue + "\". But attribute value is not matched.");
+            }
+        } else {
             if (displayedAttributeValue.equals(expectedAttributeValue)) {
                 Assertion.equalsFalse(true, "Expected: Attribute value \"" + expectedAttributeValue + "\" should not match with actual attribute value \"" + displayedAttributeValue + "\". But attribute value is matched.");
             }

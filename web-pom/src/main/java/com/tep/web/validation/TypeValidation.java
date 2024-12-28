@@ -1,26 +1,29 @@
 package com.tep.web.validation;
 
+import com.tep.utilities.PropUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Arrays;
 
 /**
- * The TypeValidation class is a singleton that provides methods to validate locator types and option types.
- * It ensures that the specified locator and option types are valid before performing any related actions.
+ * TypeValidation class to handle validation of locator types and options.
  */
 public class TypeValidation {
 
-    /** The single instance of TypeValidation used for validating locator and option types. */
     private static TypeValidation instance = null;
+    private static final Logger logger = LoggerFactory.getLogger(TypeValidation.class);
 
     /**
-     * Private constructor to prevent instantiation from other classes.
+     * Private constructor to prevent instantiation.
      */
     private TypeValidation() {
     }
 
     /**
-     * Returns the singleton instance of the TypeValidation class.
+     * Returns the singleton instance of TypeValidation.
      *
-     * @return The singleton instance of TypeValidation.
+     * @return the singleton instance of TypeValidation.
      */
     public static TypeValidation getInstance() {
         if (instance == null) {
@@ -30,9 +33,9 @@ public class TypeValidation {
     }
 
     /**
-     * Validates whether the given locator type is valid.
+     * Validates if the provided locator type is valid.
      *
-     * @param type The locator type to validate (e.g., "id", "class", "xpath").
+     * @param type the locator type to validate.
      * @return true if the locator type is valid, false otherwise.
      */
     public boolean validLocatorType(String type) {
@@ -40,37 +43,38 @@ public class TypeValidation {
     }
 
     /**
-     * Validates the given locator type and throws an exception if the type is invalid.
+     * Throws an exception if the provided locator type is invalid.
      *
-     * @param type The locator type to validate (e.g., "id", "class", "xpath").
+     * @param type the locator type to validate.
      * @throws Exception if the locator type is invalid.
      */
     public void validateLocator(String type) throws Exception {
         if (!validLocatorType(type)) {
+            logger.error("Invalid locator type provided: {}", type);
             throw new Exception("Invalid locator type - " + type);
         }
     }
 
     /**
-     * Validates whether the given option type is valid for a dropdown (e.g., "text", "value", "index").
+     * Validates if the provided option by type is valid.
      *
-     * @param optionBy The option type to validate.
-     * @return true if the option type is valid, false otherwise.
+     * @param optionBy the option by type to validate.
+     * @return true if the option by type is valid, false otherwise.
      */
     public boolean validOptionBy(String optionBy) {
         return Arrays.asList("text", "value", "index").contains(optionBy);
     }
 
     /**
-     * Validates the given option type and throws an exception if the type is invalid.
+     * Throws an exception if the provided option by type is invalid.
      *
-     * @param optionBy The option type to validate (e.g., "text", "value", "index").
-     * @throws Exception if the option type is invalid.
+     * @param optionBy the option by type to validate.
+     * @throws Exception if the option by type is invalid.
      */
     public void validateOptionBy(String optionBy) throws Exception {
         if (!validOptionBy(optionBy)) {
+            logger.error("Invalid option by criteria provided: {}", optionBy);
             throw new Exception("Invalid option by - " + optionBy);
         }
     }
-
 }

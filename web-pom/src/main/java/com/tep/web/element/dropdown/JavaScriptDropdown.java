@@ -1,61 +1,203 @@
 package com.tep.web.element.dropdown;
 
-import com.tep.web.base.SeleniumWaits;
-import org.openqa.selenium.WebElement;
-import com.tep.web.base.SeleniumDriver;
+import com.tep.web.base.Element;
+import com.tep.web.base.Waits;
+import com.tep.web.config.PageObjects;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import com.tep.web.config.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 /**
- * This class provides methods for interacting with dropdown elements (select elements)
- * using JavaScript execution. The actions include selecting, deselecting, and handling
- * multi-select options in dropdown lists.
+ * JavaScriptDropdown class to handle dropdown interactions using JavaScript.
  */
 public class JavaScriptDropdown {
 
-    /**
-     * An instance of SeleniumWaits used to apply explicit waits on elements before interacting with them.
-     */
-    private final SeleniumWaits seleniumWaits;
+    private Waits waits;
+    private WebDriver driver;
+    private Element element;
+    private PageObjects objects;
+    private static final Logger logger = LoggerFactory.getLogger(JavaScriptDropdown.class);
 
     /**
-     * An instance of SeleniumDriver used to interact with the browser and locate elements.
-     */
-    private final SeleniumDriver seleniumDriver;
-
-    /**
-     * Constructor for the JavaScriptDropdown class. Initializes instances of SeleniumWaits and SeleniumDriver.
+     * Constructor to initialize the JavaScriptDropdown with a WebDriver instance.
      *
-     * @param seleniumDriver The SeleniumDriver instance used to interact with the browser.
+     * @param driver the WebDriver instance to interact with.
      */
-    public JavaScriptDropdown(SeleniumDriver seleniumDriver) {
-        this.seleniumDriver = seleniumDriver;
-        this.seleniumWaits = new SeleniumWaits(seleniumDriver);
+    public JavaScriptDropdown(WebDriver driver) {
+        this.driver = driver;
+        this.waits = new Waits(driver);
+        this.element = new Element(driver);
+        logger.info("JavaScriptDropdown initialized with WebDriver, Waits and Element helpers.");
     }
 
     /**
-     * Selects an option in a dropdown based on the given selection criteria (index, value, text).
-     * The element is identified by its object name.
+     * Constructor to initialize the JavaScriptDropdown with a WebDriver instance and PageObjects.
      *
-     * @param option   The option to select (index, value, or text).
-     * @param optionBy The method to identify the option (index, value, text).
-     * @param objName  The object name of the dropdown element.
+     * @param driver  the WebDriver instance to interact with.
+     * @param objects the PageObjects instance to retrieve element locators.
+     */
+    public JavaScriptDropdown(WebDriver driver, PageObjects objects) {
+        this.driver = driver;
+        this.objects = objects;
+        this.waits = new Waits(driver);
+        this.element = new Element(driver);
+        logger.info("JavaScriptDropdown initialized with WebDriver, PageObjects, Waits and Element helpers.");
+    }
+
+    /**
+     * Selects an option from the dropdown identified by the object name using JavaScript.
+     *
+     * @param option   the option to select.
+     * @param optionBy the method to select the option (index, value, or text).
+     * @param objName  the name of the object whose locator is to be retrieved.
      */
     public void select(String option, String optionBy, String objName) {
-        select(option, optionBy, seleniumDriver.getElement(objName));
+        select(option, optionBy, objects.get(objName));
     }
 
     /**
-     * Selects an option in a dropdown based on the given selection criteria (index, value, text).
+     * Deselects an option from the dropdown identified by the object name using JavaScript.
      *
-     * @param option   The option to select (index, value, or text).
-     * @param optionBy The method to identify the option (index, value, text).
-     * @param webElement The dropdown WebElement.
+     * @param option   the option to deselect.
+     * @param optionBy the method to deselect the option (index, value, or text).
+     * @param objName  the name of the object whose locator is to be retrieved.
      */
+    public void deselect(String option, String optionBy, String objName) {
+        deselect(option, optionBy, objects.get(objName));
+    }
+
+    /**
+     * Selects all options from the dropdown identified by the object name using JavaScript.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     */
+    public void selectAll(String objName) {
+        selectAll(objects.get(objName));
+    }
+
+    /**
+     * Deselects all options from the dropdown identified by the object name using JavaScript.
+     *
+     * @param objName the name of the object whose locator is to be retrieved.
+     */
+    public void deselectAll(String objName) {
+        deselectAll(objects.get(objName));
+    }
+
+    /**
+     * Selects an option from the dropdown identified by the locator pair using JavaScript.
+     *
+     * @param option      the option to select.
+     * @param optionBy    the method to select the option (index, value, or text).
+     * @param locatorPair a Map.Entry containing the locator type and value.
+     */
+    public void select(String option, String optionBy, Map.Entry<String, String> locatorPair) {
+        try {
+            waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
+            WebElement element = this.element.get(locatorPair);
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            String script = null;
+            switch (optionBy) {
+                case "index" -> {
+                    int index = Integer.parseInt(option) - 1;
+                    script = "var select = arguments[0]; { select.options[" + index + "].selected = true;  }";
+                }
+                case "value" ->
+                        script = "var select = arguments[0]; for(var i = 0; i < select.options.length; i++){ if(select.options[i].value == arguments[1]){ select.options[i].selected = true; } }";
+                case "text" ->
+                        script = "var select = arguments[0]; for(var i = 0; i < select.options.length; i++){ if(select.options[i].text == arguments[1]){ select.options[i].selected = true; } }";
+            }
+            executor.executeScript(script, element, option);
+            logger.info("Option selected successfully using JavaScript.");
+        } catch (StaleElementReferenceException ignored) {
+            logger.error("StaleElementReferenceException caught during select, retrying.");
+            select(option, optionBy, locatorPair);
+        }
+    }
+
+    /**
+     * Deselects an option from the dropdown identified by the locator pair using JavaScript.
+     *
+     * @param option      the option to deselect.
+     * @param optionBy    the method to deselect the option (index, value, or text).
+     * @param locatorPair a Map.Entry containing the locator type and value.
+     */
+    public void deselect(String option, String optionBy, Map.Entry<String, String> locatorPair) {
+        try {
+            waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
+            WebElement element = this.element.get(locatorPair);
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            String script = null;
+            switch (optionBy) {
+                case "index" -> {
+                    int index = Integer.parseInt(option) - 1;
+                    script = "var select = arguments[0]; { select.options[" + index + "].selected = false;  }";
+                }
+                case "value" ->
+                        script = "var select = arguments[0]; for(var i = 0; i < select.options.length; i++){ if(select.options[i].value == arguments[1]){ select.options[i].selected = false; } }";
+                case "text" ->
+                        script = "var select = arguments[0]; for(var i = 0; i < select.options.length; i++){ if(select.options[i].text == arguments[1]){ select.options[i].selected = false; } }";
+            }
+            executor.executeScript(script, element, option);
+            logger.info("Option deselected successfully using JavaScript.");
+        } catch (StaleElementReferenceException ignored) {
+            logger.error("StaleElementReferenceException caught during deselect, retrying.");
+            deselect(option, optionBy, locatorPair);
+        }
+    }
+
+    /**
+     * Deselects all options from the dropdown identified by the locator pair using JavaScript.
+     *
+     * @param locatorPair a Map.Entry containing the locator type and value.
+     */
+    public void deselectAll(Map.Entry<String, String> locatorPair) {
+        try {
+            waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
+            WebElement element = this.element.get(locatorPair);
+            String script = "var select = arguments[0];" +
+                    "for(var i = 0; i < select.options.length; i++){ " +
+                    "if(select.options[i].selected){select.options[i].selected = false;}}";
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            executor.executeScript(script, element);
+            logger.info("All selected options have been deselected.");
+        } catch (StaleElementReferenceException ignored) {
+            logger.error("StaleElementReferenceException caught during deselectAll, retrying.");
+            deselectAll(locatorPair);
+        }
+    }
+
+    /**
+     * Selects all options from the dropdown identified by the locator pair using JavaScript.
+     *
+     * @param locatorPair a Map.Entry containing the locator type and value.
+     */
+    public void selectAll(Map.Entry<String, String> locatorPair) {
+        try {
+            waits.waitForElementToDisplay(locatorPair, Constants.IMPLICIT_WAIT_TIME_SEC);
+            WebElement element = this.element.get(locatorPair);
+            String script = "var select = arguments[0];" +
+                    "for(var i = 0; i < select.options.length; i++){ " +
+                    "if(!select.options[i].selected){select.options[i].selected = true;}}";
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            executor.executeScript(script, element);
+            logger.info("All options have been selected.");
+        } catch (StaleElementReferenceException ignored) {
+            logger.error("StaleElementReferenceException caught during selectAll, retrying.");
+            selectAll(locatorPair);
+        }
+    }
+
     public void select(String option, String optionBy, WebElement webElement) {
         try {
-            seleniumWaits.untilElementDisplayed(webElement);  // Wait for the element to be displayed
-            JavascriptExecutor executor = (JavascriptExecutor) seleniumDriver.getBrowser();
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
             String script = null;
             switch (optionBy) {
                 case "index" -> {
@@ -68,35 +210,18 @@ public class JavaScriptDropdown {
                         script = "var select = arguments[0]; for(var i = 0; i < select.options.length; i++){ if(select.options[i].text == arguments[1]){ select.options[i].selected = true; } }";
             }
             assert script != null;
-            executor.executeScript(script, webElement, option);  // Execute JavaScript to select the option
+            executor.executeScript(script, webElement, option);
+            logger.info("Option selected successfully using JavaScript.");
         } catch (StaleElementReferenceException ignored) {
-            select(option, optionBy, webElement);  // Retry if the element becomes stale
+            logger.error("StaleElementReferenceException caught during select, retrying.");
+            select(option, optionBy, webElement);
         }
     }
 
-    /**
-     * Deselects an option in a dropdown based on the given selection criteria (index, value, text).
-     * The element is identified by its object name.
-     *
-     * @param option   The option to deselect (index, value, or text).
-     * @param optionBy The method to identify the option (index, value, text).
-     * @param objName  The object name of the dropdown element.
-     */
-    public void deselect(String option, String optionBy, String objName) {
-        deselect(option, optionBy, seleniumDriver.getElement(objName));
-    }
-
-    /**
-     * Deselects an option in a dropdown based on the given selection criteria (index, value, text).
-     *
-     * @param option   The option to deselect (index, value, or text).
-     * @param optionBy The method to identify the option (index, value, text).
-     * @param webElement The dropdown WebElement.
-     */
     public void deselect(String option, String optionBy, WebElement webElement) {
         try {
-            seleniumWaits.untilElementDisplayed(webElement);  // Wait for the element to be displayed
-            JavascriptExecutor executor = (JavascriptExecutor) seleniumDriver.getBrowser();
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
             String script = null;
             switch (optionBy) {
                 case "index" -> {
@@ -109,65 +234,42 @@ public class JavaScriptDropdown {
                         script = "var select = arguments[0]; for(var i = 0; i < select.options.length; i++){ if(select.options[i].text == arguments[1]){ select.options[i].selected = false; } }";
             }
             assert script != null;
-            executor.executeScript(script, webElement, option);  // Execute JavaScript to deselect the option
+            executor.executeScript(script, webElement, option);
+            logger.info("Option deselected successfully using JavaScript.");
         } catch (StaleElementReferenceException ignored) {
-            deselect(option, optionBy, webElement);  // Retry if the element becomes stale
+            logger.error("StaleElementReferenceException caught during deselect, retrying.");
+            deselect(option, optionBy, webElement);
         }
     }
 
-    /**
-     * Deselects all options in a multi-select dropdown.
-     * The element is identified by its object name.
-     *
-     * @param objName The object name of the dropdown element.
-     */
-    public void deselectAll(String objName) {
-        deselectAll(seleniumDriver.getElement(objName));
-    }
-
-    /**
-     * Deselects all options in a multi-select dropdown.
-     *
-     * @param webElement The dropdown WebElement.
-     */
     public void deselectAll(WebElement webElement) {
         try {
-            seleniumWaits.untilElementDisplayed(webElement);  // Wait for the element to be displayed
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
             String script = "var select = arguments[0];" +
                     "for(var i = 0; i < select.options.length; i++){ " +
                     "if(select.options[i].selected){select.options[i].selected = false;}}";
-            JavascriptExecutor executor = (JavascriptExecutor) seleniumDriver.getBrowser();
-            executor.executeScript(script, webElement);  // Execute JavaScript to deselect all options
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            executor.executeScript(script, webElement);
+            logger.info("All selected options have been deselected.");
         } catch (StaleElementReferenceException ignored) {
-            deselectAll(webElement);  // Retry if the element becomes stale
+            logger.error("StaleElementReferenceException caught during deselectAll, retrying.");
+            deselectAll(webElement);
         }
     }
 
-    /**
-     * Selects all options in a multi-select dropdown.
-     * The element is identified by its object name.
-     *
-     * @param objName The object name of the dropdown element.
-     */
-    public void selectAll(String objName) {
-        selectAll(seleniumDriver.getElement(objName));
-    }
-
-    /**
-     * Selects all options in a multi-select dropdown.
-     *
-     * @param webElement The dropdown WebElement.
-     */
     public void selectAll(WebElement webElement) {
         try {
-            seleniumWaits.untilElementDisplayed(webElement);  // Wait for the element to be displayed
+            waits.waitForElementToDisplay(webElement, Constants.IMPLICIT_WAIT_TIME_SEC);
             String script = "var select = arguments[0];" +
                     "for(var i = 0; i < select.options.length; i++){ " +
                     "if(!select.options[i].selected){select.options[i].selected = true;}}";
-            JavascriptExecutor executor = (JavascriptExecutor) seleniumDriver.getBrowser();
-            executor.executeScript(script, webElement);  // Execute JavaScript to select all options
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            executor.executeScript(script, webElement);
+            logger.info("All options have been selected.");
         } catch (StaleElementReferenceException ignored) {
-            selectAll(webElement);  // Retry if the element becomes stale
+            logger.error("StaleElementReferenceException caught during selectAll, retrying.");
+            selectAll(webElement);
         }
     }
+
 }
