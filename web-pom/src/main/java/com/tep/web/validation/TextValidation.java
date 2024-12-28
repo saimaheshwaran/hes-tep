@@ -4,18 +4,46 @@ import com.tep.web.base.SeleniumWaits;
 import org.openqa.selenium.WebElement;
 import com.tep.web.base.SeleniumDriver;
 
+/**
+ * The TextValidation class provides methods to validate text inside web elements.
+ * It checks whether the text in the element matches exactly or partially with the expected text.
+ */
 public class TextValidation {
 
+    /** The instance of SeleniumWaits used for waiting on elements to be displayed. */
     private final SeleniumWaits seleniumWaits;
+
+    /** The instance of SeleniumDriver used to interact with the browser. */
     private final SeleniumDriver seleniumDriver;
 
+    /**
+     * Constructor to initialize the TextValidation class with a SeleniumDriver instance.
+     *
+     * @param seleniumDriver The SeleniumDriver instance used to interact with the browser.
+     */
     public TextValidation(SeleniumDriver seleniumDriver) {
         this.seleniumDriver = seleniumDriver;
         this.seleniumWaits = new SeleniumWaits(seleniumDriver);
     }
 
-    public void isMatching(String objName, String expectedText, boolean condition) { isMatching(seleniumDriver.getElement(objName), expectedText, condition); }
+    /**
+     * Verifies whether the text of a web element exactly matches the expected text based on the given condition.
+     *
+     * @param objName The name or identifier of the web element.
+     * @param expectedText The expected text that should match the element's text.
+     * @param condition A boolean flag indicating whether the texts should match (true) or not match (false).
+     */
+    public void isMatching(String objName, String expectedText, boolean condition) {
+        isMatching(seleniumDriver.getElement(objName), expectedText, condition);
+    }
 
+    /**
+     * Verifies whether the text of a web element exactly matches the expected text based on the given condition.
+     *
+     * @param webElement The WebElement to validate.
+     * @param expectedText The expected text that should match the element's text.
+     * @param condition A boolean flag indicating whether the texts should match (true) or not match (false).
+     */
     public void isMatching(WebElement webElement, String expectedText, boolean condition) {
         seleniumWaits.untilElementDisplayed(webElement);
         if (condition) {
@@ -29,8 +57,24 @@ public class TextValidation {
         }
     }
 
-    public void isPartiallyMatching(String objName, String expectedText, boolean condition) { isPartiallyMatching(seleniumDriver.getElement(objName), expectedText, condition); }
+    /**
+     * Verifies whether the text of a web element partially matches the expected text based on the given condition.
+     *
+     * @param objName The name or identifier of the web element.
+     * @param expectedText The expected text that should partially match the element's text.
+     * @param condition A boolean flag indicating whether the texts should partially match (true) or not match (false).
+     */
+    public void isPartiallyMatching(String objName, String expectedText, boolean condition) {
+        isPartiallyMatching(seleniumDriver.getElement(objName), expectedText, condition);
+    }
 
+    /**
+     * Verifies whether the text of a web element partially matches the expected text based on the given condition.
+     *
+     * @param webElement The WebElement to validate.
+     * @param expectedText The expected text that should partially match the element's text.
+     * @param condition A boolean flag indicating whether the texts should partially match (true) or not match (false).
+     */
     public void isPartiallyMatching(WebElement webElement, String expectedText, boolean condition) {
         seleniumWaits.untilElementDisplayed(webElement);
         if (condition) {

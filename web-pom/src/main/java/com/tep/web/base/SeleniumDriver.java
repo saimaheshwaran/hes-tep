@@ -25,18 +25,37 @@ import java.util.Map;
 import java.util.HashMap;
 import java.time.Duration;
 
+/**
+ * SeleniumDriver is a utility class for managing WebDriver instances for multiple browsers (Chrome, Firefox, Edge, Safari).
+ * This class handles browser initialization, element search, and browser management tasks.
+ */
 @NoArgsConstructor
 public class SeleniumDriver {
 
+    /**
+     * The WebDriver instance for the currently selected browser.
+     */
     private WebDriver driver;
 
+    /**
+     * The PageObjects instance used to get locators for elements.
+     */
     @Getter
     private PageObjects pageObjects = new PageObjects();
 
+    /**
+     * Constructor that initializes the browser based on the specified browser type.
+     * @param browserType The browser type to initialize.
+     */
     public SeleniumDriver(Enums.BrowserType browserType) {
         openBrowser(browserType);
     }
 
+    /**
+     * Opens a browser based on the specified browser type.
+     * If the browser type is DEFAULT, it falls back to the default browser type defined in Constants.BROWSER_TYPE.
+     * @param browserType The browser type to initialize.
+     */
     public void openBrowser(Enums.BrowserType browserType) {
 
         if (driver != null)
@@ -55,10 +74,18 @@ public class SeleniumDriver {
 
     }
 
+    /**
+     * Returns the current WebDriver instance.
+     * @return The WebDriver instance.
+     */
     public WebDriver getBrowser() {
         return driver != null ? driver : null;
     }
 
+    /**
+     * Closes the current browser and quits the WebDriver instance.
+     * If Constants.BROWSER_QUIT is true, the browser will be fully closed (quit).
+     */
     public void closeBrowser() {
         try {
             driver.close();
@@ -70,10 +97,31 @@ public class SeleniumDriver {
         }
     }
 
-    public WebElement getElement(String objName) { return getElement(pageObjects.get(objName)); }
+    /**
+     * Retrieves a WebElement based on the object name from the PageObjects.
+     * @param objName The object name defined in PageObjects.
+     * @return The WebElement associated with the object name.
+     */
+    public WebElement getElement(String objName) {
+        return getElement(pageObjects.get(objName));
+    }
 
-    public WebElement getElement(Map.Entry<String, String> locatorPair) { return getElement(locatorPair.getKey(), locatorPair.getValue()); }
+    /**
+     * Retrieves a WebElement based on a Map entry containing the locator and value.
+     * @param locatorPair A Map.Entry containing the locator type and its corresponding value.
+     * @return The WebElement located by the specified locator and value.
+     */
+    public WebElement getElement(Map.Entry<String, String> locatorPair) {
+        return getElement(locatorPair.getKey(), locatorPair.getValue());
+    }
 
+    /**
+     * Retrieves a WebElement based on the specified locator type and value.
+     * Supported locator types: "id", "name", "xpath", "css", "tagname", "linktext", "classname", "partiallinktext".
+     * @param locator The locator type (e.g., "id", "xpath").
+     * @param value The locator value (e.g., element's id or xpath expression).
+     * @return The WebElement located by the specified locator and value.
+     */
     public WebElement getElement(String locator, String value) {
         WebElement element;
         switch (locator.toLowerCase()) {
@@ -90,6 +138,12 @@ public class SeleniumDriver {
         return element;
     }
 
+    /**
+     * Returns a By object for locating elements using the specified locator type and value.
+     * @param locator The locator type (e.g., "id", "xpath").
+     * @param value The locator value (e.g., element's id or xpath expression).
+     * @return The By object used for locating the element.
+     */
     public By getBy(String locator, String value) {
         By by;
         switch (locator.toLowerCase()) {
@@ -106,6 +160,10 @@ public class SeleniumDriver {
         return by;
     }
 
+    /**
+     * Initializes a Chrome browser with the specified options.
+     * Configures headless mode, window size, and various Chrome options for automation.
+     */
     public void initializeChromeBrowser() {
 
         ChromeOptions options = new ChromeOptions();
@@ -136,6 +194,10 @@ public class SeleniumDriver {
 
     }
 
+    /**
+     * Initializes a Firefox browser with the specified options.
+     * Configures headless mode, disables PDF viewer, and sets other Firefox preferences.
+     */
     public void initializeFirefoxBrowser() {
 
         FirefoxOptions options = new FirefoxOptions();
@@ -149,7 +211,6 @@ public class SeleniumDriver {
         options.addArguments("--disable-infobars");
         options.addArguments("--disable-extensions");
         options.addArguments("--disable-dev-shm-usage");
-        //options.addArguments("--remote-allow-origins=*");
         options.addArguments("--ignore-certificate-errors");
         options.addArguments("--disable-browser-side-navigation");
 
@@ -170,6 +231,10 @@ public class SeleniumDriver {
             driver.manage().window().maximize();
     }
 
+    /**
+     * Initializes an Edge browser with the specified options.
+     * Configures headless mode, window size, and other Edge options.
+     */
     public void initializeEdgeBrowser() {
 
         EdgeOptions options = new EdgeOptions();
@@ -202,6 +267,10 @@ public class SeleniumDriver {
 
     }
 
+    /**
+     * Initializes a Safari browser with the specified options.
+     * Configures the SafariDriver and sets implicit wait time.
+     */
     public void initializeSafariBrowser() {
 
         SafariOptions options = new SafariOptions();
