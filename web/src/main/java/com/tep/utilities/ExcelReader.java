@@ -33,7 +33,7 @@ public class ExcelReader {
      * Nested map to store objects from the Excel file.
      * Structure: SheetName -> Variable -> (Locator -> Value).
      */
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, String>>> objects = new LinkedHashMap<>();
+    private final LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, String>>> objects = new LinkedHashMap<>();
 
     /**
      * Reads page objects from an Excel file and organizes them into a structured map.

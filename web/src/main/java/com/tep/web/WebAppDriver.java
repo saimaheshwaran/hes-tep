@@ -1,11 +1,11 @@
 package com.tep.web;
 
-import com.tep.web.base.SeleniumDriver;
 import com.tep.web.browser.*;
-import com.tep.web.base.SeleniumWaits;
 import com.tep.web.validation.*;
 import com.tep.web.config.Enums;
 import org.openqa.selenium.WebDriver;
+import com.tep.web.base.SeleniumWaits;
+import com.tep.web.base.SeleniumDriver;
 import com.tep.web.element.click.ActionClick;
 import com.tep.web.element.getter.GetElement;
 import com.tep.web.element.click.SeleniumClick;
