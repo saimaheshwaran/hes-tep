@@ -139,6 +139,22 @@ public class SeleniumDriver {
     }
 
     /**
+     * Extracts and returns the locator string of a given {@link WebElement}.
+     * This method parses the {@code toString()} output of the WebElement to
+     * isolate the locator details.
+     *
+     * @param element The WebElement whose locator string is to be retrieved.
+     * @return A string representation of the locator, typically including the
+     *         locator strategy (e.g., xpath, id, css) and its value.
+     * @throws StringIndexOutOfBoundsException If the {@code toString()} format
+     *         of the WebElement is not as expected.
+     */
+    public String getElementLocatorString(WebElement element) {
+        String elementString = element.toString();
+        return elementString.substring(elementString.indexOf(" -> ") + 4);
+    }
+
+    /**
      * Returns a By object for locating elements using the specified locator type and value.
      * @param locator The locator type (e.g., "id", "xpath").
      * @param value The locator value (e.g., element's id or xpath expression).
@@ -213,6 +229,7 @@ public class SeleniumDriver {
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--ignore-certificate-errors");
         options.addArguments("--disable-browser-side-navigation");
+        options.setCapability("se:Bidi", true);
 
         FirefoxProfile firefoxProfile = new FirefoxProfile();
         firefoxProfile.setPreference("pdfjs.disabled", true);

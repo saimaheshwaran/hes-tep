@@ -1,10 +1,7 @@
 package com.tep.utilities;
 
-import com.tep.web.base.Waits;
 import com.tep.web.validation.Assertion;
 import org.openqa.selenium.Keys;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Base64;
@@ -16,13 +13,16 @@ import java.util.regex.Pattern;
  */
 public class Strings {
 
-    private static final Logger logger = LoggerFactory.getLogger(Strings.class);
+    public static String parseLocatorfromWebElementString(String elementString) {
+        return elementString.substring(elementString.indexOf(" -> ") + 4);
+    }
 
     /**
-     * Identifies the Selenium Keys constant based on the provided key string.
+     * Identifies and returns the corresponding Selenium Keys enum for the given string.
+     * If no valid key is found, it returns Keys.NULL.
      *
-     * @param key the key string to identify.
-     * @return the corresponding Selenium Keys constant.
+     * @param key The string representing a key (e.g., "ENTER", "BACK_SPACE").
+     * @return The corresponding Selenium Keys enum.
      */
     public static Keys identifyKey(String key) {
         return switch (key.toUpperCase()) {
@@ -106,7 +106,6 @@ public class Strings {
             m.appendReplacement(buf, Matcher.quoteReplacement(ch));
         }
         m.appendTail(buf);
-        logger.info("UTF characters removed. Result: {}", buf);
         return buf;
     }
 
@@ -124,7 +123,6 @@ public class Strings {
         Matcher matcher = pattern.matcher(string);
         if (matcher.find()) {
             result = (matcher.group(group));
-            logger.info("Substring fetched: '{}'", result);
         }
         return result;
     }
@@ -142,7 +140,6 @@ public class Strings {
         for (String string : list) {
             if (string.matches(regex)) {
                 match = string;
-                logger.info("Match found: '{}'", match);
                 break;
             }
         }

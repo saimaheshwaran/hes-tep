@@ -1,6 +1,5 @@
 package com.tep.web.browser;
 
-import lombok.AllArgsConstructor;
 import com.tep.web.base.SeleniumDriver;
 
 /**
@@ -8,13 +7,16 @@ import com.tep.web.base.SeleniumDriver;
  * navigating back, forward, and refreshing the page.
  * It interacts with a SeleniumDriver instance to perform these actions on the browser.
  */
-@AllArgsConstructor
 public class BrowserEvent {
 
     /**
      * The SeleniumDriver instance used to interact with the browser.
      */
-    private SeleniumDriver seleniumDriver;
+    private final SeleniumDriver seleniumDriver;
+
+    public BrowserEvent(SeleniumDriver seleniumDriver) {
+        this.seleniumDriver = seleniumDriver;
+    }
 
     /**
      * Navigates to the specified URL in the browser.

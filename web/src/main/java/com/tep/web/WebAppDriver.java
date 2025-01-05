@@ -25,6 +25,8 @@ import com.tep.web.element.radiobutton.ActionRadioButton;
 import com.tep.web.element.radiobutton.SeleniumRadioButton;
 import com.tep.web.element.mousehover.JavaScriptMouseHover;
 import com.tep.web.element.radiobutton.JavaScriptRadioButton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * WebAppDriver is a class that encapsulates the initialization and management of the web browser and various web automation actions.
