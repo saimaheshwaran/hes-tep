@@ -102,7 +102,7 @@ public class MapUtils {
      * @return Updated map.
      * @throws IllegalArgumentException If an unsupported mode is provided.
      */
-    public static Map<String, String> updateMap(String mode, Map<String, String> inputMap, Map<String, String> mapToUpdate) {
+    public static Map<String, String> updateMap(Enums.Manipulation_Mode mode, Map<String, String> inputMap, Map<String, String> mapToUpdate) {
         logErrorAndThrowIfNull(LOGGER, "Mode", mode);
         if (mapToUpdate == null) {
             LOGGER.debug("Map to update is null. Initializing new HashMap.");
@@ -114,15 +114,15 @@ public class MapUtils {
             return updatedMap;
         }
 
-        switch (mode.trim().toLowerCase()) {
-            case "set":
+        switch (mode) {
+            case SET:
                 updatedMap.clear();
                 updatedMap.putAll(inputMap);
                 break;
-            case "update":
+            case UPDATE:
                 updatedMap.putAll(inputMap);
                 break;
-            case "delete":
+            case DELETE:
                 inputMap.keySet().forEach(updatedMap::remove);
                 break;
             default:
