@@ -4,6 +4,7 @@ EY:
   page: {value: 'https://ey.corpmerchandise.com'}
   searchBox: {id: 'searchTextBox'}
   pen: {xpath: '//ul//a[@id="linkProductName"]//h4[contains(text(),"Pen")]'}
+  bag: {xpath: '//ul//a[@id="linkProductName"]//h4[contains(text(),"Bag")]'}
   quantity:
     id: 'Quantity'
   addToCart:

@@ -19,6 +19,15 @@ public class ProductPage extends BasePage {
     @FindBy(xpath = "//div[@id=\"messageBoxContainerId\"]")
     private WebElement alert;
 
+    @FindBy(xpath= "//*[@id=\"customCategoryValidation\"]")
+    private WebElement newcat;
+
+    @FindBy(xpath="//*[@id='layout']/z-widget/header/div[3]/div[2]/div/z-widget[2]/nav/ul[1]/li[3]")
+    private WebElement apparel;
+
+    @FindBy(xpath= "//*[@id=\"customCategoryValidation\"and @href=\"/category/headwear\"]")
+    private WebElement headwear;
+
     public ProductPage(WebDriver driver) {
         super(driver);
         PageFactory.initElements(driver, this);

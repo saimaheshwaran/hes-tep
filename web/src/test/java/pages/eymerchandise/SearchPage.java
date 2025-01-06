@@ -14,7 +14,8 @@ public class SearchPage extends BasePage {
     @CacheLookup
     @FindBy(xpath = "//ul//a[@id='linkProductName']//h4[contains(text(),'Pen')]")
     private WebElement productPen;
-
+    @FindBy(xpath= "//ul//a[@id='linkProductName']//h4[contains(text(),'Bag')]")
+    private WebElement productBag;
     public SearchPage(WebDriver driver) {
         super(driver);
         PageFactory.initElements(driver, this);
