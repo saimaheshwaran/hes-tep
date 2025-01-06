@@ -89,12 +89,12 @@ public class ApiResponse {
         switch (comparison) {
             case EQUAL -> response.body(path, equalTo(expected));
             case NOT_EQUAL -> response.body(path, not(equalTo(expected)));
-            case CONTAIN -> response.body(path, containsString(expected));
-            case NOT_CONTAIN -> response.body(path, not(containsString(expected)));
+            case CONTAINS -> response.body(path, containsString(expected));
+            case NOT_CONTAINS -> response.body(path, not(containsString(expected)));
             case HAS_ITEM -> response.body(path, hasItem(expected));
             case NOT_HAS_ITEM -> response.body(path, not(hasItem(expected)));
             default -> {
-                logger.error(String.format("Invalid comparison type '%s' in validateResponseStringFieldByPath.", comparison));
+                logger.error("Invalid comparison type '{}' in validateResponseStringFieldByPath.", comparison);
                 throw new IllegalArgumentException("Invalid comparison type: " + comparison);
             }
         }
@@ -179,10 +179,10 @@ public class ApiResponse {
             case NOT_EQUAL:
                 response.then().body(not(equalTo(expected)));
                 break;
-            case CONTAIN:
+            case CONTAINS:
                 response.then().body(containsString(expected));
                 break;
-            case NOT_CONTAIN:
+            case NOT_CONTAINS:
                 response.then().body(not(containsString(expected)));
                 break;
             default:

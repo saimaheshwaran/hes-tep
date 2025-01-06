@@ -1,7 +1,7 @@
 package tests.eymerchandise;
 
 import com.tep.web.WebAppDriver;
-import com.tep.web.config.Enums;
+import com.tep.web.config.WebEnums;
 import org.junit.jupiter.api.Test;
 import pages.eymerchandise.HomePage;
 import pages.eymerchandise.SearchPage;
@@ -14,7 +14,7 @@ public class TestCases {
 
         WebAppDriver driver = new WebAppDriver();
 
-        driver.openBrowser(Enums.BrowserType.CHROME);
+        driver.openBrowser(WebEnums.BrowserType.CHROME);
         driver.browserEvent.goToUrlByPOValue("EY.page");
         HomePage homePage = new HomePage(driver.getBrowser());
         SearchPage searchPage = new SearchPage(driver.getBrowser());
@@ -40,7 +40,7 @@ public class TestCases {
 
         WebAppDriver driver = new WebAppDriver();
 
-        driver.openBrowser(Enums.BrowserType.CHROME);
+        driver.openBrowser(WebEnums.BrowserType.CHROME);
         driver.browserEvent.goToUrlByPOValue("EY.page");
         HomePage homePage = new HomePage(driver.getBrowser());
         SearchPage searchPage = new SearchPage(driver.getBrowser());

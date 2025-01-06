@@ -13,24 +13,6 @@ import static com.tep.utilities.Constants.*;
  */
 public final class ApiConstants {
 
-    // Static block to initialize the PROJECT_FOLDER_PATH
-    static {
-        PropUtils propUtils = new PropUtils(Constants.TEP_PROPERTIES_PATH);
-        PROJECT_FOLDER_PATH = TEST_RESOURCES_PATH + SEPARATOR + propUtils.get("project_name");
-    }
-
-    // Paths for properties files
-    /**
-     * The path to the project folder.
-     */
-    public static final String PROJECT_FOLDER_PATH;
-
-    /**
-     * The path to the API properties file.
-     */
-    public static final String API_PROPERTIES_PATH = MAIN_RESOURCES_PATH + SEPARATOR + "api.properties";
-
-    // Default configuration values
     /**
      * The default number of retries for API calls.
      */
@@ -52,4 +34,5 @@ public final class ApiConstants {
     private ApiConstants() {
         throw new UnsupportedOperationException("ApiConstants is a utility class and cannot be instantiated.");
     }
+
 }

@@ -2,7 +2,7 @@ package com.tep.web.base;
 
 import org.openqa.selenium.*;
 import lombok.AllArgsConstructor;
-import com.tep.web.config.Constants;
+import com.tep.web.config.WebConstants;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -69,7 +69,7 @@ public class SeleniumWaits {
             }
         };
 
-        FluentWait<WebDriver> wait = getFluentWait(Constants.DEFAULT_WAIT_TIME_SEC);
+        FluentWait<WebDriver> wait = getFluentWait(WebConstants.DEFAULT_WAIT_TIME_SEC);
         return wait.until(jQueryLoad) && wait.until(jsLoad);
     }
 
@@ -80,7 +80,7 @@ public class SeleniumWaits {
      * @return true if the page title contains the specified text, false otherwise.
      */
     public boolean untilTitleContains(String pageTitle) {
-        return untilTitleContains(pageTitle, Constants.DEFAULT_WAIT_TIME_SEC);
+        return untilTitleContains(pageTitle, WebConstants.DEFAULT_WAIT_TIME_SEC);
     }
 
     /**
@@ -106,7 +106,7 @@ public class SeleniumWaits {
      * @param webElement The WebElement to wait for.
      */
     public void untilElementDisplayed(WebElement webElement) {
-        untilElementDisplayed(webElement, Constants.DEFAULT_WAIT_TIME_SEC);
+        untilElementDisplayed(webElement, WebConstants.DEFAULT_WAIT_TIME_SEC);
     }
 
     /**
@@ -128,7 +128,7 @@ public class SeleniumWaits {
      * @param webElement The WebElement to wait for.
      */
     public void untilElementNotDisplayed(WebElement webElement) {
-        untilElementNotDisplayed(webElement, Constants.DEFAULT_WAIT_TIME_SEC);
+        untilElementNotDisplayed(webElement, WebConstants.DEFAULT_WAIT_TIME_SEC);
     }
 
     /**
@@ -150,7 +150,7 @@ public class SeleniumWaits {
      * @param webElement The WebElement to wait for.
      */
     public void untilElementClickable(WebElement webElement) {
-        untilElementClickable(webElement, Constants.DEFAULT_WAIT_TIME_SEC);
+        untilElementClickable(webElement, WebConstants.DEFAULT_WAIT_TIME_SEC);
     }
 
     /**
@@ -173,7 +173,7 @@ public class SeleniumWaits {
      * @param webElement The WebElement to wait for.
      */
     public void untilElementNotClickable(WebElement webElement) {
-        untilElementNotClickable(webElement, Constants.DEFAULT_WAIT_TIME_SEC);
+        untilElementNotClickable(webElement, WebConstants.DEFAULT_WAIT_TIME_SEC);
     }
 
     /**

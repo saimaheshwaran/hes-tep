@@ -1,7 +1,7 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="utilities:jar">
-    <output-path>$PROJECT_DIR$/out/</output-path>
-    <root id="archive" name="utilities.jar">
+  <artifact type="jar" name="utilities-1.0.0">
+    <output-path>$MAVEN_REPOSITORY$/com/tep/utilities/1.0.0</output-path>
+    <root id="archive" name="utilities-1.0.0.jar">
       <element id="module-output" name="utilities" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/cucumber/datatable/7.20.1/datatable-7.20.1.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/minidev/accessors-smart/2.5.0/accessors-smart-2.5.0.jar" path-in-jar="/" />

@@ -2,8 +2,8 @@ package com.tep.web.base;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import com.tep.web.config.Enums;
-import com.tep.web.config.Constants;
+import com.tep.web.config.WebEnums;
+import com.tep.web.config.WebConstants;
 import com.tep.web.config.PageObjects;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -47,7 +47,7 @@ public class SeleniumDriver {
      * Constructor that initializes the browser based on the specified browser type.
      * @param browserType The browser type to initialize.
      */
-    public SeleniumDriver(Enums.BrowserType browserType) {
+    public SeleniumDriver(WebEnums.BrowserType browserType) {
         openBrowser(browserType);
     }
 
@@ -56,13 +56,13 @@ public class SeleniumDriver {
      * If the browser type is DEFAULT, it falls back to the default browser type defined in Constants.BROWSER_TYPE.
      * @param browserType The browser type to initialize.
      */
-    public void openBrowser(Enums.BrowserType browserType) {
+    public void openBrowser(WebEnums.BrowserType browserType) {
 
         if (driver != null)
             closeBrowser();
 
-        if(browserType == Enums.BrowserType.DEFAULT)
-            browserType = Enums.BrowserType.valueOf(Constants.BROWSER_TYPE);
+        if(browserType == WebEnums.BrowserType.DEFAULT)
+            browserType = WebEnums.BrowserType.valueOf(WebConstants.BROWSER_TYPE);
 
         switch (browserType) {
             case CHROME -> initializeChromeBrowser();
@@ -89,7 +89,7 @@ public class SeleniumDriver {
     public void closeBrowser() {
         try {
             driver.close();
-            if (Constants.BROWSER_QUIT) {
+            if (WebConstants.BROWSER_QUIT) {
                 driver.quit();
                 driver = null;
             }
@@ -184,7 +184,7 @@ public class SeleniumDriver {
 
         ChromeOptions options = new ChromeOptions();
 
-        if (Constants.BROWSER_HEADLESS) {
+        if (WebConstants.BROWSER_HEADLESS) {
             options.addArguments("--headless");
             options.addArguments("--disable-gpu");
         }
@@ -204,8 +204,8 @@ public class SeleniumDriver {
                 .withSilent(true).usingAnyFreePort().build();
 
         driver = new ChromeDriver(chromeDriverService, options);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(Constants.IMPLICIT_WAIT_TIME_SEC));
-        if (Constants.BROWSER_MAXIMIZE)
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(WebConstants.IMPLICIT_WAIT_TIME_SEC));
+        if (WebConstants.BROWSER_MAXIMIZE)
             driver.manage().window().maximize();
 
     }
@@ -218,7 +218,7 @@ public class SeleniumDriver {
 
         FirefoxOptions options = new FirefoxOptions();
 
-        if (Constants.BROWSER_HEADLESS) {
+        if (WebConstants.BROWSER_HEADLESS) {
             options.addArguments("--headless");
             options.addArguments("--disable-gpu");
         }
@@ -243,8 +243,8 @@ public class SeleniumDriver {
 
         assert geckoDriverService != null;
         driver = new FirefoxDriver(geckoDriverService, options);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(Constants.IMPLICIT_WAIT_TIME_SEC));
-        if (Constants.BROWSER_MAXIMIZE)
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(WebConstants.IMPLICIT_WAIT_TIME_SEC));
+        if (WebConstants.BROWSER_MAXIMIZE)
             driver.manage().window().maximize();
     }
 
@@ -256,11 +256,11 @@ public class SeleniumDriver {
 
         EdgeOptions options = new EdgeOptions();
 
-        if (Constants.BROWSER_MAXIMIZE) {
+        if (WebConstants.BROWSER_MAXIMIZE) {
             options.addArguments("--window-size=1920,1200");
         }
 
-        if (Constants.BROWSER_HEADLESS) {
+        if (WebConstants.BROWSER_HEADLESS) {
             options.addArguments("--headless", "--disable-gpu", "--ignore-certificate-errors", "--disable-extensions", "--no-sandbox", "--disable-dev-shm-usage");
         } else {
             options.addArguments("--ignore-certificate-errors", "--disable-extensions", "--no-sandbox", "--disable-dev-shm-usage");
@@ -276,8 +276,8 @@ public class SeleniumDriver {
         try {
             assert edgeDriverService != null;
             driver = new EdgeDriver(edgeDriverService, options);
-            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(Constants.IMPLICIT_WAIT_TIME_SEC));
-            if (Constants.BROWSER_MAXIMIZE)
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(WebConstants.IMPLICIT_WAIT_TIME_SEC));
+            if (WebConstants.BROWSER_MAXIMIZE)
                 driver.manage().window().maximize();
         } catch (Exception ignored) {
         }
@@ -292,9 +292,9 @@ public class SeleniumDriver {
 
         SafariOptions options = new SafariOptions();
         driver = new SafariDriver(options);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(Constants.IMPLICIT_WAIT_TIME_SEC));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(WebConstants.IMPLICIT_WAIT_TIME_SEC));
 
-        if (Constants.BROWSER_MAXIMIZE)
+        if (WebConstants.BROWSER_MAXIMIZE)
             driver.manage().window().maximize();
     }
 

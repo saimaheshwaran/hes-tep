@@ -65,11 +65,11 @@ public class ApiConfig {
         log.setLevel(ch.qos.logback.classic.Level.INFO);
 
         // Load TEP properties
-        if (!Files.exists(Path.of(Constants.TEP_PROPERTIES_PATH))) {
-            logger.warn("TEP properties file does not exist at '{}'", Constants.TEP_PROPERTIES_PATH);
+        if (!Files.exists(Path.of(Constants.TEP_PROP_PATH))) {
+            logger.warn("TEP properties file does not exist at '{}'", Constants.TEP_PROP_PATH);
         } else {
-            if (!Boolean.parseBoolean(Constants.TEP_PROPERTIES.get("api"))) {
-                logger.warn("API testing is disabled. Set 'api=true' in '{}'.", Constants.TEP_PROPERTIES_PATH);
+            if (!Boolean.parseBoolean(Constants.TEP_PROPERTIES.getProperty("api"))) {
+                logger.warn("API testing is disabled. Set 'api=true' in '{}'.", Constants.TEP_PROP_PATH);
             } else {
                 // Load API configuration files
                 loadApiConfiguration();
@@ -86,7 +86,7 @@ public class ApiConfig {
      * Loads API configuration from the YAML files in the specified folder.
      */
     private void loadApiConfiguration() {
-        String apiFolder = ApiConstants.PROJECT_FOLDER_PATH + File.separator + "input" + File.separator + "api";
+        String apiFolder = Constants.TEST_DATA_INPUT_PATH + File.separator + "api";
         logger.info("Checking if API folder exists at '{}'", apiFolder);
 
         if (!Files.exists(Path.of(apiFolder))) {
@@ -112,19 +112,19 @@ public class ApiConfig {
      */
     private void loadApiProperties() {
 
-        logger.info("Checking if API properties file exists at '{}'", ApiConstants.API_PROPERTIES_PATH);
+        logger.info("Checking if API properties file exists at '{}'", Constants.API_PROP_PATH);
 
-        if (!Files.exists(Path.of(ApiConstants.API_PROPERTIES_PATH))) {
-            logger.warn("API properties file does not exist at '{}'", ApiConstants.API_PROPERTIES_PATH);
+        if (!Files.exists(Path.of(Constants.API_PROP_PATH))) {
+            logger.warn("API properties file does not exist at '{}'", Constants.API_PROP_PATH);
         } else {
-            apiProps = new PropUtils(ApiConstants.API_PROPERTIES_PATH);
+            apiProps = new PropUtils(Constants.API_PROP_PATH);
 
             try {
                 String jsonContent = content.jsonString();
                 PlaceHolderReplacer placeHolderReplacer = new PlaceHolderReplacer((Map<String, String>) apiProps.getAsMap());
                 String updatedJsonContent = placeHolderReplacer.replace(jsonContent);
                 setContent(updatedJsonContent);
-                logger.info("API properties loaded and placeholders replaced from '{}'.", ApiConstants.API_PROPERTIES_PATH);
+                logger.info("API properties loaded and placeholders replaced from '{}'.", Constants.API_PROP_PATH);
             } catch (Exception e) {
                 logger.error("Failed to update API config with environment variables: {}", e.getMessage(), e);
             }

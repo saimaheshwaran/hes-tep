@@ -2,7 +2,7 @@ package com.tep.web;
 
 import com.tep.web.browser.*;
 import com.tep.web.validation.*;
-import com.tep.web.config.Enums;
+import com.tep.web.config.WebEnums;
 import org.openqa.selenium.WebDriver;
 import com.tep.web.base.SeleniumWaits;
 import com.tep.web.base.SeleniumDriver;
@@ -25,8 +25,6 @@ import com.tep.web.element.radiobutton.ActionRadioButton;
 import com.tep.web.element.radiobutton.SeleniumRadioButton;
 import com.tep.web.element.mousehover.JavaScriptMouseHover;
 import com.tep.web.element.radiobutton.JavaScriptRadioButton;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * WebAppDriver is a class that encapsulates the initialization and management of the web browser and various web automation actions.
@@ -162,7 +160,7 @@ public class WebAppDriver {
      *
      * @param browserType The type of browser to use for the Selenium WebDriver.
      */
-    public WebAppDriver(Enums.BrowserType browserType) {
+    public WebAppDriver(WebEnums.BrowserType browserType) {
         try {
             this.driver = new SeleniumDriver(browserType);
             initializeDriver(this.driver);
@@ -233,7 +231,7 @@ public class WebAppDriver {
      *
      * @param browserType The type of browser to launch.
      */
-    public void openBrowser(Enums.BrowserType browserType) {
+    public void openBrowser(WebEnums.BrowserType browserType) {
         this.driver.openBrowser(browserType);
         initializeDriver(this.driver);
     }

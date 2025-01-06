@@ -1,8 +1,5 @@
 package com.tep.api.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * A utility class containing constants representing configuration keys used in the API framework.
  *
@@ -25,9 +22,9 @@ public final class ApiKeys {
     public static final String FORM_PARAMS = "formParams";           // Form parameters for requests
 
     // Retry configuration keys
-    private static final String RETRY_ON_ERROR = "retryOnError";     // Retry-on-error configuration namespace
-    public static final String RETRY_ON_ERROR_ENABLED = RETRY_ON_ERROR + ".enabled";          // Enable retries
-    public static final String RETRY_ON_ERROR_MAX_COUNT = RETRY_ON_ERROR + ".maxCount";       // Maximum retry count
+    private static final String RETRY_ON_ERROR = "retryOnError";                                 // Retry-on-error configuration namespace
+    public static final String RETRY_ON_ERROR_ENABLED = RETRY_ON_ERROR + ".enabled";             // Enable retries
+    public static final String RETRY_ON_ERROR_MAX_COUNT = RETRY_ON_ERROR + ".maxCount";          // Maximum retry count
     public static final String RETRY_ON_ERROR_MAX_BACKOFF_MS = RETRY_ON_ERROR + ".maxBackoffMs"; // Maximum backoff time in ms
 
     // Proxy configuration keys
@@ -46,4 +43,5 @@ public final class ApiKeys {
     private ApiKeys() {
         throw new UnsupportedOperationException("ApiKeys is a static constants container and cannot be instantiated.");
     }
+
 }

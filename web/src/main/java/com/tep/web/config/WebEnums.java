@@ -4,7 +4,7 @@ package com.tep.web.config;
  * The Enums class contains the enumeration definitions used across the framework.
  * Currently, it includes the BrowserType enum that defines supported browser types.
  */
-public class Enums {
+public class WebEnums {
 
     /**
      * Enum representing the supported browser types.

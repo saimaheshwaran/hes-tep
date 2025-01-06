@@ -1,8 +1,9 @@
 package com.tep.web.config;
 
-import org.yaml.snakeyaml.Yaml;
+import com.tep.utilities.Constants;
 import com.tep.utilities.ExcelReader;
 import com.tep.utilities.YamlReader;
+import org.yaml.snakeyaml.Yaml;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -32,21 +33,22 @@ public class PageObjects {
      */
     public PageObjects() {
         try {
-            String extension = Constants.PAGE_OBJECT_TYPE;
+            String extension = WebConstants.PAGE_OBJECT_TYPE;
+            String pageObjectsPath = Constants.TEST_DATA_INPUT_PATH + Constants.FILE_SEPARATOR + "web" + Constants.FILE_SEPARATOR;
             switch (extension) {
                 case "yaml", "yml" -> {
                     YamlReader yamlReader = new YamlReader();
-                    objects = (LinkedHashMap) yamlReader.getYamlDataFromFolder(Constants.TEST_DATA_INPUT_PATH);
+                    objects = (LinkedHashMap) yamlReader.getYamlDataFromFolder(pageObjectsPath);
                 }
                 case "json" -> {
                     ObjectMapper objectMapper = new ObjectMapper();
-                    FileInputStream readFile = new FileInputStream(Constants.TEST_DATA_INPUT_PATH + "PageObjects.json");
+                    FileInputStream readFile = new FileInputStream(pageObjectsPath + "PageObjects.json");
                     objects = (LinkedHashMap) objectMapper.readValue(readFile, LinkedHashMap.class);
                     readFile.close();
                 }
                 case "xlsx", "excel", "xls" -> {
                     ExcelReader excelReader = new ExcelReader();
-                    objects = excelReader.getPageObjects(Constants.TEST_DATA_INPUT_PATH + "PageObjects.xlsx");
+                    objects = excelReader.getPageObjects(pageObjectsPath + "PageObjects.xlsx");
                 }
                 default -> objects = null;
             }

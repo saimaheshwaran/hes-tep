@@ -1,7 +1,6 @@
 package tests.eymerchandise;
 import com.tep.web.WebAppDriver;
-import com.tep.web.config.Enums;
-import org.openqa.selenium.support.ui.Select;
+import com.tep.web.config.WebEnums;
 import org.testng.annotations.AfterMethod;
 import pages.eymerchandise.HomePage;
 import pages.eymerchandise.ProductPage;
@@ -17,7 +16,7 @@ public class Testcasesweb {
 
         WebAppDriver driver = new WebAppDriver();
 
-        driver.openBrowser(Enums.BrowserType.CHROME);
+        driver.openBrowser(WebEnums.BrowserType.CHROME);
         driver.browserEvent.goToUrlByPOValue("EY.page");
         driver.pageValidation.checkPageTitle("Search", true);
         driver.seleniumWaits.sleep(2);
@@ -29,7 +28,7 @@ public class Testcasesweb {
 
         WebAppDriver driver = new WebAppDriver();
 
-        driver.openBrowser(Enums.BrowserType.CHROME);
+        driver.openBrowser(WebEnums.BrowserType.CHROME);
         driver.browserEvent.goToUrlByPOValue("EY.page");
         HomePage homePage = new HomePage(driver.getBrowser());
         SearchPage searchPage = new SearchPage(driver.getBrowser());
@@ -54,7 +53,7 @@ public class Testcasesweb {
 
         WebAppDriver driver = new WebAppDriver();
 
-        driver.openBrowser(Enums.BrowserType.CHROME);
+        driver.openBrowser(WebEnums.BrowserType.CHROME);
         driver.browserEvent.goToUrlByPOValue("EY.page");
         HomePage homePage = new HomePage(driver.getBrowser());
         SearchPage searchPage = new SearchPage(driver.getBrowser());
@@ -71,7 +70,7 @@ public class Testcasesweb {
 
         WebAppDriver driver = new WebAppDriver();
 
-        driver.openBrowser(Enums.BrowserType.CHROME);
+        driver.openBrowser(WebEnums.BrowserType.CHROME);
         driver.browserEvent.goToUrlByPOValue("EY.page");
         HomePage homePage = new HomePage(driver.getBrowser());
         SearchPage searchPage = new SearchPage(driver.getBrowser());
