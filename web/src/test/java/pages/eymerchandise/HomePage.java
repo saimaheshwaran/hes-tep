@@ -11,9 +11,12 @@ import org.openqa.selenium.support.PageFactory;
 @Data
 public class HomePage extends BasePage {
 
+    String url="https://ey.corpmerchandise.com";
+
     @CacheLookup
     @FindBy(id = "searchTextBox")
     private WebElement searchBox;
+
 
     public HomePage(WebDriver driver) {
         super(driver);

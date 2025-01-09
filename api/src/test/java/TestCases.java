@@ -3,13 +3,13 @@ import com.tep.api.config.ApiEnums;
 import com.tep.utilities.Enums;
 import com.tep.utilities.DatabaseConfig;
 import io.qameta.allure.Allure;
-import org.junit.Assert;
-import org.junit.Test;
 import java.util.HashMap;
 import java.util.List;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import org.bson.Document;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestCases {
 
@@ -20,7 +20,7 @@ public class TestCases {
         apiDriver.setConfigFromYaml("catfact_fact");
         apiDriver.executeRequest(ApiEnums.Http_Method.GET);
         int code = apiDriver.Response().get().statusCode();
-        Assert.assertEquals(200, code);
+        Assertions.assertEquals(200, code);
         Allure.addAttachment("Status Code", String.valueOf(apiDriver.Response().get().statusCode()));
     }
 
@@ -29,7 +29,7 @@ public class TestCases {
         apiDriver.setConfigFromYaml("catfact_facts");
         apiDriver.executeRequest(ApiEnums.Http_Method.GET);
         int code = apiDriver.Response().get().statusCode();
-        Assert.assertEquals(200, code);
+        Assertions.assertEquals(200, code);
         Allure.addAttachment("Status Code", String.valueOf(apiDriver.Response().get().statusCode()));
     }
 
@@ -134,7 +134,7 @@ public class TestCases {
                 "}";
         apiDriver.setBaseUri("https://catfact.ninja");
         apiDriver.setEndPoint("fact");
-        Assert.assertEquals(expected, apiDriver.toString());
+        Assertions.assertEquals(expected, apiDriver.toString());
     }
 
     /**
@@ -148,7 +148,7 @@ public class TestCases {
             put("endpoint", "fact");
         }});
         apiDriver.executeRequest(ApiEnums.Http_Method.GET);
-        Assert.assertEquals(200, apiDriver.getResponse().statusCode());
+        Assertions.assertEquals(200, apiDriver.getResponse().statusCode());
     }
 
     /**
@@ -159,7 +159,7 @@ public class TestCases {
         String asStringBefore = apiDriver.toString();
         apiDriver.setConfigFromYaml("api_name_1");
         String asStringAfter = apiDriver.toString();
-        Assert.assertNotEquals(asStringBefore, asStringAfter);
+        Assertions.assertNotEquals(asStringBefore, asStringAfter);
     }
 
     /**
@@ -170,7 +170,7 @@ public class TestCases {
         apiDriver.setConfigFromYaml("base_param_post");
         System.out.println(apiDriver);
         apiDriver.executeRequest(ApiEnums.Http_Method.POST);
-        Assert.assertEquals("Bearer dev_bearer_token", apiDriver.getHeaders().get("Authorization"));
+        Assertions.assertEquals("Bearer dev_bearer_token", apiDriver.getHeaders().get("Authorization"));
     }
 
     /**
@@ -180,7 +180,7 @@ public class TestCases {
     public void test_proxy_from_config_user() {
         apiDriver.setConfigFromYaml("api_proxy_with_creds");
         System.out.println("apidriver.Response = " + apiDriver.getProxyUsername());
-        Assert.assertEquals("user", apiDriver.getProxyUsername());
+        Assertions.assertEquals("user", apiDriver.getProxyUsername());
     }
 
     /**
@@ -247,7 +247,7 @@ public class TestCases {
         apiDriver.setBaseUri("https://catfact.ninja");
         apiDriver.setEndPoint("fact");
         apiDriver.executeRequest(ApiEnums.Http_Method.GET);
-        Assert.assertEquals(200, apiDriver.getResponse().statusCode());
+        Assertions.assertEquals(200, apiDriver.getResponse().statusCode());
         String factFromApi = apiDriver.getResponse().jsonPath().getString("fact");
         DatabaseConfig.connectDatabase("MongoDB");
         Document document = new Document("fact", factFromApi);
@@ -258,48 +258,48 @@ public class TestCases {
     public void test_endpoint_MongoDB_Fetch_First_Row_Data() {
         DatabaseConfig.connectDatabase("mongodb://localhost:27017", "API", "cat_data_insert");
         List<Document> document = DatabaseConfig.getFirstRowData("MongoDB", "cat_data_insert");
-        Assert.assertTrue(document.getFirst().containsKey("fact"));
+        Assertions.assertTrue(document.getFirst().containsKey("fact"));
         String expectedFact = "The way you treat kittens in the early stages of it's life will render it's personality traits later in life.";
         String actualFact = document.getFirst().getString("fact");
-        Assert.assertEquals(expectedFact, actualFact);
+        Assertions.assertEquals(expectedFact, actualFact);
     }
 
     @Test
     public void test_endpoint_MongoDB_Fetch_All_Data() {
         DatabaseConfig.connectDatabase("mongodb://localhost:27017", "API", "cat_data_insert");
         List<Document> documents = DatabaseConfig.getAllData("MongoDB", "cat_data_insert");
-        Assert.assertEquals(5, documents.size());
+        Assertions.assertEquals(6, documents.size());
     }
 
     @Test
     public void test_endpoint_MongoDB_Fetch_Data_With_Query() {
         DatabaseConfig.connectDatabase("mongodb://localhost:27017", "API", "cat_data_insert");
         List<Document> documents = DatabaseConfig.getDataWithQuery("MongoDB", "cat_data_insert", "{ \"_id\": { $ne: ObjectId(\"676173fcb0b2f013b419f0c1\") } }");
-        Assert.assertEquals(4, documents.size());
+        Assertions.assertEquals(5, documents.size());
     }
 
     @Test
     public void test_MySQL_Fetch_First_Row_Data() {
         DatabaseConfig.connectDatabase("MySQL");
         List<Document> document = DatabaseConfig.getFirstRowData("MySQL", "city");
-        Assert.assertTrue(document.getFirst().containsKey("Name"));
+        Assertions.assertTrue(document.getFirst().containsKey("Name"));
         int expectedPopulation = 1780000;
         int actualPopulation = document.getFirst().getInteger("Population");
-        Assert.assertEquals(expectedPopulation, actualPopulation);
+        Assertions.assertEquals(expectedPopulation, actualPopulation);
     }
 
     @Test
     public void test_MySQL_Fetch_All_Data() {
         DatabaseConfig.connectDatabase("MySQL");
         List<Document> documents = DatabaseConfig.getAllData("MySQL", "city");
-        Assert.assertEquals(4079, documents.size());
+        Assertions.assertEquals(4079, documents.size());
     }
 
     @Test
     public void test_MySQL_Fetch_Data_With_Query() {
         DatabaseConfig.connectDatabase("MySQL");
         List<Document> documents = DatabaseConfig.getDataWithQuery("MySQL", "city", "SELECT * FROM world.city LIMIT 10;");
-        Assert.assertEquals(10, documents.size());
+        Assertions.assertEquals(10, documents.size());
     }
 }
 

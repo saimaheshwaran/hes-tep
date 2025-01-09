@@ -2,7 +2,7 @@
 
 # Test Elevate Platform
 
-Test Elevate Platform is a Junit based test automation framework to test Web, API and Database.
+Test Elevate Platform is a test automation framework to test Web, API and Database.
 It enables you to write and execute automated acceptance/unit tests.
 Automate your test cases with minimal coding.
 
@@ -44,7 +44,7 @@ Automate your test cases with minimal coding.
 
 ## Introduction
 
-JUnit is an essential unit testing framework for Java, streamlining the development process with simple annotations, assertions, and test runners. It facilitates test-driven development, enabling consistent and efficient testing practices that integrate seamlessly with build tools and CI/CD pipelines. Adopting a JUnit-based automation framework enhances software quality by enabling thorough regression testing and rapid identification of bugs.
+Test Elevate is an essential unit testing framework for Java, streamlining the development process with simple annotations, assertions, and test runners. It facilitates test-driven development, enabling consistent and efficient testing practices that integrate seamlessly with build tools and CI/CD pipelines. Adopting a JUnit-based automation framework enhances software quality by enabling thorough regression testing and rapid identification of bugs.
 
 ## Installation
 

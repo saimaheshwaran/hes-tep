@@ -49,10 +49,11 @@ public class TestCases2 {
         SearchPage searchPage = new SearchPage(driver.getBrowser());
         ProductPage productPage = new ProductPage(driver.getBrowser());
 
-        driver.seleniumSendKeys.sendKeys(homePage.getSearchBox(), "Pen");
+        driver.seleniumSendKeys.sendKeys("EY.searchBox", "Pen");
+
         driver.actionSendKeys.enterKeys(homePage.getSearchBox(), "ENTER");
         driver.pageValidation.checkPartialPageTitle("Search", true);
-        driver.seleniumClick.click(searchPage.getProductPen());
+        driver.seleniumClick.click("EY.pen");
         driver.pageValidation.checkPartialPageTitle("Pen", true);
         driver.seleniumSendKeys.clearInputs(productPage.getQuantity());
         driver.seleniumSendKeys.sendKeys(productPage.getQuantity(), "2");

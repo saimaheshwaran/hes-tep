@@ -1,14 +1,48 @@
 {
-  "Google" : {
-    "searchBox" : {
-      "id" : "",
-      "xpath" : "//*[@title=\"Search\"]",
-      "value" : "fire"
+  "EY" : {
+    "page" : {
+      "value" : "https://ey.corpmerchandise.com"
     },
-    "searchButton" : {
-      "id" : "",
-      "value" : "mobile",
-      "xpath" : "//*[@value=\"Google Search\"]"
+    "searchBox" : {
+      "id" : "searchTextBox",
+      "value" : ""
+    },
+    "pen" : {
+      "xpath" : "//ul//a[@id=\"linkProductName\"]//h4[contains(text(),\"Pen\")]",
+      "value" : ""
+    },
+    "bag" : {
+      "xpath" : "//ul//a[@id=\"linkProductName\"]//h4[contains(text(),\"Bag\")]",
+      "value" : ""
+    },
+    "quantity" : {
+      "id" : "Quantity",
+      "value" : ""
+    },
+    "addToCart" : {
+      "xpath" : "//button[contains(@id, \"button-addtocart\")]",
+      "value" : ""
+    },
+    "alert" : {
+      "xpath" : "//div[@id=\"messageBoxContainerId\"]",
+      "value" : ""
+    }
+  },
+  "Login" : {
+    "page" : {
+      "value" : "https://ey.corpmerchandise.com"
+    },
+    "username" : {
+      "id" : "searchTextBox",
+      "value" : ""
+    },
+    "password" : {
+      "xpath" : "//ul//a[@id=\"linkProductName\"]//h4[contains(text(),\"Pen\")]",
+      "value" : ""
+    },
+    "submit" : {
+      "id" : "Quantity",
+      "value" : ""
     }
   }
 }

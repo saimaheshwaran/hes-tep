@@ -2,7 +2,7 @@
 
 # Test Elevate Platform
 
-Test Elevate Platform is a Junit based test automation framework to test Web.
+Test Elevate Platform is a test automation framework to test Web.
 It enables you to write and execute automated acceptance/unit tests.
 Automate your test cases with minimal coding.
 
@@ -34,7 +34,6 @@ Automate your test cases with minimal coding.
 			<li><a href = "#git">Creating a WEB Test</a></li>
 			<li><a href = "#git">Input Data</a></li>
 			<li><a href = "#git">Running WEB Test</a></li>
-			<li><a href = "#git">Viewing WEB Test result</a></li>
 			</li>
 		</ol>	
 	</li>
@@ -43,7 +42,7 @@ Automate your test cases with minimal coding.
 
 ## Introduction
 
-JUnit is an essential unit testing framework for Java, streamlining the development process with simple annotations, assertions, and test runners. It facilitates test-driven development, enabling consistent and efficient testing practices that integrate seamlessly with build tools and CI/CD pipelines. Adopting a JUnit-based automation framework enhances software quality by enabling thorough regression testing and rapid identification of bugs.
+Test Elevate is an essential unit testing framework for Java, streamlining the development process with simple annotations, assertions, and test runners. It facilitates test-driven development, enabling consistent and efficient testing practices that integrate seamlessly with build tools and CI/CD pipelines. Adopting a JUnit-based automation framework enhances software quality by enabling thorough regression testing and rapid identification of bugs.
 
 ## Installation
 
@@ -229,27 +228,26 @@ you can explore the input data saved in the xlsx file at "src/test/java/pages/ey
 ![image](https://github.com/user-attachments/assets/65c28a1a-9520-4f7e-8deb-4932e9503b89)
 ![image](https://github.com/user-attachments/assets/ffd90610-c886-474c-9ec2-8217cbc1b47a)
 
+# In Json,
+
+In Test-Elevate framework, page. You can store all your Xpath, Id, Name, link, Partial link in Json format.
+you can explore the input data saved in the json file at "src/test/resources/testProject/input/web/PageObjects.json"
+
+![image](https://github.com/user-attachments/assets/5c9c4445-f9c3-43a1-860b-bf7e131dc7f9)
 
 
 ### Running WEB Test
 "web.properties file", is used in our frameworks to set up and manage environment-specific properties.
 
- Location of the file- "api/src/main/resources/api.properties"
-![image](https://github.com/user-attachments/assets/b261bcb3-cd06-42a6-83f2-84661b302514)
+The configuration entry page.object.type = yaml in the properties file of our framework determines the type of file from which page object information is sourced. Should the page.object.type be configured as xls, the system will extract page object identifiers from an Excel spreadsheet. If it is configured as json, the system will instead retrieve the identifiers from a JSON structure. These identifiers include various selectors like ID, XPath, name, or link text, which are essential for web element identification and manipulation within the framework.
+ 
+ you can explore the .properties file at this location  "src/main/resources/web.properties"
+ ![image](https://github.com/user-attachments/assets/b261bcb3-cd06-42a6-83f2-84661b302514)
 
 
- "tep.properties file" is used to manage and configure various aspects of the test environment.
+  "tep.properties file" is used to manage and configure various aspects of the test environment.
    web=true - This line indicates that web testing is enabled. When the testing framework reads this property, it will 
    include web tests in the test execution.
    
-   File Location- "api/src/main/resources/tep.properties"
+   you can explore the .properties file at this location "src/main/resources/tep.properties"
    ![image](https://github.com/user-attachments/assets/c0b4d7c4-f229-44e9-9d87-5f54bcf4d480)
-
-
-### Viewing WEB Test Result
-Allure Reporting Storage refers to the system or location where Allure test reports are saved and managed.It typically involves storing generated report files in a way that allows for easy access, sharing, and historical analysis.
-
-![image](https://github.com/user-attachments/assets/243a5bce-6085-4d76-a4ab-1d3f1f796abb)
-![image](https://github.com/user-attachments/assets/489304df-d831-4eb0-bc56-708f54a2ce1a)
-
-
