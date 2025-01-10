@@ -1,4 +1,4 @@
-import com.tep.DatabaseConfig;
+import com.tep.database.DatabaseConfig;
 import org.bson.Document;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -21,14 +21,14 @@ public class TestCases {
     public void test_endpoint_MongoDB_Fetch_All_Data() {
         DatabaseConfig.connectDatabase("mongodb://localhost:27017", "API", "cat_data_insert");
         List<Document> documents = DatabaseConfig.getAllData("MongoDB", "cat_data_insert");
-        Assertions.assertEquals(6, documents.size());
+        Assertions.assertEquals(7, documents.size());
     }
 
     @Test
     public void test_endpoint_MongoDB_Fetch_Data_With_Query() {
         DatabaseConfig.connectDatabase("mongodb://localhost:27017", "API", "cat_data_insert");
         List<Document> documents = DatabaseConfig.getDataWithQuery("MongoDB", "cat_data_insert", "{ \"_id\": { $ne: ObjectId(\"676173fcb0b2f013b419f0c1\") } }");
-        Assertions.assertEquals(5, documents.size());
+        Assertions.assertEquals(6, documents.size());
     }
 
     @Test

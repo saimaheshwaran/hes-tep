@@ -1,15 +1,16 @@
-import com.tep.DatabaseConfig;
+import com.tep.database.DatabaseConfig;
 import com.tep.api.ApiDriver;
 import com.tep.api.config.ApiEnums;
 import com.tep.utilities.Enums;
 import io.qameta.allure.Allure;
 import java.util.HashMap;
-import java.util.List;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import org.bson.Document;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+
 
 public class TestCases {
 
@@ -254,7 +255,7 @@ public class TestCases {
         DatabaseConfig.insertData("cat_data_insert", document);
     }
 
-}
+  }
 
 
 

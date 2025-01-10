@@ -1,5 +1,4 @@
-package com.tep;
-
+package com.tep.database;
 import com.mongodb.client.*;
 import org.bson.Document;
 import org.slf4j.Logger;
