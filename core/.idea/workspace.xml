@@ -10,35 +10,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="88b6db27-1269-41a8-8985-afd600e4168e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/core_1_0_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../utilities/src/test/java/TestCases.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../database/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../database/.idea/artifacts/database_1_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../database/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../database/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../database/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../database/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../api/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../api/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../api/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../api/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../api/src/main/java/com/tep/utilities/DatabaseConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../database/src/main/java/com/tep/DatabaseConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../api/src/test/java/TestCases.java" beforeDir="false" afterPath="$PROJECT_DIR$/../api/src/test/java/TestCases.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/allure-results/6733b30f-36c8-4f5a-8913-526d76e15809-attachment.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/allure-results/6b198338-e17b-4e8e-a9e3-9775ffdf2882-attachment.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/allure-results/7fc95e1b-e65b-486f-a894-793b8e382f4e-attachment.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/allure-results/837cd7c0-cc10-4e5a-aa52-4b08d3f9551f-attachment.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/allure-results/da196514-07d3-49ce-8e03-bf13275965af-attachment.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/api.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/web.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/testProject/TestCases.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/testProject/input/api/dev.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/testProject/input/api/uat.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/testProject/input/web/PageObjects.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/testProject/input/web/PageObjects.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/testProject/input/web/PageObjects.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/testProject/misc/response/httpbin_post_negative.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/testProject/misc/response/httpbin_post_positive.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/testProject/misc/schema/catfact_fact.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/testProject/misc/schema/fact.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/testProject/misc/schema/incorrect_catfact_fact.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../utilities/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../utilities/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../utilities/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../utilities/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../web/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../web/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../web/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../web/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,8 +106,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23726.103" />
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23726.103" />
+        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.22562.218" />
+        <option value="bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-IU-243.22562.218" />
       </set>
     </attachedChunks>
   </component>
@@ -151,6 +135,8 @@
       <workItem from="1736344693795" duration="3655000" />
       <workItem from="1736348556611" duration="1682000" />
       <workItem from="1736351497662" duration="789000" />
+      <workItem from="1736452923020" duration="603000" />
+      <workItem from="1736509948505" duration="599000" />
     </task>
     <servers />
   </component>

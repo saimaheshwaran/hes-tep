@@ -1,4 +1,4 @@
-package com.tep.utilities;
+package com.tep;
 
 import com.mongodb.client.*;
 import org.bson.Document;

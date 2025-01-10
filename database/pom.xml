@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.tep</groupId>
-    <artifactId>api</artifactId>
+    <artifactId>database</artifactId>
     <version>1.0.0</version>
 
     <properties>
@@ -17,13 +17,7 @@
     <dependencies>
         <dependency>
             <groupId>com.tep</groupId>
-            <artifactId>utilities</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.tep</groupId>
-            <artifactId>database</artifactId>
+            <artifactId>core</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>
