@@ -1,9 +1,0 @@
-<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-
-<suite name="SuitePo" parallel="methods" thread-count="10" verbose="1">
-    <test name="TestingPo">
-        <packages>
-            <package name="tests.eymerchandise"/>
-        </packages>
-    </test>
-</suite>
