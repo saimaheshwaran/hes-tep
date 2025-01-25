@@ -1,0 +1,3287 @@
+dev:
+  catfact_fact:
+    baseUri: https://catfact.ninja
+    endpoint: fact
+
+  catfact_facts:
+    baseUri: https://catfact.ninja
+    endpoint: facts
+    queryParams:
+      limit: 2
+
+  invalid_api:
+    baseUri: https://catfact.ninj
+    endpoint: invalid
+    retryOnError:
+      enabled: true
+
+  test_api:
+    baseUrl: https://httpbin.org
+    basePath: $(method)
+    pathParams:
+      method: post
+    proxy:
+      enabled: true
+      url: https://myproxy.com:8080
+      username: ${DEV_PROXY_USERNAME}
+      password: ${DEV_PROXY_PASSWORD}
+
+  api_name_1:
+    baseUri: https://www.dev.example.com
+    cookies:
+      Authentication: Bearer ${DEV_BEARER_TOKEN}
+      Cookie2: Value2
+    basePath: /users/{user}
+    queryParams:
+      param1: value1
+      param2: value2
+    pathParams:
+      user: andrei
+
+  base_param_post:
+    baseUri: https://httpbin.org/anything
+    headers:
+      Authorization: Bearer ${DEV_BEARER_TOKEN}
+    basePath: user/userpath
+    body: |
+      {
+          "my_integer": 123,
+          "my_string": "string",
+          "my_boolean": true,
+          "my_double": 12.34,
+          "my_string_array": ["str1", "str2", "str3"],
+          "my_number_array": [1, 2, 3, 4.4, 10.1],
+          "my_boolean_array": [true, true, true],
+          "body_placeholder": "${my_saved_integer}",
+          "my_unset_variable": "",
+          "nest" : {
+              "a": 1,
+              "b": true,
+              "c": [1, 2, 3, 4, 5]
+          }
+      }
+
+  form_param_post:
+    baseUri: https://httpbin.org/anything
+    formParams:
+      key1: value1
+      key2: value2
+
+  httpbin_post:
+    cookies:
+      MyCookie: MyCookieValue
+    headers:
+      Authorization: Bearer ${DEV_BEARER_TOKEN}
+    body: |
+      {
+          "my_integer": 123,
+          "my_string": "string",
+          "my_boolean": true,
+          "my_double": 12.34,
+          "my_string_array": ["str1", "str2", "str3"],
+          "my_number_array": [1, 2, 3, 4.4, 10.1],
+          "my_boolean_array": [true, true, true],
+          "body_placeholder": "${my_saved_integer}",
+          "my_unset_variable": "",
+          "nest" : {
+              "a": 1,
+              "b": true,
+              "c": [1, 2, 3, 4, 5]
+          }
+          "pack":[{
+                      "a": 1,
+                      "b": {"x":12,"y":"test"},
+                      "c": [{"p":1, "q":true, "r":"pqr"}]
+                  },
+                  {
+                      "a": 1,
+                      "b": {"x":12,"y":"test"},
+                      "c": [{"p":1, "q":true, "r":"pqr"},{"p":1, "q":true, "r":"pqr"}]
+                  }]
+      }
+
+default:
+  api_name_1:
+    fallbackEnv_test_field: fallbackEnv_test_field_value
+    headers:
+      Content-Type: application/json
+      Authorization: myusername/${UAT_API_PASSWORD}
+    retryOnError:
+      enabled: true
+      maxCount: 3
+      maxBackoffMs: 10000
+
+  httpbin_post:
+    baseUri: https://httpbin.org
+    endpoint: post
+    headers:
+      Content-Type: application/json
+      User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    retryOnError:
+      enabled: true
+
+  api_proxy_no_creds:
+    baseUri: "https://forproxynocreds.com"
+    proxy:
+      enabled: true
+      url: https://proxynocreds.com:8080
+
+  api_proxy_with_creds:
+    baseUri: "https://forproxywithcreds.com"
+    proxy:
+      enabled: true
+      url: https://proxynocreds.com:8080
+      username: user
+      password: pass
+
+  api_proxy_with_no_port:
+    baseUri: "https://forproxywithcreds.com"
+    proxy:
+      enabled: true
+      url: https://proxynocreds.com
+      username: user
+      password: pass
+
+  api_retrospective_billing_get:
+    baseUri: http://dev-retrospective-billing-system.dev-aro.healthesystems.com
+    endpoint: api/v1/retrospective-bills/{id}
+    headers:
+       x-vendor-code:  HES
+    pathParams:
+       id: id
+
+
+  api_retrospective_billing_837Pone:
+    baseUri: http://dev-retrospective-billing-system.dev-aro.healthesystems.com
+    endpoint: api/v1/retrospective-bills
+    headers:
+      Content-Type: application/json
+    body: |
+      {
+          "claimNumber": "FYY2080",
+          "insurancePayer": "travelers-insurance",
+          "insurancePayerBillIdentifier": "JX9bxgcxp",
+          "billReceivedDate": [
+              2023,
+              3,
+              8
+          ],
+          "billChargedAmount": 3,
+          "billingProviderTaxIdentificationNumber": "562298123",
+          "renderedServices": [
+              {
+                  "id": 0,
+                  "dateOfService": [
+                      2025,
+                      1,
+                      21
+                  ],
+                  "procedureCode": "97110",
+                  "chargedAmount": 3,
+                  "allowedAmount": 4
+              }
+          ],
+          "billSource": {
+              "@type": "X12_837_PROFESSIONAL_FILE_SOURCE",
+              "fileName": "FN yx",
+              "authorizationInformationQualifier": "04",
+              "authorizationInformation": "AuthInform",
+              "securityInformationQualifier": "00",
+              "securityInformation": "SecurityIn",
+              "interchangeIdQualifierSender": "ZZ",
+              "interchangeSenderId": "339127576584563",
+              "interchangeIdQualifierReceiver": "ZZ",
+              "interchangeReceiverId": "362557154547896",
+              "interchangeDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "interchangeControlVersionNumber": "00501",
+              "interchangeControlNumber": "000000905",
+              "acknowledgementRequested": false,
+              "testIndicator": "P",
+              "functionalIdentifierCode": "HC",
+              "applicationSenderCode": "123546789",
+              "applicationReceiverCode": "987654321",
+              "functionalGroupCreationDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "groupControlNumber": "1",
+              "responsibleAgencyCode": "X",
+              "versionReleaseIndustryIdentifierCode": "005010X222A1",
+              "identifierCode": "837",
+              "controlNumber": "987654",
+              "implementationConventionReference": "005010X222A1",
+              "hierarchicalStructureCode": "0019",
+              "purposeCode": "00",
+              "originatorTransactionIdentifier": "20240305121500",
+              "creationDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "claimOrEncounterIndicator": "CH",
+              "billSender": {
+                  "entityIdentifierCode": "41",
+                  "entityTypeQualifier": 1,
+                  "organizationNameOrLastName": "Doe",
+                  "firstName": "John",
+                  "middleName": "Man",
+                  "namePrefix": "Mr",
+                  "nameSuffix": "I",
+                  "identificationCodeQualifier": "46",
+                  "taxIdentificationNumber": "872373839",
+                  "contactFunctionCode": "IC",
+                  "contactName": "Jane Doe",
+                  "contactCommunication": [
+                      {
+                          "@type": "PHONE_CONTACT_COMMUNICATION",
+                          "phoneNumber": "5557779999x1234"
+                      }
+                  ]
+              },
+              "billReceiver": {
+                  "entityIdentifierCode": "40",
+                  "entityTypeQualifier": 2,
+                  "organizationNameOrLastName": "Healthesystems",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "identificationCodeQualifier": "46",
+                  "taxIdentificationNumber": "872373839"
+              },
+              "billProvider": {
+                  "entityIdentifierCode": "40",
+                  "entityTypeQualifier": 2,
+                  "organizationNameOrLastName": "Healthesystems",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "I",
+                  "hierarchicalIdNumber": "1",
+                  "hierarchicalParentIdNumber": "1",
+                  "hierarchicalLevelCode": "20",
+                  "hierarchicalChildCode": "1",
+                  "providerCode": "BI",
+                  "healthCareProviderTaxonomyCode": "PXC",
+                  "providerTaxonomyCode": "347E00000",
+                  "primaryIdentificationCodeQualifier": "XX",
+                  "primaryIdentificationId": "123456789",
+                  "taxIdentificationNumberQualifier": "EI",
+                  "taxIdentificationNumber": "872373839",
+                  "stateLicenseNumberQualifier": "0B",
+                  "stateLicenseNumber": "PT30555",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  },
+                  "contactFunctionCode": "IC",
+                  "contactName": "Jane Doe",
+                  "contactCommunication": [
+                      {
+                          "@type": "FAX_CONTACT_COMMUNICATION",
+                          "faxNumber": "321323210"
+                      }
+                  ],
+                  "secondaryIdentificationCodeQualifier": "G2",
+                  "secondaryIdentificationId": "R3"
+              },
+              "billPayer": {
+                  "entityIdentifierCode": "PR",
+                  "entityTypeQualifier": 2,
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "PI",
+                  "primaryIdentificationId": "ACME001",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  }
+              },
+              "subscriber": {
+                  "hierarchicalIdNumber": "2",
+                  "hierarchicalParentIdNumber": "1",
+                  "hierarchicalLevelCode": "22",
+                  "hierarchicalChildCode": "0",
+                  "payerResponsibilitySequenceNumberCode": "P",
+                  "payerResponsibilityRelationshipCode": "18",
+                  "insuredGroupOrPolicyNumber": "GRP01020102",
+                  "insuredGroupName": "GROUPNAME",
+                  "claimFilingIndicatorCode": "WC",
+                  "entityIdentifierCode": "IL",
+                  "entityTypeQualifier": "1",
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "MI",
+                  "primaryIdentificationId": "123456789",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  },
+                  "dateOfBirth": [
+                      2001,
+                      7,
+                      15
+                  ],
+                  "genderCode": "M",
+                  "patient": {
+                      "firstName": "NameTest",
+                      "middleName": "NameTest",
+                      "lastName": "NameTest",
+                      "nameSuffix": "NT",
+                      "address": {
+                          "primaryAddress": "123 Main Street",
+                          "secondaryAddress": "Suite 111",
+                          "city": "Tampa",
+                          "state": "FL",
+                          "zipCode": "33609"
+                      },
+                      "dateOfBirth": [
+                          2001,
+                          7,
+                          15
+                      ],
+                      "genderCode": "F",
+                      "referenceIdentification": "PI",
+                      "dateOfDeath": [
+                          1999,
+                          1,
+                          1
+                      ],
+                      "weight": 89,
+                      "pregnancyIndicator": false
+                  }
+              },
+              "claimNumber": "C000662",
+              "patientControlNumber": "A123456",
+              "totalBillChargeAmount": 200,
+              "filingIndicatorCode": "1",
+              "nonInstitutionalBillTypeCode": "DW",
+              "facilityTypeCode": "11",
+              "facilityCodeQualifier": "B",
+              "billFrequencyCode": "1",
+              "providerSignatureOnFile": true,
+              "medicareAssignmentCode": "A",
+              "benefitAssignmentIndicator": "Y",
+              "releaseOfInformationCode": "Y",
+              "patientSignatureSourceCode": "P",
+              "relatedCauseCode1": "EM",
+              "relatedCauseCode2": "EM",
+              "relatedCauseCode3": "EM",
+              "stateOrProvinceCode": "FL",
+              "countryCode": "GA",
+              "specialProgramCode": "",
+              "billSubmissionReasonCode": "00",
+              "dateOfInjury": [
+                  2024,
+                  3,
+                  1
+              ],
+              "repricerReceivedDate": [
+                  2024,
+                  3,
+                  1
+              ],
+              "attachment": {
+                  "reportTypeCode": "DE",
+                  "transmissionCode": "A",
+                  "identificationCode": "3245"
+              },
+              "contractTypeCode": "1234",
+              "medicalRecordNumberId": "1234",
+              "jurisdictionState": "FL",
+              "billReviewState": "FL",
+              "billReviewReceivedDate": "2021-05-05",
+              "billAllowedAmountQualifierCode": "123",
+              "billAllowedAmount": 23.99,
+              "otherPayerPriorAuthorizationOrReferralNumber": "12321",
+              "adjustedRepricedClaimReferenceNumber": "Y",
+              "payerClaimControlNumber": "",
+              "repricedClaimReferenceNumber": "01",
+              "valueAddedNetworkTraceNumber": "",
+              "mcoHcnEffectiveDateReferenceIdentificationQualifier": "",
+              "mcoHcnEffectiveDateRange": "",
+              "managedCareOrganization": "",
+              "mcoContractApplied": "97110",
+              "icdCodes": [
+                  {
+                      "primary": true,
+                      "diagnosisCodeQualifier": "ABK",
+                      "diagnosisCode": "T22.122"
+                  }
+              ],
+              "pricingMethodology": "02",
+              "repricedAllowedAmount": 23.99,
+              "repricedSavingsAmount": 23.99,
+              "repricingOrganizationIdentifier": "",
+              "repricingPerDiemOrFlatRateAmount": "",
+              "repricingProductCode": "",
+              "rejectReasonCode": "",
+              "referringProvider": {
+                  "entityIdentifierCode": "DN",
+                  "entityTypeQualifier": 1,
+                  "organizationNameOrLastName": "Smith",
+                  "firstName": "Edward",
+                  "middleName": "J",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "XX",
+                  "primaryIdentificationId": "123456789",
+                  "stateLicenseNumberQualifier": "0B",
+                  "stateLicenseNumber": "PT00101"
+              },
+              "renderingProvider": {
+                  "entityIdentifierCode": "82",
+                  "entityTypeQualifier": 1,
+                  "organizationNameOrLastName": "Davis",
+                  "firstName": "Juanita",
+                  "middleName": "A",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "XX",
+                  "primaryIdentificationId": "123456789",
+                  "providerCode": "PE",
+                  "healthCareProviderTaxonomyCode": "PXC",
+                  "taxonomyCode": "",
+                  "secondaryIdentificationCodeQualifier": "",
+                  "secondaryIdentificationId": "string"
+              },
+              "serviceFacility": {
+                  "entityIdentifierCode": "82",
+                  "entityTypeQualifier": 1,
+                  "organizationNameOrLastName": "Service Facility Name",
+                  "firstName": "Jane",
+                  "middleName": "A",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "XX",
+                  "primaryIdentificationId": "",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  },
+                  "stateLicenseNumberQualifier": "0B",
+                  "stateLicenseNumber": "123456789"
+              },
+              "serviceLines": [
+                  {
+                      "lineNumber": 1,
+                      "productOrServiceIdQualifier": "HC",
+                      "procedureCode": "97110",
+                      "modifier1": "CQ",
+                      "modifier2": "LT",
+                      "modifier3": "25",
+                      "modifier4": "59",
+                      "modifierPointerMap": "M",
+                      "lineItemChargeAmount": 200,
+                      "unitOfMeasurementCode": "MJ",
+                      "quantity": 3,
+                      "placeOfServiceCode": "",
+                      "serviceTypeCode": "11",
+                      "dateOfService": [
+                          2024,
+                          3,
+                          1
+                      ],
+                      "lineItemControlNumber": "54321",
+                      "lineItemReferenceIdentificationQualifier": "FS",
+                      "lineItemAllowedAmount": 200,
+                      "originalBilledServiceCode": "TBD",
+                      "attachment": {
+                          "reportTypeCode": "DE",
+                          "transmissionCode": "A",
+                          "identificationCode": "3245"
+                      },
+                      "diagnosisCodePointer1": "54",
+                      "diagnosisCodePointer2": "FS",
+                      "diagnosisCodePointer3": "",
+                      "diagnosisCodePointer4": "C45",
+                      "monetaryAmount": "m12",
+                      "emergencyIndicator": false,
+                      "earlyPeriodicScreeningDiagnosticTreatmentIndicator": "N",
+                      "familyPlanningIndicator": "Y",
+                      "copayStatusCode": "",
+                      "drug": {
+                          "nationalDrugCode": "21213",
+                          "quantity": 31,
+                          "unitOfMeasure": "F2",
+                          "prescriptionNumber": "131231",
+                          "serviceDate": [
+                              2023,
+                              1,
+                              1
+                          ]
+                      }
+                  }
+              ],
+              "payToProvider": {
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  }
+              },
+              "dateOfSymptomOnset": [
+                  2024,
+                  3,
+                  1
+              ],
+              "providerPaidDate": [
+                  2024,
+                  4,
+                  1
+              ]
+          }
+      }
+
+  api_retrospective_billing_837Ptwo:
+    baseUri: http://dev-retrospective-billing-system.dev-aro.healthesystems.com
+    endpoint: api/v1/retrospective-bills
+    headers:
+      Content-Type: application/json
+    body: |
+      {
+          "claimNumber": "FYY2080",
+          "insurancePayer": "travelers-insurance",
+          "insurancePayerBillIdentifier": "JX9bxgcxp",
+          "billReceivedDate": [
+              2023,
+              3,
+              8
+          ],
+          "billChargedAmount": 6,
+          "billingProviderTaxIdentificationNumber": "562298123",
+          "renderedServices": [
+              {
+                  "id": 0,
+                  "dateOfService": [
+                      2024,
+                      2,
+                      1
+                  ],
+                  "procedureCode": "97110",
+                  "chargedAmount": 3,
+                  "allowedAmount": 4
+              },
+      		{
+                  "id": 1,
+                  "dateOfService": [
+                      2024,
+                      2,
+                      1
+                  ],
+                  "procedureCode": "97110",
+                  "chargedAmount": 3,
+                  "allowedAmount": 4
+              }
+          ],
+          "billSource": {
+              "@type": "X12_837_PROFESSIONAL_FILE_SOURCE",
+              "fileName": "FN yx",
+              "authorizationInformationQualifier": "04",
+              "authorizationInformation": "AuthInform",
+              "securityInformationQualifier": "00",
+              "securityInformation": "SecurityIn",
+              "interchangeIdQualifierSender": "ZZ",
+              "interchangeSenderId": "339127576584563",
+              "interchangeIdQualifierReceiver": "ZZ",
+              "interchangeReceiverId": "362557154547896",
+              "interchangeDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "interchangeControlVersionNumber": "00501",
+              "interchangeControlNumber": "000000905",
+              "acknowledgementRequested": false,
+              "testIndicator": "P",
+              "functionalIdentifierCode": "HC",
+              "applicationSenderCode": "123546789",
+              "applicationReceiverCode": "987654321",
+              "functionalGroupCreationDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "groupControlNumber": "1",
+              "responsibleAgencyCode": "X",
+              "versionReleaseIndustryIdentifierCode": "005010X222A1",
+              "identifierCode": "837",
+              "controlNumber": "987654",
+              "implementationConventionReference": "005010X222A1",
+              "hierarchicalStructureCode": "0019",
+              "purposeCode": "00",
+              "originatorTransactionIdentifier": "20240305121500",
+              "creationDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "claimOrEncounterIndicator": "CH",
+              "billSender": {
+                  "entityIdentifierCode": "41",
+                  "entityTypeQualifier": 1,
+                  "organizationNameOrLastName": "Doe",
+                  "firstName": "John",
+                  "middleName": "Man",
+                  "namePrefix": "Mr",
+                  "nameSuffix": "I",
+                  "identificationCodeQualifier": "46",
+                  "taxIdentificationNumber": "872373839",
+                  "contactFunctionCode": "IC",
+                  "contactName": "Jane Doe",
+                  "contactCommunication": [
+                      {
+                          "@type": "PHONE_CONTACT_COMMUNICATION",
+                          "phoneNumber": "5557779999x1234"
+                      }
+                  ]
+              },
+              "billReceiver": {
+                  "entityIdentifierCode": "40",
+                  "entityTypeQualifier": 2,
+                  "organizationNameOrLastName": "Healthesystems",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "identificationCodeQualifier": "46",
+                  "taxIdentificationNumber": "872373839"
+              },
+              "billProvider": {
+                  "entityIdentifierCode": "40",
+                  "entityTypeQualifier": 2,
+                  "organizationNameOrLastName": "Healthesystems",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "I",
+                  "hierarchicalIdNumber": "1",
+                  "hierarchicalParentIdNumber": "1",
+                  "hierarchicalLevelCode": "20",
+                  "hierarchicalChildCode": "1",
+                  "providerCode": "BI",
+                  "healthCareProviderTaxonomyCode": "PXC",
+                  "providerTaxonomyCode": "347E00000",
+                  "primaryIdentificationCodeQualifier": "XX",
+                  "primaryIdentificationId": "123456789",
+                  "taxIdentificationNumberQualifier": "EI",
+                  "taxIdentificationNumber": "872373839",
+                  "stateLicenseNumberQualifier": "0B",
+                  "stateLicenseNumber": "PT30555",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  },
+                  "contactFunctionCode": "IC",
+                  "contactName": "Jane Doe",
+                  "contactCommunication": [
+                      {
+                          "@type": "FAX_CONTACT_COMMUNICATION",
+                          "faxNumber": "321323210"
+                      }
+                  ],
+                  "secondaryIdentificationCodeQualifier": "G2",
+                  "secondaryIdentificationId": "R3"
+              },
+              "billPayer": {
+                  "entityIdentifierCode": "PR",
+                  "entityTypeQualifier": 2,
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "PI",
+                  "primaryIdentificationId": "ACME001",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  }
+              },
+              "subscriber": {
+                  "hierarchicalIdNumber": "2",
+                  "hierarchicalParentIdNumber": "1",
+                  "hierarchicalLevelCode": "22",
+                  "hierarchicalChildCode": "0",
+                  "payerResponsibilitySequenceNumberCode": "P",
+                  "payerResponsibilityRelationshipCode": "18",
+                  "insuredGroupOrPolicyNumber": "GRP01020102",
+                  "insuredGroupName": "GROUPNAME",
+                  "claimFilingIndicatorCode": "WC",
+                  "entityIdentifierCode": "IL",
+                  "entityTypeQualifier": "1",
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "MI",
+                  "primaryIdentificationId": "123456789",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  },
+                  "dateOfBirth": [
+                      2001,
+                      7,
+                      15
+                  ],
+                  "genderCode": "M",
+                  "patient": {
+                      "firstName": "NameTest",
+                      "middleName": "NameTest",
+                      "lastName": "NameTest",
+                      "nameSuffix": "NT",
+                      "address": {
+                          "primaryAddress": "123 Main Street",
+                          "secondaryAddress": "Suite 111",
+                          "city": "Tampa",
+                          "state": "FL",
+                          "zipCode": "33609"
+                      },
+                      "dateOfBirth": [
+                          2001,
+                          7,
+                          15
+                      ],
+                      "genderCode": "F",
+                      "referenceIdentification": "PI",
+                      "dateOfDeath": [
+                          1999,
+                          1,
+                          1
+                      ],
+                      "weight": 89,
+                      "pregnancyIndicator": false
+                  }
+              },
+              "claimNumber": "C000662",
+              "patientControlNumber": "A123456",
+              "totalBillChargeAmount": 200,
+              "filingIndicatorCode": "1",
+              "nonInstitutionalBillTypeCode": "DW",
+              "facilityTypeCode": "11",
+              "facilityCodeQualifier": "B",
+              "billFrequencyCode": "1",
+              "providerSignatureOnFile": true,
+              "medicareAssignmentCode": "A",
+              "benefitAssignmentIndicator": "Y",
+              "releaseOfInformationCode": "Y",
+              "patientSignatureSourceCode": "P",
+              "relatedCauseCode1": "EM",
+              "relatedCauseCode2": "EM",
+              "relatedCauseCode3": "EM",
+              "stateOrProvinceCode": "FL",
+              "countryCode": "GA",
+              "specialProgramCode": "",
+              "billSubmissionReasonCode": "00",
+              "dateOfInjury": [
+                  2024,
+                  3,
+                  1
+              ],
+              "repricerReceivedDate": [
+                  2024,
+                  3,
+                  1
+              ],
+              "attachment": {
+                  "reportTypeCode": "DE",
+                  "transmissionCode": "A",
+                  "identificationCode": "3245"
+              },
+              "contractTypeCode": "1234",
+              "medicalRecordNumberId": "1234",
+              "jurisdictionState": "FL",
+              "billReviewState": "FL",
+              "billReviewReceivedDate": "2021-05-05",
+              "billAllowedAmountQualifierCode": "123",
+              "billAllowedAmount": 23.99,
+              "otherPayerPriorAuthorizationOrReferralNumber": "12321",
+              "adjustedRepricedClaimReferenceNumber": "Y",
+              "payerClaimControlNumber": "",
+              "repricedClaimReferenceNumber": "01",
+              "valueAddedNetworkTraceNumber": "",
+              "mcoHcnEffectiveDateReferenceIdentificationQualifier": "",
+              "mcoHcnEffectiveDateRange": "",
+              "managedCareOrganization": "",
+              "mcoContractApplied": "97110",
+              "icdCodes": [
+                  {
+                      "primary": true,
+                      "diagnosisCodeQualifier": "ABK",
+                      "diagnosisCode": "T22.122"
+                  }
+              ],
+              "pricingMethodology": "02",
+              "repricedAllowedAmount": 23.99,
+              "repricedSavingsAmount": 23.99,
+              "repricingOrganizationIdentifier": "",
+              "repricingPerDiemOrFlatRateAmount": "",
+              "repricingProductCode": "",
+              "rejectReasonCode": "",
+              "referringProvider": {
+                  "entityIdentifierCode": "DN",
+                  "entityTypeQualifier": 1,
+                  "organizationNameOrLastName": "Smith",
+                  "firstName": "Edward",
+                  "middleName": "J",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "XX",
+                  "primaryIdentificationId": "123456789",
+                  "stateLicenseNumberQualifier": "0B",
+                  "stateLicenseNumber": "PT00101"
+              },
+              "renderingProvider": {
+                  "entityIdentifierCode": "82",
+                  "entityTypeQualifier": 1,
+                  "organizationNameOrLastName": "Davis",
+                  "firstName": "Juanita",
+                  "middleName": "A",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "XX",
+                  "primaryIdentificationId": "123456789",
+                  "providerCode": "PE",
+                  "healthCareProviderTaxonomyCode": "PXC",
+                  "taxonomyCode": "",
+                  "secondaryIdentificationCodeQualifier": "",
+                  "secondaryIdentificationId": "string"
+              },
+              "serviceFacility": {
+                  "entityIdentifierCode": "82",
+                  "entityTypeQualifier": 1,
+                  "organizationNameOrLastName": "Service Facility Name",
+                  "firstName": "Jane",
+                  "middleName": "A",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "XX",
+                  "primaryIdentificationId": "",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  },
+                  "stateLicenseNumberQualifier": "0B",
+                  "stateLicenseNumber": "123456789"
+              },
+              "serviceLines": [
+                  {
+                      "lineNumber": 1,
+                      "productOrServiceIdQualifier": "HC",
+                      "procedureCode": "97110",
+                      "modifier1": "CQ",
+                      "modifier2": "LT",
+                      "modifier3": "25",
+                      "modifier4": "59",
+                      "modifierPointerMap": "M",
+                      "lineItemChargeAmount": 200,
+                      "unitOfMeasurementCode": "MJ",
+                      "quantity": 3,
+                      "placeOfServiceCode": "",
+                      "serviceTypeCode": "11",
+                      "dateOfService": [
+                          2024,
+                          3,
+                          1
+                      ],
+                      "lineItemControlNumber": "54321",
+                      "lineItemReferenceIdentificationQualifier": "FS",
+                      "lineItemAllowedAmount": 200,
+                      "originalBilledServiceCode": "TBD",
+                      "attachment": {
+                          "reportTypeCode": "DE",
+                          "transmissionCode": "A",
+                          "identificationCode": "3245"
+                      },
+                      "diagnosisCodePointer1": "54",
+                      "diagnosisCodePointer2": "FS",
+                      "diagnosisCodePointer3": "",
+                      "diagnosisCodePointer4": "C45",
+                      "monetaryAmount": "m12",
+                      "emergencyIndicator": false,
+                      "earlyPeriodicScreeningDiagnosticTreatmentIndicator": "N",
+                      "familyPlanningIndicator": "Y",
+                      "copayStatusCode": "",
+                      "drug": {
+                          "nationalDrugCode": "21213",
+                          "quantity": 31,
+                          "unitOfMeasure": "F2",
+                          "prescriptionNumber": "131231",
+                          "serviceDate": [
+                              2023,
+                              1,
+                              1
+                          ]
+                      }
+                  }
+              ],
+              "payToProvider": {
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  }
+              },
+              "dateOfSymptomOnset": [
+                  2024,
+                  3,
+                  1
+              ],
+              "providerPaidDate": [
+                  2024,
+                  4,
+                  1
+              ]
+          }
+      }
+
+  api_retrospective_billing_837Ptwopast:
+    baseUri: http://dev-retrospective-billing-system.dev-aro.healthesystems.com
+    endpoint: api/v1/retrospective-bills
+    headers:
+      Content-Type: application/json
+    body: |
+      {
+          "claimNumber": "FYY2080",
+          "insurancePayer": "travelers-insurance",
+          "insurancePayerBillIdentifier": "JX9bxgcxp",
+          "billReceivedDate": [
+              2023,
+              3,
+              8
+          ],
+          "billChargedAmount": 6,
+          "billingProviderTaxIdentificationNumber": "562298123",
+          "renderedServices": [
+              {
+                  "id": 0,
+                  "dateOfService": [
+                      2024,
+                      2,
+                      1
+                  ],
+                  "procedureCode": "97110",
+                  "chargedAmount": 3,
+                  "allowedAmount": 4
+              },
+      		{
+                  "id": 1,
+                  "dateOfService": [
+                      2024,
+                      2,
+                      1
+                  ],
+                  "procedureCode": "97110",
+                  "chargedAmount": 3,
+                  "allowedAmount": 4
+              }
+          ],
+          "billSource": {
+              "@type": "X12_837_PROFESSIONAL_FILE_SOURCE",
+              "fileName": "FN yx",
+              "authorizationInformationQualifier": "04",
+              "authorizationInformation": "AuthInform",
+              "securityInformationQualifier": "00",
+              "securityInformation": "SecurityIn",
+              "interchangeIdQualifierSender": "ZZ",
+              "interchangeSenderId": "339127576584563",
+              "interchangeIdQualifierReceiver": "ZZ",
+              "interchangeReceiverId": "362557154547896",
+              "interchangeDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "interchangeControlVersionNumber": "00501",
+              "interchangeControlNumber": "000000905",
+              "acknowledgementRequested": false,
+              "testIndicator": "P",
+              "functionalIdentifierCode": "HC",
+              "applicationSenderCode": "123546789",
+              "applicationReceiverCode": "987654321",
+              "functionalGroupCreationDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "groupControlNumber": "1",
+              "responsibleAgencyCode": "X",
+              "versionReleaseIndustryIdentifierCode": "005010X222A1",
+              "identifierCode": "837",
+              "controlNumber": "987654",
+              "implementationConventionReference": "005010X222A1",
+              "hierarchicalStructureCode": "0019",
+              "purposeCode": "00",
+              "originatorTransactionIdentifier": "20240305121500",
+              "creationDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "claimOrEncounterIndicator": "CH",
+              "billSender": {
+                  "entityIdentifierCode": "41",
+                  "entityTypeQualifier": 1,
+                  "organizationNameOrLastName": "Doe",
+                  "firstName": "John",
+                  "middleName": "Man",
+                  "namePrefix": "Mr",
+                  "nameSuffix": "I",
+                  "identificationCodeQualifier": "46",
+                  "taxIdentificationNumber": "872373839",
+                  "contactFunctionCode": "IC",
+                  "contactName": "Jane Doe",
+                  "contactCommunication": [
+                      {
+                          "@type": "PHONE_CONTACT_COMMUNICATION",
+                          "phoneNumber": "5557779999x1234"
+                      }
+                  ]
+              },
+              "billReceiver": {
+                  "entityIdentifierCode": "40",
+                  "entityTypeQualifier": 2,
+                  "organizationNameOrLastName": "Healthesystems",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "identificationCodeQualifier": "46",
+                  "taxIdentificationNumber": "872373839"
+              },
+              "billProvider": {
+                  "entityIdentifierCode": "40",
+                  "entityTypeQualifier": 2,
+                  "organizationNameOrLastName": "Healthesystems",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "I",
+                  "hierarchicalIdNumber": "1",
+                  "hierarchicalParentIdNumber": "1",
+                  "hierarchicalLevelCode": "20",
+                  "hierarchicalChildCode": "1",
+                  "providerCode": "BI",
+                  "healthCareProviderTaxonomyCode": "PXC",
+                  "providerTaxonomyCode": "347E00000",
+                  "primaryIdentificationCodeQualifier": "XX",
+                  "primaryIdentificationId": "123456789",
+                  "taxIdentificationNumberQualifier": "EI",
+                  "taxIdentificationNumber": "872373839",
+                  "stateLicenseNumberQualifier": "0B",
+                  "stateLicenseNumber": "PT30555",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  },
+                  "contactFunctionCode": "IC",
+                  "contactName": "Jane Doe",
+                  "contactCommunication": [
+                      {
+                          "@type": "FAX_CONTACT_COMMUNICATION",
+                          "faxNumber": "321323210"
+                      }
+                  ],
+                  "secondaryIdentificationCodeQualifier": "G2",
+                  "secondaryIdentificationId": "R3"
+              },
+              "billPayer": {
+                  "entityIdentifierCode": "PR",
+                  "entityTypeQualifier": 2,
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "PI",
+                  "primaryIdentificationId": "ACME001",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  }
+              },
+              "subscriber": {
+                  "hierarchicalIdNumber": "2",
+                  "hierarchicalParentIdNumber": "1",
+                  "hierarchicalLevelCode": "22",
+                  "hierarchicalChildCode": "0",
+                  "payerResponsibilitySequenceNumberCode": "P",
+                  "payerResponsibilityRelationshipCode": "18",
+                  "insuredGroupOrPolicyNumber": "GRP01020102",
+                  "insuredGroupName": "GROUPNAME",
+                  "claimFilingIndicatorCode": "WC",
+                  "entityIdentifierCode": "IL",
+                  "entityTypeQualifier": "1",
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "MI",
+                  "primaryIdentificationId": "123456789",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  },
+                  "dateOfBirth": [
+                      2001,
+                      7,
+                      15
+                  ],
+                  "genderCode": "M",
+                  "patient": {
+                      "firstName": "NameTest",
+                      "middleName": "NameTest",
+                      "lastName": "NameTest",
+                      "nameSuffix": "NT",
+                      "address": {
+                          "primaryAddress": "123 Main Street",
+                          "secondaryAddress": "Suite 111",
+                          "city": "Tampa",
+                          "state": "FL",
+                          "zipCode": "33609"
+                      },
+                      "dateOfBirth": [
+                          2001,
+                          7,
+                          15
+                      ],
+                      "genderCode": "F",
+                      "referenceIdentification": "PI",
+                      "dateOfDeath": [
+                          1999,
+                          1,
+                          1
+                      ],
+                      "weight": 89,
+                      "pregnancyIndicator": false
+                  }
+              },
+              "claimNumber": "C000662",
+              "patientControlNumber": "A123456",
+              "totalBillChargeAmount": 200,
+              "filingIndicatorCode": "1",
+              "nonInstitutionalBillTypeCode": "DW",
+              "facilityTypeCode": "11",
+              "facilityCodeQualifier": "B",
+              "billFrequencyCode": "1",
+              "providerSignatureOnFile": true,
+              "medicareAssignmentCode": "A",
+              "benefitAssignmentIndicator": "Y",
+              "releaseOfInformationCode": "Y",
+              "patientSignatureSourceCode": "P",
+              "relatedCauseCode1": "EM",
+              "relatedCauseCode2": "EM",
+              "relatedCauseCode3": "EM",
+              "stateOrProvinceCode": "FL",
+              "countryCode": "GA",
+              "specialProgramCode": "",
+              "billSubmissionReasonCode": "00",
+              "dateOfInjury": [
+                  2024,
+                  3,
+                  1
+              ],
+              "repricerReceivedDate": [
+                  2024,
+                  3,
+                  1
+              ],
+              "attachment": {
+                  "reportTypeCode": "DE",
+                  "transmissionCode": "A",
+                  "identificationCode": "3245"
+              },
+              "contractTypeCode": "1234",
+              "medicalRecordNumberId": "1234",
+              "jurisdictionState": "FL",
+              "billReviewState": "FL",
+              "billReviewReceivedDate": "2021-05-05",
+              "billAllowedAmountQualifierCode": "123",
+              "billAllowedAmount": 23.99,
+              "otherPayerPriorAuthorizationOrReferralNumber": "12321",
+              "adjustedRepricedClaimReferenceNumber": "Y",
+              "payerClaimControlNumber": "",
+              "repricedClaimReferenceNumber": "01",
+              "valueAddedNetworkTraceNumber": "",
+              "mcoHcnEffectiveDateReferenceIdentificationQualifier": "",
+              "mcoHcnEffectiveDateRange": "",
+              "managedCareOrganization": "",
+              "mcoContractApplied": "97110",
+              "icdCodes": [
+                  {
+                      "primary": true,
+                      "diagnosisCodeQualifier": "ABK",
+                      "diagnosisCode": "T22.122"
+                  }
+              ],
+              "pricingMethodology": "02",
+              "repricedAllowedAmount": 23.99,
+              "repricedSavingsAmount": 23.99,
+              "repricingOrganizationIdentifier": "",
+              "repricingPerDiemOrFlatRateAmount": "",
+              "repricingProductCode": "",
+              "rejectReasonCode": "",
+              "referringProvider": {
+                  "entityIdentifierCode": "DN",
+                  "entityTypeQualifier": 1,
+                  "organizationNameOrLastName": "Smith",
+                  "firstName": "Edward",
+                  "middleName": "J",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "XX",
+                  "primaryIdentificationId": "123456789",
+                  "stateLicenseNumberQualifier": "0B",
+                  "stateLicenseNumber": "PT00101"
+              },
+              "renderingProvider": {
+                  "entityIdentifierCode": "82",
+                  "entityTypeQualifier": 1,
+                  "organizationNameOrLastName": "Davis",
+                  "firstName": "Juanita",
+                  "middleName": "A",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "XX",
+                  "primaryIdentificationId": "123456789",
+                  "providerCode": "PE",
+                  "healthCareProviderTaxonomyCode": "PXC",
+                  "taxonomyCode": "",
+                  "secondaryIdentificationCodeQualifier": "",
+                  "secondaryIdentificationId": "string"
+              },
+              "serviceFacility": {
+                  "entityIdentifierCode": "82",
+                  "entityTypeQualifier": 1,
+                  "organizationNameOrLastName": "Service Facility Name",
+                  "firstName": "Jane",
+                  "middleName": "A",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "XX",
+                  "primaryIdentificationId": "",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  },
+                  "stateLicenseNumberQualifier": "0B",
+                  "stateLicenseNumber": "123456789"
+              },
+              "serviceLines": [
+                  {
+                      "lineNumber": 1,
+                      "productOrServiceIdQualifier": "HC",
+                      "procedureCode": "97110",
+                      "modifier1": "CQ",
+                      "modifier2": "LT",
+                      "modifier3": "25",
+                      "modifier4": "59",
+                      "modifierPointerMap": "M",
+                      "lineItemChargeAmount": 200,
+                      "unitOfMeasurementCode": "MJ",
+                      "quantity": 3,
+                      "placeOfServiceCode": "",
+                      "serviceTypeCode": "11",
+                      "dateOfService": [
+                          2024,
+                          3,
+                          1
+                      ],
+                      "lineItemControlNumber": "54321",
+                      "lineItemReferenceIdentificationQualifier": "FS",
+                      "lineItemAllowedAmount": 200,
+                      "originalBilledServiceCode": "TBD",
+                      "attachment": {
+                          "reportTypeCode": "DE",
+                          "transmissionCode": "A",
+                          "identificationCode": "3245"
+                      },
+                      "diagnosisCodePointer1": "54",
+                      "diagnosisCodePointer2": "FS",
+                      "diagnosisCodePointer3": "",
+                      "diagnosisCodePointer4": "C45",
+                      "monetaryAmount": "m12",
+                      "emergencyIndicator": false,
+                      "earlyPeriodicScreeningDiagnosticTreatmentIndicator": "N",
+                      "familyPlanningIndicator": "Y",
+                      "copayStatusCode": "",
+                      "drug": {
+                          "nationalDrugCode": "21213",
+                          "quantity": 31,
+                          "unitOfMeasure": "F2",
+                          "prescriptionNumber": "131231",
+                          "serviceDate": [
+                              2023,
+                              1,
+                              1
+                          ]
+                      }
+                  }
+              ],
+              "payToProvider": {
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  }
+              },
+              "dateOfSymptomOnset": [
+                  2024,
+                  3,
+                  1
+              ],
+              "providerPaidDate": [
+                  2024,
+                  4,
+                  1
+              ]
+          }
+      }
+
+  api_retrospective_billing_837Ione:
+    baseUri: http://dev-retrospective-billing-system.dev-aro.healthesystems.com
+    endpoint: api/v1/retrospective-bills
+    headers:
+      Content-Type: application/json
+    body: |
+      {
+          "claimNumber": "FYY2080",
+          "insurancePayer": "travelers-insurance",
+          "billChargedAmount": 3,
+          "insurancePayerBillIdentifier":"dsd22e2e",
+          "billingProviderTaxIdentificationNumber": "562298123",
+          "renderedServices": [
+              {
+                  "id": 0,
+                  "dateOfService": [
+                      2024,
+                      2,
+                      1
+                  ],
+                  "procedureCode": "97110",
+                  "chargedAmount": 3,
+                  "allowedAmount": 4
+              }
+          ],
+          "billSource": {
+              "@type": "X12_837_INSTITUTIONAL_FILE_SOURCE",
+              "fileName": "FN J8",
+              "authorizationInformationQualifier": "04",
+              "authorizationInformation": "AuthInform",
+              "securityInformationQualifier": "00",
+              "securityInformation": "SecurityIn",
+              "interchangeIdQualifierSender": "ZZ",
+              "interchangeSenderId": "339127576584563",
+              "interchangeIdQualifierReceiver": "ZZ",
+              "interchangeReceiverId": "362557154547896",
+              "interchangeDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "interchangeControlVersionNumber": "00501",
+              "interchangeControlNumber": "000000905",
+              "acknowledgementRequested": false,
+              "testIndicator": "P",
+              "functionalIdentifierCode": "HC",
+              "applicationSenderCode": "123546789",
+              "applicationReceiverCode": "987654321",
+              "functionalGroupCreationDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "groupControlNumber": "1",
+              "responsibleAgencyCode": "X",
+              "versionReleaseIndustryIdentifierCode": "005010X222A1",
+              "identifierCode": "837",
+              "controlNumber": "987654",
+              "implementationConventionReference": "005010X222A1",
+              "hierarchicalStructureCode": "0019",
+              "purposeCode": "00",
+              "originatorTransactionIdentifier": "20240305121500",
+              "creationDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "claimOrEncounterIndicator": "CH",
+              "billSender": {
+                  "entityIdentifierCode": "41",
+                  "entityTypeQualifier": 1,
+                  "organizationNameOrLastName": "Doe",
+                  "firstName": "John",
+                  "middleName": "Man",
+                  "namePrefix": "Mr",
+                  "nameSuffix": "I",
+                  "identificationCodeQualifier": "46",
+                  "taxIdentificationNumber": "872373839",
+                  "contactFunctionCode": "IC",
+                  "contactName": "Jane Doe",
+                  "contactCommunication": [
+                      {
+                          "@type": "PHONE_CONTACT_COMMUNICATION",
+                          "phoneNumber": "5557779999x1234"
+                      }
+                  ]
+              },
+              "billReceiver": {
+                  "entityIdentifierCode": "40",
+                  "entityTypeQualifier": 2,
+                  "organizationNameOrLastName": "Healthesystems",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "identificationCodeQualifier": "46",
+                  "taxIdentificationNumber": "872373839"
+              },
+              "billProvider": {
+                  "entityIdentifierCode": "40",
+                  "entityTypeQualifier": 2,
+                  "organizationNameOrLastName": "Healthesystems",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "I",
+                  "hierarchicalIdNumber": "1",
+                  "hierarchicalParentIdNumber": "1",
+                  "hierarchicalLevelCode": "20",
+                  "hierarchicalChildCode": "1",
+                  "providerCode": "BI",
+                  "healthCareProviderTaxonomyCode": "PXC",
+                  "providerTaxonomyCode": "347E00000",
+                  "primaryIdentificationCodeQualifier": "XX",
+                  "primaryIdentificationId": "123456789",
+                  "taxIdentificationNumberQualifier": "EI",
+                  "taxIdentificationNumber": "872373839",
+                  "stateLicenseNumberQualifier": "0B",
+                  "stateLicenseNumber": "PT30555",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  },
+                  "contactFunctionCode": "IC",
+                  "contactName": "Jane Doe",
+                  "contactCommunication": [
+                      {
+                          "@type": "FAX_CONTACT_COMMUNICATION",
+                          "faxNumber": "321323210"
+                      }
+                  ],
+                  "secondaryIdentificationCodeQualifier": "G2",
+                  "secondaryIdentificationId": "R3"
+              },
+              "billPayer": {
+                  "entityIdentifierCode": "PR",
+                  "entityTypeQualifier": 2,
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "PI",
+                  "primaryIdentificationId": "ACME001",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  }
+              },
+              "subscriber": {
+                  "hierarchicalIdNumber": "2",
+                  "hierarchicalParentIdNumber": "1",
+                  "hierarchicalLevelCode": "22",
+                  "hierarchicalChildCode": "0",
+                  "payerResponsibilitySequenceNumberCode": "P",
+                  "payerResponsibilityRelationshipCode": "18",
+                  "insuredGroupOrPolicyNumber": "GRP01020102",
+                  "insuredGroupName": "GROUPNAME",
+                  "claimFilingIndicatorCode": "WC",
+                  "entityIdentifierCode": "IL",
+                  "entityTypeQualifier": "1",
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "MI",
+                  "primaryIdentificationId": "123456789",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  },
+                  "dateOfBirth": [
+                      2001,
+                      7,
+                      15
+                  ],
+                  "genderCode": "M",
+                  "patient": {
+                      "firstName": "uddish",
+                      "middleName": "uddish",
+                      "lastName": "uddish",
+                      "nameSuffix": "NT",
+                      "address": {
+                          "primaryAddress": "123 Main Street",
+                          "secondaryAddress": "Suite 111",
+                          "city": "Tampa",
+                          "state": "FL",
+                          "zipCode": "33609"
+                      },
+                      "dateOfBirth": [
+                          2001,
+                          7,
+                          15
+                      ],
+                      "genderCode": "F",
+                      "referenceIdentification": "PI",
+                      "dateOfDeath": [
+                          1999,
+                          1,
+                          1
+                      ],
+                      "weight": 89,
+                      "pregnancyIndicator": false,
+                      "entityTypeQualifier":"d",
+                      "entityIdentifierCode":"fds",
+                      "patientRelationshipToInsured":"2w"
+                  }
+              },
+              "claimNumber": "C000662",
+              "repricerReceivedDate": "2024-05-05",
+              "patientControlNumber": "A123456",
+              "totalBillChargeAmount": 200,
+              "filingIndicatorCode": "1",
+              "nonInstitutionalBillTypeCode": "21",
+              "facilityTypeCode": "11",
+              "facilityCodeQualifier": "B",
+              "billFrequencyCode": "1",
+              "providerSignatureOnFile": true,
+              "medicareAssignmentCode": "A",
+              "benefitAssignmentIndicator": "Y",
+              "releaseOfInformationCode": "Y",
+              "patientSignatureSourceCode": "P",
+              "relatedCauseCode1": "EM",
+              "relatedCauseCode2": "EM",
+              "relatedCauseCode3": "EM",
+              "stateOrProvinceCode": "FL",
+              "countryCode": "GA",
+              "specialProgramCode": "E",
+              "billSubmissionReasonCode": "00",
+              "dateOfInjury": [
+                  2024,
+                  3,
+                  1
+              ],
+              "attachment": {
+                  "reportTypeCode": "DE",
+                  "transmissionCode": "A",
+                  "identifcationCode": "3245"
+              },
+              "contract": {
+                  "contractTypeCode": "02",
+                  "amount": 200,
+                  "percentage": 2,
+                  "code": "XRT54",
+                  "termsDiscountPercent": 2,
+                  "versionIdentifier": "GT4332"
+              },
+              "autoIncidentReferenceIdentification": "1234",
+              "medicalRecordNumberId": "1234",
+              "jurisdictionState": "",
+              "billReviewReceivedDate": "2024-05-05",
+              "billAllowedAmountQualifierCode": "1234",
+              "billAllowedAmount": 23.99,
+              "otherPayerPriorAuthorizationOrReferralNumber": "1",
+              "adjustedRepricedClaimReferenceNumber": "3231",
+              "payerClaimControlNumber": "1",
+              "repricedClaimReferenceNumber": "Y",
+              "valueAddedNetworkTraceNumber": "1",
+              "mcoHcnEffectiveDateReferenceIdentificationQualifier": "01",
+              "mcoHcnEffectiveDateRange": "21",
+              "managedCareOrganization": "2",
+              "mcoContractApplied": "2",
+              "icdCodes": [
+                  {
+                      "primary": true,
+                      "diagnosisCodeQualifier": "ABK",
+                      "diagnosisCode": "T22.122"
+                  }
+              ],
+              "pricingMethodology": "1",
+              "occurrenceCode": "CR",
+              "occurrenceCodeDate": [
+                  2024,
+                  3,
+                  1
+              ],
+              "conditionCode": "CR",
+              "repricedAllowedAmount": 23.99,
+              "repricedSavingsAmount": 23.99,
+              "repricingOrganizationIdentifier": "",
+              "repricingPerDiemOrFlatRateAmount": "1",
+              "repricingProductCode": "1",
+              "rejectReasonCode": "",
+              "attendingPhysician": {
+                  "entityIdentifierCode": "PR",
+                  "entityTypeQualifier": "2",
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "PI",
+                  "nameSuffix": "ACME001",
+                  "primaryIdentificationCodeQualifier": "23",
+                  "primaryIdentificationId": "23",
+                  "attendingPhysicianCode": "32",
+                  "healthCareProviderTaxonomyCode": "2",
+                  "taxonomyCode": "2",
+                  "stateLicenseNumberQualifier": "32",
+                  "stateLicenseNumber": "323223"
+              },
+              "operatingPhysician": {
+                  "entityIdentifierCode": "PR",
+                  "entityTypeQualifier": "E",
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "PI",
+                  "primaryIdentificationId": "ACME001",
+                  "stateLicenseNumberQualifier": "123",
+                  "stateLicenseNumber": "12342"
+              },
+              "serviceFacility": {
+                  "entityIdentifierCode": "82",
+                  "entityTypeQualifier": 1,
+                  "organizationNameOrLastName": "Service Facility Name",
+                  "firstName": "Jane",
+                  "middleName": "A",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "XX",
+                  "primaryIdentificationId": "",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  },
+                  "stateLicenseNumberQualifier": "0B",
+                  "stateLicenseNumber": "123456789"
+              },
+              "serviceLines": [
+                  {
+                      "lineNumber": 1,
+                      "productOrServiceIdQualifier": "HC",
+                      "procedureCode": "97110",
+                      "modifier1": "CQ",
+                      "modifier2": "LT",
+                      "modifier3": "25",
+                      "modifier4": "59",
+                      "modifierPointerMap": "",
+                      "lineItemChargeAmount": 200,
+                      "unitOfMeasurementCode": "MJ",
+                      "quantity": 3,
+                      "placeOfServiceCode": "",
+                      "serviceTypeCode": "11",
+                      "dateOfService": [
+                          2024,
+                          3,
+                          1
+                      ],
+                      "lineItemControlNumber": "54321",
+                      "lineItemReferenceIdentificationQualifier": "FS",
+                      "lineItemAllowedAmount": 200,
+                      "originalBilledServiceCode": "TBD",
+                      "attachment": {
+                          "reportTypeCode": "DE",
+                          "transmissionCode": "A",
+                          "identifcationCode": "3245"
+                      },
+                      "revenueCode": "54",
+                      "nonCoveredChargeAmount": 20,
+                      "drug": {
+                          "nationalDrugCode": "21213",
+                          "quantity": 31,
+                          "unitOfMeasure": "F2",
+                          "prescriptionNumber": "131231",
+                          "serviceDate": [
+                              2023,
+                              1,
+                              1
+                          ]
+                      }
+                  }
+              ],
+              "providerPaidDate": [
+                  2024,
+                  3,
+                  1
+              ],
+              "payToProvider": {
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  }
+              },
+              "statementDateRange": "1",
+              "dischargeHour": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "admissionDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "admissionTypeCode": 1,
+              "admissionSourceCode": 1,
+              "patientStatusCode": 30,
+              "billReviewState": "FL",
+              "procedures": [
+                  {
+                      "primary": true,
+                  "procedureCodeQualifier":"fdr",
+                      "procedureCode": "T22.021",
+                      "procedureDate": [
+                          2023,
+                          7,
+                          15
+                      ]
+                  }
+              ],
+              "otherPhysicianRequest": {
+                  "entityIdentifierCode": "PR",
+                  "entityTypeQualifier": "E",
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "PI",
+                  "primaryIdentificationId": "ACME001",
+                  "stateLicenseNumberQualifier": "31",
+                  "stateLicenseNumber": "212123"
+              }
+          }
+      }
+  api_retrospective_billing_837Itwo:
+    baseUri: http://dev-retrospective-billing-system.dev-aro.healthesystems.com
+    endpoint: api/v1/retrospective-bills
+    headers:
+      Content-Type: application/json
+    body: |
+      {
+          "claimNumber": "FYY2080",
+          "insurancePayer": "travelers-insurance",
+          "billChargedAmount": 6,
+          "insurancePayerBillIdentifier":"dsd22e2e",
+          "billingProviderTaxIdentificationNumber": "562298123",
+          "renderedServices": [
+              {
+                  "id": 0,
+                  "dateOfService": [
+                      2024,
+                      2,
+                      1
+                  ],
+                  "procedureCode": "97110",
+                  "chargedAmount": 3,
+                  "allowedAmount": 4
+              },
+      		{
+                  "id": 1,
+                  "dateOfService": [
+                      2024,
+                      2,
+                      1
+                  ],
+                  "procedureCode": "97110",
+                  "chargedAmount": 3,
+                  "allowedAmount": 4
+              }
+          ],
+          "billSource": {
+              "@type": "X12_837_INSTITUTIONAL_FILE_SOURCE",
+              "fileName": "FN J8",
+              "authorizationInformationQualifier": "04",
+              "authorizationInformation": "AuthInform",
+              "securityInformationQualifier": "00",
+              "securityInformation": "SecurityIn",
+              "interchangeIdQualifierSender": "ZZ",
+              "interchangeSenderId": "339127576584563",
+              "interchangeIdQualifierReceiver": "ZZ",
+              "interchangeReceiverId": "362557154547896",
+              "interchangeDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "interchangeControlVersionNumber": "00501",
+              "interchangeControlNumber": "000000905",
+              "acknowledgementRequested": false,
+              "testIndicator": "P",
+              "functionalIdentifierCode": "HC",
+              "applicationSenderCode": "123546789",
+              "applicationReceiverCode": "987654321",
+              "functionalGroupCreationDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "groupControlNumber": "1",
+              "responsibleAgencyCode": "X",
+              "versionReleaseIndustryIdentifierCode": "005010X222A1",
+              "identifierCode": "837",
+              "controlNumber": "987654",
+              "implementationConventionReference": "005010X222A1",
+              "hierarchicalStructureCode": "0019",
+              "purposeCode": "00",
+              "originatorTransactionIdentifier": "20240305121500",
+              "creationDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "claimOrEncounterIndicator": "CH",
+              "billSender": {
+                  "entityIdentifierCode": "41",
+                  "entityTypeQualifier": 1,
+                  "organizationNameOrLastName": "Doe",
+                  "firstName": "John",
+                  "middleName": "Man",
+                  "namePrefix": "Mr",
+                  "nameSuffix": "I",
+                  "identificationCodeQualifier": "46",
+                  "taxIdentificationNumber": "872373839",
+                  "contactFunctionCode": "IC",
+                  "contactName": "Jane Doe",
+                  "contactCommunication": [
+                      {
+                          "@type": "PHONE_CONTACT_COMMUNICATION",
+                          "phoneNumber": "5557779999x1234"
+                      }
+                  ]
+              },
+              "billReceiver": {
+                  "entityIdentifierCode": "40",
+                  "entityTypeQualifier": 2,
+                  "organizationNameOrLastName": "Healthesystems",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "identificationCodeQualifier": "46",
+                  "taxIdentificationNumber": "872373839"
+              },
+              "billProvider": {
+                  "entityIdentifierCode": "40",
+                  "entityTypeQualifier": 2,
+                  "organizationNameOrLastName": "Healthesystems",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "I",
+                  "hierarchicalIdNumber": "1",
+                  "hierarchicalParentIdNumber": "1",
+                  "hierarchicalLevelCode": "20",
+                  "hierarchicalChildCode": "1",
+                  "providerCode": "BI",
+                  "healthCareProviderTaxonomyCode": "PXC",
+                  "providerTaxonomyCode": "347E00000",
+                  "primaryIdentificationCodeQualifier": "XX",
+                  "primaryIdentificationId": "123456789",
+                  "taxIdentificationNumberQualifier": "EI",
+                  "taxIdentificationNumber": "872373839",
+                  "stateLicenseNumberQualifier": "0B",
+                  "stateLicenseNumber": "PT30555",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  },
+                  "contactFunctionCode": "IC",
+                  "contactName": "Jane Doe",
+                  "contactCommunication": [
+                      {
+                          "@type": "FAX_CONTACT_COMMUNICATION",
+                          "faxNumber": "321323210"
+                      }
+                  ],
+                  "secondaryIdentificationCodeQualifier": "G2",
+                  "secondaryIdentificationId": "R3"
+              },
+              "billPayer": {
+                  "entityIdentifierCode": "PR",
+                  "entityTypeQualifier": 2,
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "PI",
+                  "primaryIdentificationId": "ACME001",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  }
+              },
+              "subscriber": {
+                  "hierarchicalIdNumber": "2",
+                  "hierarchicalParentIdNumber": "1",
+                  "hierarchicalLevelCode": "22",
+                  "hierarchicalChildCode": "0",
+                  "payerResponsibilitySequenceNumberCode": "P",
+                  "payerResponsibilityRelationshipCode": "18",
+                  "insuredGroupOrPolicyNumber": "GRP01020102",
+                  "insuredGroupName": "GROUPNAME",
+                  "claimFilingIndicatorCode": "WC",
+                  "entityIdentifierCode": "IL",
+                  "entityTypeQualifier": "1",
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "MI",
+                  "primaryIdentificationId": "123456789",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  },
+                  "dateOfBirth": [
+                      2001,
+                      7,
+                      15
+                  ],
+                  "genderCode": "M",
+                  "patient": {
+                      "firstName": "uddish",
+                      "middleName": "uddish",
+                      "lastName": "uddish",
+                      "nameSuffix": "NT",
+                      "address": {
+                          "primaryAddress": "123 Main Street",
+                          "secondaryAddress": "Suite 111",
+                          "city": "Tampa",
+                          "state": "FL",
+                          "zipCode": "33609"
+                      },
+                      "dateOfBirth": [
+                          2001,
+                          7,
+                          15
+                      ],
+                      "genderCode": "F",
+                      "referenceIdentification": "PI",
+                      "dateOfDeath": [
+                          1999,
+                          1,
+                          1
+                      ],
+                      "weight": 89,
+                      "pregnancyIndicator": false,
+                      "entityTypeQualifier":"d",
+                      "entityIdentifierCode":"fds",
+                      "patientRelationshipToInsured":"2w"
+                  }
+              },
+              "claimNumber": "C000662",
+              "repricerReceivedDate": "2024-05-05",
+              "patientControlNumber": "A123456",
+              "totalBillChargeAmount": 200,
+              "filingIndicatorCode": "1",
+              "nonInstitutionalBillTypeCode": "21",
+              "facilityTypeCode": "11",
+              "facilityCodeQualifier": "B",
+              "billFrequencyCode": "1",
+              "providerSignatureOnFile": true,
+              "medicareAssignmentCode": "A",
+              "benefitAssignmentIndicator": "Y",
+              "releaseOfInformationCode": "Y",
+              "patientSignatureSourceCode": "P",
+              "relatedCauseCode1": "EM",
+              "relatedCauseCode2": "EM",
+              "relatedCauseCode3": "EM",
+              "stateOrProvinceCode": "FL",
+              "countryCode": "GA",
+              "specialProgramCode": "E",
+              "billSubmissionReasonCode": "00",
+              "dateOfInjury": [
+                  2024,
+                  3,
+                  1
+              ],
+              "attachment": {
+                  "reportTypeCode": "DE",
+                  "transmissionCode": "A",
+                  "identifcationCode": "3245"
+              },
+              "contract": {
+                  "contractTypeCode": "02",
+                  "amount": 200,
+                  "percentage": 2,
+                  "code": "XRT54",
+                  "termsDiscountPercent": 2,
+                  "versionIdentifier": "GT4332"
+              },
+              "autoIncidentReferenceIdentification": "1234",
+              "medicalRecordNumberId": "1234",
+              "jurisdictionState": "",
+              "billReviewReceivedDate": "2024-05-05",
+              "billAllowedAmountQualifierCode": "1234",
+              "billAllowedAmount": 23.99,
+              "otherPayerPriorAuthorizationOrReferralNumber": "1",
+              "adjustedRepricedClaimReferenceNumber": "3231",
+              "payerClaimControlNumber": "1",
+              "repricedClaimReferenceNumber": "Y",
+              "valueAddedNetworkTraceNumber": "1",
+              "mcoHcnEffectiveDateReferenceIdentificationQualifier": "01",
+              "mcoHcnEffectiveDateRange": "21",
+              "managedCareOrganization": "2",
+              "mcoContractApplied": "2",
+              "icdCodes": [
+                  {
+                      "primary": true,
+                      "diagnosisCodeQualifier": "ABK",
+                      "diagnosisCode": "T22.122"
+                  }
+              ],
+              "pricingMethodology": "1",
+              "occurrenceCode": "CR",
+              "occurrenceCodeDate": [
+                  2024,
+                  3,
+                  1
+              ],
+              "conditionCode": "CR",
+              "repricedAllowedAmount": 23.99,
+              "repricedSavingsAmount": 23.99,
+              "repricingOrganizationIdentifier": "",
+              "repricingPerDiemOrFlatRateAmount": "1",
+              "repricingProductCode": "1",
+              "rejectReasonCode": "",
+              "attendingPhysician": {
+                  "entityIdentifierCode": "PR",
+                  "entityTypeQualifier": "2",
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "PI",
+                  "nameSuffix": "ACME001",
+                  "primaryIdentificationCodeQualifier": "23",
+                  "primaryIdentificationId": "23",
+                  "attendingPhysicianCode": "32",
+                  "healthCareProviderTaxonomyCode": "2",
+                  "taxonomyCode": "2",
+                  "stateLicenseNumberQualifier": "32",
+                  "stateLicenseNumber": "323223"
+              },
+              "operatingPhysician": {
+                  "entityIdentifierCode": "PR",
+                  "entityTypeQualifier": "E",
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "PI",
+                  "primaryIdentificationId": "ACME001",
+                  "stateLicenseNumberQualifier": "123",
+                  "stateLicenseNumber": "12342"
+              },
+              "serviceFacility": {
+                  "entityIdentifierCode": "82",
+                  "entityTypeQualifier": 1,
+                  "organizationNameOrLastName": "Service Facility Name",
+                  "firstName": "Jane",
+                  "middleName": "A",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "XX",
+                  "primaryIdentificationId": "",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  },
+                  "stateLicenseNumberQualifier": "0B",
+                  "stateLicenseNumber": "123456789"
+              },
+              "serviceLines": [
+                  {
+                      "lineNumber": 1,
+                      "productOrServiceIdQualifier": "HC",
+                      "procedureCode": "97110",
+                      "modifier1": "CQ",
+                      "modifier2": "LT",
+                      "modifier3": "25",
+                      "modifier4": "59",
+                      "modifierPointerMap": "",
+                      "lineItemChargeAmount": 200,
+                      "unitOfMeasurementCode": "MJ",
+                      "quantity": 3,
+                      "placeOfServiceCode": "",
+                      "serviceTypeCode": "11",
+                      "dateOfService": [
+                          2024,
+                          3,
+                          1
+                      ],
+                      "lineItemControlNumber": "54321",
+                      "lineItemReferenceIdentificationQualifier": "FS",
+                      "lineItemAllowedAmount": 200,
+                      "originalBilledServiceCode": "TBD",
+                      "attachment": {
+                          "reportTypeCode": "DE",
+                          "transmissionCode": "A",
+                          "identifcationCode": "3245"
+                      },
+                      "revenueCode": "54",
+                      "nonCoveredChargeAmount": 20,
+                      "drug": {
+                          "nationalDrugCode": "21213",
+                          "quantity": 31,
+                          "unitOfMeasure": "F2",
+                          "prescriptionNumber": "131231",
+                          "serviceDate": [
+                              2023,
+                              1,
+                              1
+                          ]
+                      }
+                  }
+              ],
+              "providerPaidDate": [
+                  2024,
+                  3,
+                  1
+              ],
+              "payToProvider": {
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  }
+              },
+              "statementDateRange": "1",
+              "dischargeHour": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "admissionDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "admissionTypeCode": 1,
+              "admissionSourceCode": 1,
+              "patientStatusCode": 30,
+              "billReviewState": "FL",
+              "procedures": [
+                  {
+                      "primary": true,
+                  "procedureCodeQualifier":"fdr",
+                      "procedureCode": "T22.021",
+                      "procedureDate": [
+                          2023,
+                          7,
+                          15
+                      ]
+                  }
+              ],
+              "otherPhysicianRequest": {
+                  "entityIdentifierCode": "PR",
+                  "entityTypeQualifier": "E",
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "PI",
+                  "primaryIdentificationId": "ACME001",
+                  "stateLicenseNumberQualifier": "31",
+                  "stateLicenseNumber": "212123"
+              }
+          }
+      }
+
+  api_retrospective_billing_837Itwofuture:
+    baseUri: http://dev-retrospective-billing-system.dev-aro.healthesystems.com
+    endpoint: api/v1/retrospective-bills
+    headers:
+      Content-Type: application/json
+    body: |
+      {
+          "claimNumber": "FYY2080",
+          "insurancePayer": "travelers-insurance",
+          "billChargedAmount": 6,
+          "insurancePayerBillIdentifier":"dsd22e2e",
+          "billingProviderTaxIdentificationNumber": "562298123",
+          "renderedServices": [
+              {
+                  "id": 0,
+                  "dateOfService": [
+                      2026,
+                      2,
+                      1
+                  ],
+                  "procedureCode": "97110",
+                  "chargedAmount": 3,
+                  "allowedAmount": 4
+              },
+      		{
+                  "id": 1,
+                  "dateOfService": [
+                      2026,
+                      2,
+                      1
+                  ],
+                  "procedureCode": "97110",
+                  "chargedAmount": 3,
+                  "allowedAmount": 4
+              }
+          ],
+          "billSource": {
+              "@type": "X12_837_INSTITUTIONAL_FILE_SOURCE",
+              "fileName": "FN J8",
+              "authorizationInformationQualifier": "04",
+              "authorizationInformation": "AuthInform",
+              "securityInformationQualifier": "00",
+              "securityInformation": "SecurityIn",
+              "interchangeIdQualifierSender": "ZZ",
+              "interchangeSenderId": "339127576584563",
+              "interchangeIdQualifierReceiver": "ZZ",
+              "interchangeReceiverId": "362557154547896",
+              "interchangeDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "interchangeControlVersionNumber": "00501",
+              "interchangeControlNumber": "000000905",
+              "acknowledgementRequested": false,
+              "testIndicator": "P",
+              "functionalIdentifierCode": "HC",
+              "applicationSenderCode": "123546789",
+              "applicationReceiverCode": "987654321",
+              "functionalGroupCreationDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "groupControlNumber": "1",
+              "responsibleAgencyCode": "X",
+              "versionReleaseIndustryIdentifierCode": "005010X222A1",
+              "identifierCode": "837",
+              "controlNumber": "987654",
+              "implementationConventionReference": "005010X222A1",
+              "hierarchicalStructureCode": "0019",
+              "purposeCode": "00",
+              "originatorTransactionIdentifier": "20240305121500",
+              "creationDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "claimOrEncounterIndicator": "CH",
+              "billSender": {
+                  "entityIdentifierCode": "41",
+                  "entityTypeQualifier": 1,
+                  "organizationNameOrLastName": "Doe",
+                  "firstName": "John",
+                  "middleName": "Man",
+                  "namePrefix": "Mr",
+                  "nameSuffix": "I",
+                  "identificationCodeQualifier": "46",
+                  "taxIdentificationNumber": "872373839",
+                  "contactFunctionCode": "IC",
+                  "contactName": "Jane Doe",
+                  "contactCommunication": [
+                      {
+                          "@type": "PHONE_CONTACT_COMMUNICATION",
+                          "phoneNumber": "5557779999x1234"
+                      }
+                  ]
+              },
+              "billReceiver": {
+                  "entityIdentifierCode": "40",
+                  "entityTypeQualifier": 2,
+                  "organizationNameOrLastName": "Healthesystems",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "identificationCodeQualifier": "46",
+                  "taxIdentificationNumber": "872373839"
+              },
+              "billProvider": {
+                  "entityIdentifierCode": "40",
+                  "entityTypeQualifier": 2,
+                  "organizationNameOrLastName": "Healthesystems",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "I",
+                  "hierarchicalIdNumber": "1",
+                  "hierarchicalParentIdNumber": "1",
+                  "hierarchicalLevelCode": "20",
+                  "hierarchicalChildCode": "1",
+                  "providerCode": "BI",
+                  "healthCareProviderTaxonomyCode": "PXC",
+                  "providerTaxonomyCode": "347E00000",
+                  "primaryIdentificationCodeQualifier": "XX",
+                  "primaryIdentificationId": "123456789",
+                  "taxIdentificationNumberQualifier": "EI",
+                  "taxIdentificationNumber": "872373839",
+                  "stateLicenseNumberQualifier": "0B",
+                  "stateLicenseNumber": "PT30555",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  },
+                  "contactFunctionCode": "IC",
+                  "contactName": "Jane Doe",
+                  "contactCommunication": [
+                      {
+                          "@type": "FAX_CONTACT_COMMUNICATION",
+                          "faxNumber": "321323210"
+                      }
+                  ],
+                  "secondaryIdentificationCodeQualifier": "G2",
+                  "secondaryIdentificationId": "R3"
+              },
+              "billPayer": {
+                  "entityIdentifierCode": "PR",
+                  "entityTypeQualifier": 2,
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "PI",
+                  "primaryIdentificationId": "ACME001",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  }
+              },
+              "subscriber": {
+                  "hierarchicalIdNumber": "2",
+                  "hierarchicalParentIdNumber": "1",
+                  "hierarchicalLevelCode": "22",
+                  "hierarchicalChildCode": "0",
+                  "payerResponsibilitySequenceNumberCode": "P",
+                  "payerResponsibilityRelationshipCode": "18",
+                  "insuredGroupOrPolicyNumber": "GRP01020102",
+                  "insuredGroupName": "GROUPNAME",
+                  "claimFilingIndicatorCode": "WC",
+                  "entityIdentifierCode": "IL",
+                  "entityTypeQualifier": "1",
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "MI",
+                  "primaryIdentificationId": "123456789",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  },
+                  "dateOfBirth": [
+                      2001,
+                      7,
+                      15
+                  ],
+                  "genderCode": "M",
+                  "patient": {
+                      "firstName": "uddish",
+                      "middleName": "uddish",
+                      "lastName": "uddish",
+                      "nameSuffix": "NT",
+                      "address": {
+                          "primaryAddress": "123 Main Street",
+                          "secondaryAddress": "Suite 111",
+                          "city": "Tampa",
+                          "state": "FL",
+                          "zipCode": "33609"
+                      },
+                      "dateOfBirth": [
+                          2001,
+                          7,
+                          15
+                      ],
+                      "genderCode": "F",
+                      "referenceIdentification": "PI",
+                      "dateOfDeath": [
+                          1999,
+                          1,
+                          1
+                      ],
+                      "weight": 89,
+                      "pregnancyIndicator": false,
+                      "entityTypeQualifier":"d",
+                      "entityIdentifierCode":"fds",
+                      "patientRelationshipToInsured":"2w"
+                  }
+              },
+              "claimNumber": "C000662",
+              "repricerReceivedDate": "2024-05-05",
+              "patientControlNumber": "A123456",
+              "totalBillChargeAmount": 200,
+              "filingIndicatorCode": "1",
+              "nonInstitutionalBillTypeCode": "21",
+              "facilityTypeCode": "11",
+              "facilityCodeQualifier": "B",
+              "billFrequencyCode": "1",
+              "providerSignatureOnFile": true,
+              "medicareAssignmentCode": "A",
+              "benefitAssignmentIndicator": "Y",
+              "releaseOfInformationCode": "Y",
+              "patientSignatureSourceCode": "P",
+              "relatedCauseCode1": "EM",
+              "relatedCauseCode2": "EM",
+              "relatedCauseCode3": "EM",
+              "stateOrProvinceCode": "FL",
+              "countryCode": "GA",
+              "specialProgramCode": "E",
+              "billSubmissionReasonCode": "00",
+              "dateOfInjury": [
+                  2024,
+                  3,
+                  1
+              ],
+              "attachment": {
+                  "reportTypeCode": "DE",
+                  "transmissionCode": "A",
+                  "identifcationCode": "3245"
+              },
+              "contract": {
+                  "contractTypeCode": "02",
+                  "amount": 200,
+                  "percentage": 2,
+                  "code": "XRT54",
+                  "termsDiscountPercent": 2,
+                  "versionIdentifier": "GT4332"
+              },
+              "autoIncidentReferenceIdentification": "1234",
+              "medicalRecordNumberId": "1234",
+              "jurisdictionState": "",
+              "billReviewReceivedDate": "2024-05-05",
+              "billAllowedAmountQualifierCode": "1234",
+              "billAllowedAmount": 23.99,
+              "otherPayerPriorAuthorizationOrReferralNumber": "1",
+              "adjustedRepricedClaimReferenceNumber": "3231",
+              "payerClaimControlNumber": "1",
+              "repricedClaimReferenceNumber": "Y",
+              "valueAddedNetworkTraceNumber": "1",
+              "mcoHcnEffectiveDateReferenceIdentificationQualifier": "01",
+              "mcoHcnEffectiveDateRange": "21",
+              "managedCareOrganization": "2",
+              "mcoContractApplied": "2",
+              "icdCodes": [
+                  {
+                      "primary": true,
+                      "diagnosisCodeQualifier": "ABK",
+                      "diagnosisCode": "T22.122"
+                  }
+              ],
+              "pricingMethodology": "1",
+              "occurrenceCode": "CR",
+              "occurrenceCodeDate": [
+                  2024,
+                  3,
+                  1
+              ],
+              "conditionCode": "CR",
+              "repricedAllowedAmount": 23.99,
+              "repricedSavingsAmount": 23.99,
+              "repricingOrganizationIdentifier": "",
+              "repricingPerDiemOrFlatRateAmount": "1",
+              "repricingProductCode": "1",
+              "rejectReasonCode": "",
+              "attendingPhysician": {
+                  "entityIdentifierCode": "PR",
+                  "entityTypeQualifier": "2",
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "PI",
+                  "nameSuffix": "ACME001",
+                  "primaryIdentificationCodeQualifier": "23",
+                  "primaryIdentificationId": "23",
+                  "attendingPhysicianCode": "32",
+                  "healthCareProviderTaxonomyCode": "2",
+                  "taxonomyCode": "2",
+                  "stateLicenseNumberQualifier": "32",
+                  "stateLicenseNumber": "323223"
+              },
+              "operatingPhysician": {
+                  "entityIdentifierCode": "PR",
+                  "entityTypeQualifier": "E",
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "PI",
+                  "primaryIdentificationId": "ACME001",
+                  "stateLicenseNumberQualifier": "123",
+                  "stateLicenseNumber": "12342"
+              },
+              "serviceFacility": {
+                  "entityIdentifierCode": "82",
+                  "entityTypeQualifier": 1,
+                  "organizationNameOrLastName": "Service Facility Name",
+                  "firstName": "Jane",
+                  "middleName": "A",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "XX",
+                  "primaryIdentificationId": "",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  },
+                  "stateLicenseNumberQualifier": "0B",
+                  "stateLicenseNumber": "123456789"
+              },
+              "serviceLines": [
+                  {
+                      "lineNumber": 1,
+                      "productOrServiceIdQualifier": "HC",
+                      "procedureCode": "97110",
+                      "modifier1": "CQ",
+                      "modifier2": "LT",
+                      "modifier3": "25",
+                      "modifier4": "59",
+                      "modifierPointerMap": "",
+                      "lineItemChargeAmount": 200,
+                      "unitOfMeasurementCode": "MJ",
+                      "quantity": 3,
+                      "placeOfServiceCode": "",
+                      "serviceTypeCode": "11",
+                      "dateOfService": [
+                          2024,
+                          3,
+                          1
+                      ],
+                      "lineItemControlNumber": "54321",
+                      "lineItemReferenceIdentificationQualifier": "FS",
+                      "lineItemAllowedAmount": 200,
+                      "originalBilledServiceCode": "TBD",
+                      "attachment": {
+                          "reportTypeCode": "DE",
+                          "transmissionCode": "A",
+                          "identifcationCode": "3245"
+                      },
+                      "revenueCode": "54",
+                      "nonCoveredChargeAmount": 20,
+                      "drug": {
+                          "nationalDrugCode": "21213",
+                          "quantity": 31,
+                          "unitOfMeasure": "F2",
+                          "prescriptionNumber": "131231",
+                          "serviceDate": [
+                              2023,
+                              1,
+                              1
+                          ]
+                      }
+                  }
+              ],
+              "providerPaidDate": [
+                  2024,
+                  3,
+                  1
+              ],
+              "payToProvider": {
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  }
+              },
+              "statementDateRange": "1",
+              "dischargeHour": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "admissionDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "admissionTypeCode": 1,
+              "admissionSourceCode": 1,
+              "patientStatusCode": 30,
+              "billReviewState": "FL",
+              "procedures": [
+                  {
+                      "primary": true,
+                  "procedureCodeQualifier":"fdr",
+                      "procedureCode": "T22.021",
+                      "procedureDate": [
+                          2023,
+                          7,
+                          15
+                      ]
+                  }
+              ],
+              "otherPhysicianRequest": {
+                  "entityIdentifierCode": "PR",
+                  "entityTypeQualifier": "E",
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "PI",
+                  "primaryIdentificationId": "ACME001",
+                  "stateLicenseNumberQualifier": "31",
+                  "stateLicenseNumber": "212123"
+              }
+          }
+      }
+
+  api_retrospective_billing_837Itwocurrent:
+    baseUri: http://dev-retrospective-billing-system.dev-aro.healthesystems.com
+    endpoint: api/v1/retrospective-bills
+    headers:
+      Content-Type: application/json
+    body: |
+      {
+          "claimNumber": "FYY2080",
+          "insurancePayer": "travelers-insurance",
+          "billChargedAmount": 6,
+          "insurancePayerBillIdentifier":"dsd22e2e",
+          "billingProviderTaxIdentificationNumber": "562298123",
+          "renderedServices": [
+              {
+                  "id": 0,
+                  "dateOfService": [
+                      2025,
+                      1,
+                      21
+                  ],
+                  "procedureCode": "97110",
+                  "chargedAmount": 3,
+                  "allowedAmount": 4
+              },
+      		{
+                  "id": 1,
+                  "dateOfService": [
+                      2025,
+                      1,
+                      21
+                  ],
+                  "procedureCode": "97110",
+                  "chargedAmount": 3,
+                  "allowedAmount": 4
+              }
+          ],
+          "billSource": {
+              "@type": "X12_837_INSTITUTIONAL_FILE_SOURCE",
+              "fileName": "FN J8",
+              "authorizationInformationQualifier": "04",
+              "authorizationInformation": "AuthInform",
+              "securityInformationQualifier": "00",
+              "securityInformation": "SecurityIn",
+              "interchangeIdQualifierSender": "ZZ",
+              "interchangeSenderId": "339127576584563",
+              "interchangeIdQualifierReceiver": "ZZ",
+              "interchangeReceiverId": "362557154547896",
+              "interchangeDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "interchangeControlVersionNumber": "00501",
+              "interchangeControlNumber": "000000905",
+              "acknowledgementRequested": false,
+              "testIndicator": "P",
+              "functionalIdentifierCode": "HC",
+              "applicationSenderCode": "123546789",
+              "applicationReceiverCode": "987654321",
+              "functionalGroupCreationDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "groupControlNumber": "1",
+              "responsibleAgencyCode": "X",
+              "versionReleaseIndustryIdentifierCode": "005010X222A1",
+              "identifierCode": "837",
+              "controlNumber": "987654",
+              "implementationConventionReference": "005010X222A1",
+              "hierarchicalStructureCode": "0019",
+              "purposeCode": "00",
+              "originatorTransactionIdentifier": "20240305121500",
+              "creationDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "claimOrEncounterIndicator": "CH",
+              "billSender": {
+                  "entityIdentifierCode": "41",
+                  "entityTypeQualifier": 1,
+                  "organizationNameOrLastName": "Doe",
+                  "firstName": "John",
+                  "middleName": "Man",
+                  "namePrefix": "Mr",
+                  "nameSuffix": "I",
+                  "identificationCodeQualifier": "46",
+                  "taxIdentificationNumber": "872373839",
+                  "contactFunctionCode": "IC",
+                  "contactName": "Jane Doe",
+                  "contactCommunication": [
+                      {
+                          "@type": "PHONE_CONTACT_COMMUNICATION",
+                          "phoneNumber": "5557779999x1234"
+                      }
+                  ]
+              },
+              "billReceiver": {
+                  "entityIdentifierCode": "40",
+                  "entityTypeQualifier": 2,
+                  "organizationNameOrLastName": "Healthesystems",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "identificationCodeQualifier": "46",
+                  "taxIdentificationNumber": "872373839"
+              },
+              "billProvider": {
+                  "entityIdentifierCode": "40",
+                  "entityTypeQualifier": 2,
+                  "organizationNameOrLastName": "Healthesystems",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "I",
+                  "hierarchicalIdNumber": "1",
+                  "hierarchicalParentIdNumber": "1",
+                  "hierarchicalLevelCode": "20",
+                  "hierarchicalChildCode": "1",
+                  "providerCode": "BI",
+                  "healthCareProviderTaxonomyCode": "PXC",
+                  "providerTaxonomyCode": "347E00000",
+                  "primaryIdentificationCodeQualifier": "XX",
+                  "primaryIdentificationId": "123456789",
+                  "taxIdentificationNumberQualifier": "EI",
+                  "taxIdentificationNumber": "872373839",
+                  "stateLicenseNumberQualifier": "0B",
+                  "stateLicenseNumber": "PT30555",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  },
+                  "contactFunctionCode": "IC",
+                  "contactName": "Jane Doe",
+                  "contactCommunication": [
+                      {
+                          "@type": "FAX_CONTACT_COMMUNICATION",
+                          "faxNumber": "321323210"
+                      }
+                  ],
+                  "secondaryIdentificationCodeQualifier": "G2",
+                  "secondaryIdentificationId": "R3"
+              },
+              "billPayer": {
+                  "entityIdentifierCode": "PR",
+                  "entityTypeQualifier": 2,
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "PI",
+                  "primaryIdentificationId": "ACME001",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  }
+              },
+              "subscriber": {
+                  "hierarchicalIdNumber": "2",
+                  "hierarchicalParentIdNumber": "1",
+                  "hierarchicalLevelCode": "22",
+                  "hierarchicalChildCode": "0",
+                  "payerResponsibilitySequenceNumberCode": "P",
+                  "payerResponsibilityRelationshipCode": "18",
+                  "insuredGroupOrPolicyNumber": "GRP01020102",
+                  "insuredGroupName": "GROUPNAME",
+                  "claimFilingIndicatorCode": "WC",
+                  "entityIdentifierCode": "IL",
+                  "entityTypeQualifier": "1",
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "MI",
+                  "primaryIdentificationId": "123456789",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  },
+                  "dateOfBirth": [
+                      2001,
+                      7,
+                      15
+                  ],
+                  "genderCode": "M",
+                  "patient": {
+                      "firstName": "uddish",
+                      "middleName": "uddish",
+                      "lastName": "uddish",
+                      "nameSuffix": "NT",
+                      "address": {
+                          "primaryAddress": "123 Main Street",
+                          "secondaryAddress": "Suite 111",
+                          "city": "Tampa",
+                          "state": "FL",
+                          "zipCode": "33609"
+                      },
+                      "dateOfBirth": [
+                          2001,
+                          7,
+                          15
+                      ],
+                      "genderCode": "F",
+                      "referenceIdentification": "PI",
+                      "dateOfDeath": [
+                          1999,
+                          1,
+                          1
+                      ],
+                      "weight": 89,
+                      "pregnancyIndicator": false,
+                      "entityTypeQualifier":"d",
+                      "entityIdentifierCode":"fds",
+                      "patientRelationshipToInsured":"2w"
+                  }
+              },
+              "claimNumber": "C000662",
+              "repricerReceivedDate": "2024-05-05",
+              "patientControlNumber": "A123456",
+              "totalBillChargeAmount": 200,
+              "filingIndicatorCode": "1",
+              "nonInstitutionalBillTypeCode": "21",
+              "facilityTypeCode": "11",
+              "facilityCodeQualifier": "B",
+              "billFrequencyCode": "1",
+              "providerSignatureOnFile": true,
+              "medicareAssignmentCode": "A",
+              "benefitAssignmentIndicator": "Y",
+              "releaseOfInformationCode": "Y",
+              "patientSignatureSourceCode": "P",
+              "relatedCauseCode1": "EM",
+              "relatedCauseCode2": "EM",
+              "relatedCauseCode3": "EM",
+              "stateOrProvinceCode": "FL",
+              "countryCode": "GA",
+              "specialProgramCode": "E",
+              "billSubmissionReasonCode": "00",
+              "dateOfInjury": [
+                  2024,
+                  3,
+                  1
+              ],
+              "attachment": {
+                  "reportTypeCode": "DE",
+                  "transmissionCode": "A",
+                  "identifcationCode": "3245"
+              },
+              "contract": {
+                  "contractTypeCode": "02",
+                  "amount": 200,
+                  "percentage": 2,
+                  "code": "XRT54",
+                  "termsDiscountPercent": 2,
+                  "versionIdentifier": "GT4332"
+              },
+              "autoIncidentReferenceIdentification": "1234",
+              "medicalRecordNumberId": "1234",
+              "jurisdictionState": "",
+              "billReviewReceivedDate": "2024-05-05",
+              "billAllowedAmountQualifierCode": "1234",
+              "billAllowedAmount": 23.99,
+              "otherPayerPriorAuthorizationOrReferralNumber": "1",
+              "adjustedRepricedClaimReferenceNumber": "3231",
+              "payerClaimControlNumber": "1",
+              "repricedClaimReferenceNumber": "Y",
+              "valueAddedNetworkTraceNumber": "1",
+              "mcoHcnEffectiveDateReferenceIdentificationQualifier": "01",
+              "mcoHcnEffectiveDateRange": "21",
+              "managedCareOrganization": "2",
+              "mcoContractApplied": "2",
+              "icdCodes": [
+                  {
+                      "primary": true,
+                      "diagnosisCodeQualifier": "ABK",
+                      "diagnosisCode": "T22.122"
+                  }
+              ],
+              "pricingMethodology": "1",
+              "occurrenceCode": "CR",
+              "occurrenceCodeDate": [
+                  2024,
+                  3,
+                  1
+              ],
+              "conditionCode": "CR",
+              "repricedAllowedAmount": 23.99,
+              "repricedSavingsAmount": 23.99,
+              "repricingOrganizationIdentifier": "",
+              "repricingPerDiemOrFlatRateAmount": "1",
+              "repricingProductCode": "1",
+              "rejectReasonCode": "",
+              "attendingPhysician": {
+                  "entityIdentifierCode": "PR",
+                  "entityTypeQualifier": "2",
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "PI",
+                  "nameSuffix": "ACME001",
+                  "primaryIdentificationCodeQualifier": "23",
+                  "primaryIdentificationId": "23",
+                  "attendingPhysicianCode": "32",
+                  "healthCareProviderTaxonomyCode": "2",
+                  "taxonomyCode": "2",
+                  "stateLicenseNumberQualifier": "32",
+                  "stateLicenseNumber": "323223"
+              },
+              "operatingPhysician": {
+                  "entityIdentifierCode": "PR",
+                  "entityTypeQualifier": "E",
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "PI",
+                  "primaryIdentificationId": "ACME001",
+                  "stateLicenseNumberQualifier": "123",
+                  "stateLicenseNumber": "12342"
+              },
+              "serviceFacility": {
+                  "entityIdentifierCode": "82",
+                  "entityTypeQualifier": 1,
+                  "organizationNameOrLastName": "Service Facility Name",
+                  "firstName": "Jane",
+                  "middleName": "A",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "XX",
+                  "primaryIdentificationId": "",
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  },
+                  "stateLicenseNumberQualifier": "0B",
+                  "stateLicenseNumber": "123456789"
+              },
+              "serviceLines": [
+                  {
+                      "lineNumber": 1,
+                      "productOrServiceIdQualifier": "HC",
+                      "procedureCode": "97110",
+                      "modifier1": "CQ",
+                      "modifier2": "LT",
+                      "modifier3": "25",
+                      "modifier4": "59",
+                      "modifierPointerMap": "",
+                      "lineItemChargeAmount": 200,
+                      "unitOfMeasurementCode": "MJ",
+                      "quantity": 3,
+                      "placeOfServiceCode": "",
+                      "serviceTypeCode": "11",
+                      "dateOfService": [
+                          2024,
+                          3,
+                          1
+                      ],
+                      "lineItemControlNumber": "54321",
+                      "lineItemReferenceIdentificationQualifier": "FS",
+                      "lineItemAllowedAmount": 200,
+                      "originalBilledServiceCode": "TBD",
+                      "attachment": {
+                          "reportTypeCode": "DE",
+                          "transmissionCode": "A",
+                          "identifcationCode": "3245"
+                      },
+                      "revenueCode": "54",
+                      "nonCoveredChargeAmount": 20,
+                      "drug": {
+                          "nationalDrugCode": "21213",
+                          "quantity": 31,
+                          "unitOfMeasure": "F2",
+                          "prescriptionNumber": "131231",
+                          "serviceDate": [
+                              2023,
+                              1,
+                              1
+                          ]
+                      }
+                  }
+              ],
+              "providerPaidDate": [
+                  2024,
+                  3,
+                  1
+              ],
+              "payToProvider": {
+                  "address": {
+                      "primaryAddress": "123 Main Street",
+                      "secondaryAddress": "Suite 111",
+                      "city": "Tampa",
+                      "state": "FL",
+                      "zipCode": "33609"
+                  }
+              },
+              "statementDateRange": "1",
+              "dischargeHour": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "admissionDateTime": [
+                  2021,
+                  5,
+                  25,
+                  13,
+                  15,
+                  1
+              ],
+              "admissionTypeCode": 1,
+              "admissionSourceCode": 1,
+              "patientStatusCode": 30,
+              "billReviewState": "FL",
+              "procedures": [
+                  {
+                      "primary": true,
+                  "procedureCodeQualifier":"fdr",
+                      "procedureCode": "T22.021",
+                      "procedureDate": [
+                          2023,
+                          7,
+                          15
+                      ]
+                  }
+              ],
+              "otherPhysicianRequest": {
+                  "entityIdentifierCode": "PR",
+                  "entityTypeQualifier": "E",
+                  "organizationNameOrLastName": "Acme Insurance",
+                  "firstName": "Jane",
+                  "middleName": "Amelia",
+                  "namePrefix": "Mr.",
+                  "nameSuffix": "Jr.",
+                  "primaryIdentificationCodeQualifier": "PI",
+                  "primaryIdentificationId": "ACME001",
+                  "stateLicenseNumberQualifier": "31",
+                  "stateLicenseNumber": "212123"
+              }
+          }
+      }
+
