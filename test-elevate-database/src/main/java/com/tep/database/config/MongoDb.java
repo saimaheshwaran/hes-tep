@@ -4,11 +4,11 @@ import com.mongodb.client.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MongoDB implements DBConfig{
+public class MongoDb implements DbConfig {
 
     private static MongoClient mongoClient;
     private static MongoDatabase database;
-    private static final Logger LOGGER = LoggerFactory.getLogger(com.tep.database.config.MongoDB.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MongoDb.class);
 
      /**
      * Connects to MongoDB using the provided connection string, database name, and collection name.

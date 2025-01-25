@@ -1,7 +1,7 @@
 package com.tep.database.config;
 
 
-public interface DBConfig {
+public interface DbConfig {
 
     Object connectDatabase(String connectionString, String dbName);
 }

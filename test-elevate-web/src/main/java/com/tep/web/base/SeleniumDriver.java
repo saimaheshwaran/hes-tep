@@ -210,6 +210,7 @@ public class SeleniumDriver {
 
     }
 
+
     /**
      * Initializes a Firefox browser with the specified options.
      * Configures headless mode, disables PDF viewer, and sets other Firefox preferences.

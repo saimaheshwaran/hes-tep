@@ -16,6 +16,11 @@ public class WebEnums {
         CHROME,
 
         /**
+         * Chrome browser.
+         */
+        CHROME_CANARY,
+
+        /**
          * Firefox browser.
          */
         FIREFOX,

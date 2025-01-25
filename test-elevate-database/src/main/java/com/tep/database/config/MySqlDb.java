@@ -7,11 +7,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 
-public class MySqlDB implements DBConfig {
+public class MySqlDb implements DbConfig {
 
     private static Connection connection;
     private static Statement statement;
-    private static final Logger LOGGER = LoggerFactory.getLogger(com.tep.database.config.MySqlDB.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MySqlDb.class);
 
     public Statement connectDatabase(String connectionString, String credentials) {
         try {

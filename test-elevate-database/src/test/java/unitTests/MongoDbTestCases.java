@@ -1,14 +1,14 @@
 package unitTests;
 
-import com.tep.database.DatabaseDriver;
+import com.tep.database.DbDriver;
 import org.bson.Document;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-public class MongoDBTestCases {
-    DatabaseDriver driver = new DatabaseDriver();
+public class MongoDbTestCases {
+    DbDriver driver = new DbDriver();
 
     @Test
     public void MongoDB_Fetch_First_Row_Data() {

@@ -68,15 +68,11 @@ public class ApiConfig {
         if (!Files.exists(Path.of(Constants.TEP_PROP_PATH))) {
             logger.warn("TEP properties file does not exist at '{}'", Constants.TEP_PROP_PATH);
         } else {
-            if (!Boolean.parseBoolean(Constants.TEP_PROPERTIES.getProperty("api"))) {
-                logger.warn("API testing is disabled. Set 'api=true' in '{}'.", Constants.TEP_PROP_PATH);
-            } else {
-                // Load API configuration files
-                loadApiConfiguration();
+            // Load API configuration files
+            loadApiConfiguration();
 
-                // Load API properties and replace placeholders
-                loadApiProperties();
-            }
+            // Load API properties and replace placeholders
+            loadApiProperties();
         }
 
         logger.debug("API configuration setup complete.");
