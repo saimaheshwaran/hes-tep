@@ -19,11 +19,20 @@ public class StringToType {
     }
 
     /**
-     * Parses the string value into a data type according to the suffix.
+     * Parses a string value with a type indicator and returns the corresponding typed object.
+     * The type indicator should be appended to the value with a colon separator. Supported type indicators are:
+     * ":string" or ":str" for String,
+     * ":bool" or ":boolean" for Boolean,
+     * ":int" or ":integer" for Integer,
+     * ":float", ":double", or ":decimal" for Double,
+     * ":long" for Long,
+     * ":null" for null,
+     * ":json" for a parsed JSON tree using OBJECT_MAPPER.
+     * If no type indicator is provided, the value is returned as a String.
      *
-     * @param typedValue The string value with a suffix indicating the data type (e.g., ":string", ":bool", ":int", ":float", ":long", ":null", ":json").
-     * @return The value converted to the specified data type, or the original string if no suffix is provided.
-     * @throws RuntimeException if the JSON parsing fails or if the value cannot be converted to the specified data type.
+     * @param typedValue The string value with a type indicator to parse.
+     * @return The parsed object of the specified type, or the original string if no type indicator is provided.
+     * @throws RuntimeException If the ":json" type indicator is provided and JSON parsing fails.
      */
     public static Object parseValue(String typedValue) {
         if (typedValue.endsWith(":string") || typedValue.endsWith(":str")) {

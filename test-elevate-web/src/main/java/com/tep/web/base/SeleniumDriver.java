@@ -1,5 +1,6 @@
 package com.tep.web.base;
 
+import com.tep.utilities.Constants;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import com.tep.web.config.WebEnums;
@@ -69,6 +70,7 @@ public class SeleniumDriver {
             case FIREFOX -> initializeFirefoxBrowser();
             case EDGE -> initializeEdgeBrowser();
             case SAFARI -> initializeSafariBrowser();
+            case CHROME_CANARY -> initializeChromeCanaryBrowser();
             default -> driver = null;
         }
 
@@ -210,6 +212,51 @@ public class SeleniumDriver {
 
     }
 
+    /**
+     * Initializes a Chrome Canary browser with the specified options.
+     * Configures headless mode, window size, and various Chrome options for automation.
+     */
+    public void initializeChromeCanaryBrowser() {
+        ChromeOptions options = new ChromeOptions();
+
+        // Set Chrome Canary binary path
+              String canraypath = Constants.TEST_DATA_INPUT_PATH + Constants.FILE_SEPARATOR + "web"+ Constants.FILE_SEPARATOR + "Chrome SxS"+ Constants.FILE_SEPARATOR+"Application"+ Constants.FILE_SEPARATOR +"chrome.exe"; // Update this to the actual path of Chrome Canary
+              options.setBinary(canraypath);
+
+        // Update this to the actual path of Chrome Canary
+        // Configure options based on constants
+        if (WebConstants.BROWSER_HEADLESS) {
+            options.addArguments("--headless");
+            options.addArguments("--disable-gpu");
+        }
+
+        options.addArguments("enable-automation");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-infobars");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--disable-browser-side-navigation");
+        options.addArguments("--remote-allow-origins=*");
+
+        // Add Chrome preferences
+        HashMap<String, Object> chromePrefs = new HashMap<>();
+        chromePrefs.put("profile.default_content_settings.popups", 0);
+        options.setExperimentalOption("prefs", chromePrefs);
+
+        // Build ChromeDriverService for Chrome Canary
+        ChromeDriverService chromeDriverService = new ChromeDriverService.Builder()
+                .withSilent(true)
+                .usingAnyFreePort()
+                .build();
+
+        // Initialize the WebDriver with ChromeDriver and options
+        driver = new ChromeDriver(chromeDriverService, options);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(WebConstants.IMPLICIT_WAIT_TIME_SEC));
+
+        // Maximize the browser window if specified
+        if (WebConstants.BROWSER_MAXIMIZE) {
+            driver.manage().window().maximize();
+        }
+    }
 
     /**
      * Initializes a Firefox browser with the specified options.

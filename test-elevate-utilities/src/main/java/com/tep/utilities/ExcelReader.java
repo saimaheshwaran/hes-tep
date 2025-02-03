@@ -74,10 +74,10 @@ public class ExcelReader {
     }
 
     /**
-     * Retrieves the names of all sheets in the given Excel file.
+     * Retrieves a list of sheet names from the specified Excel file.
      *
-     * @param excelFilePath The file path of the Excel document.
-     * @return A list of sheet names in the Excel file.
+     * @param excelFilePath The path to the Excel file from which to retrieve the sheet names.
+     * @return A list of strings containing the names of all sheets in the Excel file.
      */
     private List<String> getSheetNames(String excelFilePath) {
         List<String> sheetNames = new ArrayList<>();

@@ -3,8 +3,6 @@ package com.tep.utilities;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.FileSystems;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
 /**
@@ -55,6 +53,11 @@ public class Constants {
     public static final String API_PROP_PATH = MAIN_PATH + FILE_SEPARATOR + "resources" + FILE_SEPARATOR + "api.properties";
 
     /**
+     * The path to the 'database.properties' configuration file.
+     */
+    public static final String DB_PROP_PATH = MAIN_PATH + FILE_SEPARATOR + "resources" + FILE_SEPARATOR + "database.properties";
+
+    /**
      * The path to the test application directory, loaded from the 'web.properties' file.
      */
     public static final String TEST_APP_PATH;
@@ -91,33 +94,6 @@ public class Constants {
         TEST_APP_FEATURE_PATH = TEST_APP_PATH + FILE_SEPARATOR + "features";
         TEST_DATA_INPUT_PATH = TEST_APP_PATH + FILE_SEPARATOR + "input";
         TEST_DATA_OUTPUT_PATH = TARGET_PATH + FILE_SEPARATOR + "output";
-    }
-
-    /**
-     * Returns the current date and time formatted as 'yyyy/MM/dd hh:mm:ss a'.
-     *
-     * @return The formatted current date and time.
-     */
-    public static String getCurrentDateTime() {
-        return DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm:ss a").format(LocalDateTime.now());
-    }
-
-    /**
-     * Returns the current date formatted as 'yyyy/MM/dd'.
-     *
-     * @return The formatted current date.
-     */
-    public static String getCurrentDate() {
-        return DateTimeFormatter.ofPattern("yyyy/MM/dd").format(LocalDateTime.now());
-    }
-
-    /**
-     * Returns the current time formatted as 'hh:mm:ss a'.
-     *
-     * @return The formatted current time.
-     */
-    public static String getCurrentTime() {
-        return DateTimeFormatter.ofPattern("hh:mm:ss a").format(LocalDateTime.now());
     }
 
 }

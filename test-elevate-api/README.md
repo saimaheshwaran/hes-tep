@@ -35,6 +35,45 @@ Automate your test cases with minimal coding.
 			<li><a href = "#git">Viewing API Test result</a></li>
 		</ol>	
 	</li>
+	<li><a href = "#git">API Project - Quick Read</a>
+        <ol>
+        	<li><a href = "#Config">Config</a>
+            <ol>
+			<li><a href = "#git">ApiConfig</a></li>
+            <li><a href = "#git">ApiConstants</a></li>
+            <li><a href = "#git">ApiEnums</a></li>
+            <li><a href = "#git">ApiKeys</a></li>
+            </ol>
+            </li>
+	   		<li><a href = "#request">request</a>
+             <ol>
+			<li><a href = "#git">ApiRequest</a></li>
+            <li><a href = "#git">ApiRequestFactory</a></li>
+            <li><a href = "#git">ApiRequestJsonImpl</a></li>
+            <li><a href = "#git">ApiRequestXmlImpl</a></li>
+            </ol>
+            </li>
+			<li><a href = "#response">response</a>
+            <ol>
+			<li><a href = "#git">ApiResponse</a></li>
+            <li><a href = "#git">ApiSchema</a></li>
+            </ol>
+            </li>
+			<li><a href = "#Support">Support</a>
+             <ol>
+			<li><a href = "#git">ApiDriver</a></li>
+            </ol>
+            </li>
+			<li><a href = "#ApiRequest">resources</a>
+            <ol>
+			<li><a href = "#git">api.properties</a></li>
+            <li><a href = "#git">logback.xml</a></li>
+            <li><a href = "#git">tep.properties</a></li>
+            </ol>
+            </li>
+        </ol>  
+	</li>	
+	</li>
 </ul>
 	
 
@@ -45,7 +84,11 @@ Test Elevate is an essential unit testing framework for Java, streamlining the d
 
 ## Installation
 
+Note : Please feel free to skip the Java and Maven installation section if you have it installed.
+
 ## Version control System GitHub
+
+Disclaimer : GitHub Desktop is used to pull the latest code from BitBucket repository. Please feel free to use the version control of your choice to pull the latest repo.
 
 1. **Installation**: Download and install GitHub Desktop from the official website. Log in with your GitHub credentials to connect your repositories.
 2. **Clone a Repository**: Start by cloning a repository from GitHub to your local machine, creating a local copy to work on.
@@ -116,7 +159,7 @@ IntelliJ IDEA requires a Java Development Kit (JDK) to develop Java applications
 
 Steps to create api jar in Nexus Repo:-
 
-1. Use Bitbucket version control, to pull the latest api code from your source repository.
+1. Pull the latest api code from your source repository.
       "http://git.hestest.com:7990/projects/DEVOPS/repos/test-elevate-api/browse"
 2. In the project directory, run the Maven command to update your project dependencies:
    Run the command: mvn clean install
@@ -497,3 +540,74 @@ File Location- "api/src/main/resources/api.properties"
 Allure Reporting Storage refers to the system or location where Allure test reports are saved and managed.It typically involves storing generated report files in a way that allows for easy access, sharing, and historical analysis.
 
 
+## API project - Quick Read
+
+## config
+
+### ApiConfig
+
+The ApiConfig class in the com.tep.api.config package is a singleton configuration class responsible for loading, parsing, and managing API settings from YAML and property files. It initializes itself statically and sets up JSONPath configuration using Jackson. The class provides methods to load API configurations from a specified folder, replace placeholders with environment variables, and query configuration values based on API name and path. It also includes a utility method to unload YAML data into both YAML and JSON files in a target directory. The class uses logging for debugging and error reporting.
+
+### ApiConstants
+
+The ApiConstants class in the com.tep.api.config package is a utility class that provides constant values for the API framework. It defines default settings such as the number of retries for API calls and the maximum backoff time in milliseconds. The class is designed to be non-instantiable with a private constructor that throws an UnsupportedOperationException if instantiation is attempted. This ensures that the class serves only as a repository for constant values used throughout the project.
+
+### ApiEnums
+
+The ApiEnums class in the com.tep.api.config package defines an enumeration Http_Method with values GET and POST to represent HTTP methods. The class includes a private constructor to prevent instantiation, throwing an UnsupportedOperationException if an attempt is made to create an instance. This class is intended to be a utility class for storing API-related enumerations.
+
+### ApiKeys
+
+The ApiKeys class in the com.tep.api.config package is a utility class that defines constants representing various configuration keys used in the API framework. These keys include base URI, base path, endpoint, request body, query parameters, headers, cookies, path parameters, form parameters, and settings for retry and proxy configurations. The class is final and includes a private constructor to prevent instantiation, ensuring it is used solely as a container for static constants to promote consistency and maintainability across the API framework.
+
+## request
+
+### ApiRequest
+
+The ApiRequest interface in the com.tep.api.request package defines operations for handling API request content, particularly for structured formats like JSON or XML. It provides methods to convert objects to string representations, read values from content at specified paths, delete values from content, cast values to specific types, and update values within the content. This interface is intended to be implemented by classes that manage the manipulation and querying of API request data.
+
+### ApiRequestFactory
+
+The ApiRequestFactory class in the com.tep.api.request package is a factory class for creating instances of ApiRequest based on the content type, such as JSON or XML. It provides static methods to return singleton instances of JSON and XML handlers and to determine the appropriate handler for a given content. The class is final with a private constructor to prevent instantiation and includes an internal enum ContentType to represent possible content types. It also performs error handling for unknown content types.
+
+### ApiRequestJsonImpl
+
+The ApiRequestJsonImpl class implements the ApiRequest interface for handling JSON content in API requests. It provides methods to convert objects to JSON strings, read values from JSON using JSONPath expressions, delete values at specified JSONPaths, read and cast values to specific types, and update values within JSON content. The class uses an ObjectMapper for JSON processing and a JsonManipulator for JSON content manipulation, with error handling and logging provided by SLF4J.
+
+### ApiRequestXmlImpl
+
+The ApiRequestXmlImpl class implements the ApiRequest interface for handling XML content in API requests. It provides methods to convert objects to XML strings, read values from XML using XPath expressions, delete values at specified XPaths, read and cast values to specific types, and update values within XML content. The class uses an XmlMapper for XML processing and dom4j for XML manipulation, with error handling and logging provided by SLF4J.
+
+## response
+
+### ApiResponse
+
+The ApiResponse class in the com.tep.api.response package is designed to handle API responses, allowing for the validation of fields and comparison of values within the response. It uses the RestAssured library to interact with and validate the response data. The class provides methods to validate string, boolean, and numeric fields by JSON path, validate the entire response body as text, and compare the response body against expected JSON files or strings. It includes error handling and logging capabilities, and supports custom comparison types through the Enums.Comparison_Type enumeration.
+
+### ApiSchema
+
+The ApiSchema class in the com.tep.api.response package is responsible for validating API response bodies against a specified JSON schema. It uses RestAssured's JSON schema validation module to perform the validation. The class provides a constructor to initialize with a RestAssured Response object and a method validateJsonSchema to validate the response against a JSON schema file located in the classpath. It includes error handling for assertion failures, invalid file paths, and JSON schema validation exceptions, with logging provided by SLF4J.
+
+### ApiDriverHelpers
+
+The ApiDriverHelpers class in the com.tep.api.support package is a helper class that extends the ApiDriver class. It is intended to provide additional functionality to the base API driver capabilities. Currently, the class does not implement any new methods or properties, but it serves as a placeholder for future enhancements or custom methods that may be added to augment the API request and response handling provided by ApiDriver.
+
+## support
+
+### ApiDriver
+
+The ApiDriver class in the com.tep.api package is designed to configure and execute API requests, including setting request parameters like headers, cookies, and query parameters. It handles proxy settings and executes requests with optional retry capabilities. The class provides methods to set API configurations from YAML files, validate JSON response schemas, and build request specifications using RestAssured. It also includes functionality to reset request data, update request parameters, and convert the instance to a string representation for debugging. The class uses an ObjectMapper for JSON processing and supports various HTTP methods. Logging is provided by SLF4J, and additional utility methods are included for parameter manipulation and validation.
+
+## resources
+
+### api.properties
+
+This properties file specifies configuration settings for an API framework. It defines the output format for API responses as YAML and sets the primary and fallback environments to 'dev' and 'default', respectively. Additionally, it provides environment-specific properties such as bearer tokens, API passwords, and proxy credentials for UAT (User Acceptance Testing) and DEV (Development) environments. The file contains sensitive information like passwords and tokens, indicating it should be securely managed.
+
+### tep.properties
+
+This properties file contains configuration settings related to different types of testing environments and project-specific information. It specifies that API testing is enabled (api=true), while desktop, mobile, and web testing are disabled. Additionally, it defines the project's name as 'testProject' and sets a placeholder for the project's base directory (project.dir=$[project.basedir]). The file serves as a centralized location for toggling testing types and defining project-level settings.
+
+### logback.xml
+
+This XML file is a configuration file for Logback, a Java-based logging framework. It defines an appender named "STDOUT" that outputs log messages to the console using a specified pattern that includes the timestamp, thread name, log level, logger name, and message. The root logger is set to the "info" level, which means only messages at this level and above will be logged. There is also an empty "debug" level root logger configuration, which may be intended for future use or customization.

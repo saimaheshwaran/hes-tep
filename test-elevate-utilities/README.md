@@ -36,10 +36,21 @@ Automate your test cases with minimal coding.
            </li>
            </ul>  
 			</li>
-			<li><a href = "#git">Utilities functions</a>
+			<li><a href = "#git">Utilities functions - Quick Read</a>
            <ul>
-           <li><a href = "#Enums">Enums</a></li>
-	   <li><a href = "#Enums">ExcelReader</a></li>
+        	<li><a href = "#Enums">Enums</a></li>
+	   		<li><a href = "#ExcelReader">ExcelReader</a></li>
+			<li><a href = "#Constants">Constants</a></li>
+			<li><a href = "#ExceptionUtils">ExceptionUtils</a></li>
+			<li><a href = "#JsonManipulator">JsonManipulator</a></li>
+			<li><a href = "#JsonUtils">JsonUtils</a></li>
+			<li><a href = "#MapUtils">MapUtils</a></li>
+			<li><a href = "#MethodUtils">MethodUtils</a></li>
+			<li><a href = "#PlaceHolderReplacer">PlaceHolderReplacer</a></li>
+			<li><a href = "#PropUtils">PropUtils</a></li>
+			<li><a href = "#StringToType">StringToType</a></li>
+			<li><a href = "#StringUtils">StringUtils</a></li>
+			<li><a href = "#YamlReader">YamlReader</a></li>
            </li>
            </ul>  
 		   	</li>
@@ -55,7 +66,11 @@ Test Elevate is an essential unit testing framework for Java, streamlining the d
 
 ## Installation
 
+Note : Please feel free to skip the Java and Maven installation section if you have it installed.
+
 ## Version control System GitHub
+
+Disclaimer : GitHub Desktop is used to pull the latest code from BitBucket repository. Please feel free to use the version control of your choice to pull the latest repo.
 
 1. **Installation**: Download and install GitHub Desktop from the official website. Log in with your GitHub credentials to connect your repositories.
 2. **Clone a Repository**: Start by cloning a repository from GitHub to your local machine, creating a local copy to work on.
@@ -100,7 +115,7 @@ Click next through all the setup instructions. Click finish at the end. Required
 
 IntelliJ IDEA requires a Java Development Kit (JDK) to develop Java applications.
 
-# Configure JDK in Intellij IDEA- 
+## Configure JDK in Intellij IDEA- 
 
 1. Open IntelliJ IDEA and either create a new project or open an existing one.
 2. Go to `File` > `Project Structure` or press `Ctrl` + `Alt` + `Shift` + `S` on your keyboard to open the Project Structure dialog.
@@ -110,7 +125,7 @@ IntelliJ IDEA requires a Java Development Kit (JDK) to develop Java applications
 6. IntelliJ IDEA will load the selected JDK and display its version in the list of SDKs.
 
 
-# Configure Maven in Intellij IDE- 
+## Configure Maven in Intellij IDE- 
 
 1. Open IntelliJ IDEA and either create a new project with Maven or open an existing Maven project.
 2. Go to `File` > `Settings` (on Windows/Linux) or `IntelliJ IDEA` > `Preferences` (on macOS).
@@ -130,7 +145,7 @@ This approach is common in software development to promote code reuse, maintaina
 
 Steps to create utilities jar in Nexus Repo:-
 
-1. Use Bitbucket version control, to pull the latest code from your source repository.
+1. Pull the latest code from your source repository.
      http://git.hestest.com:7990/projects/DEVOPS/repos/test-elevate-utilities/browse
 2. In the project directory, run the Maven command to update your project dependencies:
    Run the command: mvn clean install
@@ -143,15 +158,15 @@ Steps to create utilities jar in Nexus Repo:-
 8. Once completed, you can check the latest core jar in the snapshots folder in Nexus repo
 	http://co1-rep01sha01.test.healthe:8080/nexus/#browse/browse	
 
-### How to use Utilities Artifact in Api/Web project
+## How to use Utilities Artifact in Api/Web project
 
-## Utilities is used by Api project. 
+### Utilities is used by Api project. 
 
 Utilities dependency is called as part of test-elevate-api project. So no need to explicitly add utility dependency for any API project.
-To create any new API project, you need to add API jar. Details mentioned as part of test-elevate-api Readme file
+To create any new API project, you need to add API jar available in nexus repository. Details mentioned as part of test-elevate-api Readme file
 
  
-## Utilities is used by Web project. 
+### Utilities is used by Web project. 
 
 Please follow these steps to incorporate utilities in web project.
 
@@ -164,7 +179,7 @@ Please follow these steps to incorporate utilities in web project.
 		<repositories>
         	<repository>
 				<id>internal-nexus</id>
-				<url>http://co1-rep01sha01.test.healthe:8080/nexus/content/groups/public/</url>
+				<url>http://co1-rep01sha01.test.healthe:8080/nexus/content/groups/snapshots/</url>
 			</repository>
        </repositories>  
 
@@ -178,10 +193,10 @@ Please follow these steps to incorporate utilities in web project.
 
 6. In the project directory, run the Maven command to update your project dependencies:
    Run the command: mvn clean install		
-7. You can now use the functionality provided by the Utilities project within your Web project.
+7. You can now use the functionality provided by the utilities project within your Web project.
 
 
-### Utilities functions
+# Utilities functions - Quick Read
 
 ## Enums
 
@@ -190,3 +205,50 @@ Java class named Enums within the com.tep.utilities package. This class contains
 ## ExcelReader
 
 Java class named ExcelReader in the com.tep.utilities package, designed to read data from Excel files. It uses the Fillo library to query Excel data with SQL-like syntax and the Apache POI library to interact with Excel sheets. The class maintains a nested LinkedHashMap to store the retrieved data in a structured format. The getPageObjects method reads page objects from an Excel file, organizing them into this map, while the getSheetNames method retrieves the names of all sheets in the Excel file. The class handles file connections and exceptions, ensuring the connection is closed after use.
+
+## Constants
+
+This class serves as a utility to store static constants and methods for a framework. It includes paths to various directories such as the project base, main, test, and target directories, as well as paths to property files like web.properties, tep.properties, and api.properties. The class also contains a static block that loads properties from the tep.properties file and initializes related paths.The class is designed to centralize configuration and common utility functions for ease of maintenance and reuse across the framework.
+
+## ExceptionUtils
+
+The ExceptionUtils class in the com.tep.utilities package provides static utility methods for error handling in Java. It includes functions to log errors and throw exceptions, specifically IllegalArgumentException and RuntimeException, when certain conditions are met, such as an object being null. The class is designed to be non-instantiable with a private constructor and uses the SLF4J logging facade for logging errors. Methods are overloaded to offer flexibility in specifying custom error messages and using different loggers.
+
+## JsonManipulator
+
+The JsonManipulator class in the com.tep.utilities package is designed to handle JSON data manipulation using the Jackson library for parsing and updating JSON structures, and JsonPath for querying. It provides methods to read, write, update, and delete JSON elements, as well as to handle exceptions and log errors using SLF4J. The class encapsulates a JsonNode object representing the JSON data and offers a string constructor to initialize the JSON structure from a given JSON string.
+
+## JsonUtils
+
+The JsonUtils class in the com.tep.utilities package provides a static method for converting Java objects to JSON string representations using the Jackson library. The class has a private constructor to prevent instantiation, making it a utility class. It handles null objects by returning the string "null" and logs errors during the conversion process, returning a default error string if an exception occurs.
+
+## MapUtils
+
+The MapUtils class in the com.tep.utilities package provides static methods for working with maps, including converting maps to string representations, transforming Cucumber DataTables into maps, and updating maps based on different modes (set, update, delete). The class is designed to be non-instantiable with a private constructor and uses SLF4J for logging. It also integrates with the ExceptionUtils class for error handling.
+
+## MethodUtils
+
+The MethodUtils class in the com.tep.utilities package provides a static method for executing a given method with a retry mechanism that includes an exponential backoff strategy. It is designed to be non-instantiable with a private constructor and uses SLF4J for logging. The executeWithRetry method attempts to execute a supplied method multiple times (up to a specified maximum) and waits for an increasing duration between retries, with a cap on the maximum wait time. If all retries fail, it throws a RuntimeException.
+
+## PlaceHolderReplacer
+
+The PlaceHolderReplacer class in the com.tep.utilities package is a utility class for replacing placeholders in a string with corresponding values from a provided map. Placeholders are expected to be in the format ${placeholder}. The class allows for case-insensitive matching of placeholders by converting keys to lowercase and supports the option to replace unknown placeholders with a default value or leave them unchanged.
+
+## PropUtils
+
+The PropUtils class in the com.tep.utilities package is a utility class for handling operations on properties files. It provides methods to read, write, and retrieve key-value pairs from a properties file. The class is initialized with the path to a properties file, and it loads the properties into a Properties object. It also allows for converting the properties to a Map for easier access and manipulation, and includes functionality to update the properties file with new or changed key-value pairs.
+
+## StringToType
+
+The StringToType class in the com.tep.utilities package provides static methods to convert string representations of values into their respective data types based on a suffix that indicates the type (e.g., ":int" for integers, ":bool" for booleans). It uses an ObjectMapper for JSON parsing when the suffix indicates a JSON object. The class cannot be instantiated due to its private constructor and throws a RuntimeException if parsing fails or the specified data type conversion is not possible.
+
+## StringUtils
+
+The StringUtils class in the com.tep.utilities package offers static methods for string operations, such as obfuscating a string by replacing its characters with asterisks and indenting each line of a given text. The class is designed to be non-instantiable with a private constructor. It provides methods for custom indentation using a specified character and amount, as well as a default indentation using two spaces.
+
+## YamlReader
+
+The YamlReader class in the com.tep.utilities package is a utility class for handling YAML files. It provides methods to read and merge YAML data from files or directories, and to convert YAML data to JSON format. The class uses a YAMLMapper to read YAML and an ObjectMapper with enabled indentation to serialize objects to JSON. It handles file reading and conversion operations, returning the results as maps or JSON strings, and includes error handling for null inputs and I/O exceptions.
+
+
+

@@ -21,23 +21,18 @@ public class MethodUtils {
     }
 
     /**
-     * Executes a given method with a specified number of retries and an exponential backoff strategy.
-     * <p>
-     * This method will attempt to invoke the supplied method up to {@code maxRetries} times. If the execution
-     * fails due to an exception, the method will wait for an exponentially increasing duration before retrying.
-     * The wait time is capped at {@code maxBackoffMillis}.
-     * </p>
-     * <p>
-     * Usage: {@code T result = executeWithRetry(() -> yourMethodToExecute(), 3, 10000);}
-     * </p>
+     * Executes a given supplier function with a specified number of retry attempts and exponential backoff.
+     * If the supplier function throws an exception, the method will retry the execution until the maximum
+     * number of retries is reached or the function completes successfully.
      *
-     * @param <T>              the type of the result returned by the {@code supplier}
-     * @param supplier         a {@link Supplier} that provides the method to be executed
-     * @param maxRetries       the maximum number of retries before giving up
-     * @param maxBackoffMillis the maximum time (in milliseconds) to wait between retries
-     * @return the result of the successful method execution, or {@code null} if all retries fail (though the method is
-     * designed to either return a result or throw an exception, so reaching a {@code null} return should be exceptional)
-     * @throws RuntimeException if the supplied method fails on the last retry
+     * @param <T>           The type of the result provided by the supplier.
+     * @param supplier      The supplier function to be executed. Must not be null.
+     * @param maxRetries    The maximum number of retry attempts. Must be a non-negative integer.
+     * @param maxBackoffMillis The maximum backoff time in milliseconds to wait between retries.
+     *                         Must be a non-negative long value.
+     * @return The result of the supplier function if execution is successful.
+     * @throws RuntimeException If all retry attempts are exhausted and the supplier function
+     *                          still fails, the last exception is rethrown wrapped in a RuntimeException.
      */
     public static <T> T executeWithRetry(Supplier<T> supplier, int maxRetries, long maxBackoffMillis) {
         for (int i = 0; i < maxRetries; i++) {

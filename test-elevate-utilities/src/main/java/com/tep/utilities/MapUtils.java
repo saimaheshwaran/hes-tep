@@ -26,10 +26,13 @@ public class MapUtils {
     }
 
     /**
-     * Converts the given Map's keys and values to strings using {@code String.valueOf()}.
+     * Converts a map with keys and values of any types to a map with keys and values of type String.
+     * The conversion is done by calling the `String.valueOf` method on both keys and values of the input map.
      *
-     * @param inputMap any Map
-     * @return input map with String keys and values or an empty map if inputMap is null.
+     * @param inputMap The input map with keys and values of any type. If null, an empty Map<String, String> is returned.
+     * @return A new Map<String, String> with the keys and values converted to Strings.
+     *         If the input map is null, an empty Map<String, String> is returned.
+     * @throws RuntimeException If an error occurs during the conversion process. The original exception is included as the cause.
      */
     public static Map<String, String> convertToMapStrStr(Map<?, ?> inputMap) {
         if (inputMap == null) {
@@ -47,20 +50,13 @@ public class MapUtils {
     }
 
     /**
-     * Converts a Cucumber DataTable into a HashMap.
-     * <p>
-     * This method processes a DataTable with either one or two columns.
-     * For each row in the DataTable:
-     * <ul>
-     *     <li>If the row has two columns, it treats the first column as the key and the second column as the value.</li>
-     *     <li>If the row has only one column, it treats the column as the key and assigns a null value.</li>
-     * </ul>
-     * <p>
-     * An IllegalArgumentException is thrown if any row in the DataTable is found to be empty.
+     * Converts a DataTable object into a Map by mapping the first column as keys and the second column as values.
+     * If a row contains only one column, the value is set to null. If a row is empty, an exception is thrown.
      *
-     * @param dataTable The DataTable to be converted, typically obtained from a Cucumber step definition.
-     * @return A HashMap where each row of the DataTable is represented as a key-value pair. Empty HashMap if data table is null.
-     * @throws IllegalArgumentException if any row in the DataTable is empty.
+     * @param dataTable The DataTable to convert. Must not be null. Each row should contain at least one column.
+     *                  The first column is treated as the key, and the second column (if present) is treated as the value.
+     * @return A Map<String, Object> representing the rows of the DataTable. If the DataTable is null, an empty Map is returned.
+     * @throws IllegalArgumentException If a row in the DataTable is empty.
      */
     public static Map<String, Object> dataTableToMap(DataTable dataTable) {
         if (dataTable == null) {
@@ -88,19 +84,22 @@ public class MapUtils {
     }
 
     /**
-     * Updates the provided map based on the specified mode.
+     * Updates a map based on the specified manipulation mode and input data.
+     * The method can set, update, or delete entries in the map to update.
      *
-     * <ul>
-     *   <li><b>set:</b> Directly sets the provided map, replacing any existing data.</li>
-     *   <li><b>update:</b> Merges the provided map with any existing data in the ThreadLocal map.</li>
-     *   <li><b>delete:</b> Removes the keys in the provided map from the ThreadLocal map.</li>
-     * </ul>
-     *
-     * @param mode        The update mode, either "set", "update", or "delete".
-     * @param inputMap    The Map containing new data.
-     * @param mapToUpdate The Map to update.
-     * @return Updated map.
-     * @throws IllegalArgumentException If an unsupported mode is provided.
+     * @param mode       the manipulation mode that determines how the map should be updated.
+     *                   The mode should be one of the following:
+     *                   - SET: Clears the map to update and sets it to the input map.
+     *                   - UPDATE: Adds all entries from the input map to the map to update.
+     *                            Existing keys will have their values overwritten.
+     *                   - DELETE: Removes all entries in the map to update that have keys
+     *                             present in the input map.
+     * @param inputMap   the map containing the data to be used for updating the map to update.
+     *                   If null, no changes will be made to the map to update.
+     * @param mapToUpdate the map to be updated. If null, a new HashMap will be initialized.
+     * @return a new {@link Map} instance containing the updated entries.
+     * @throws NullPointerException if the mode is null.
+     * @throws IllegalArgumentException if the mode is not supported.
      */
     public static Map<String, String> updateMap(Enums.Manipulation_Mode mode, Map<String, String> inputMap, Map<String, String> mapToUpdate) {
         logErrorAndThrowIfNull(LOGGER, "Mode", mode);

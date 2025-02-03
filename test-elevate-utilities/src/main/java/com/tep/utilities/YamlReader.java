@@ -115,11 +115,13 @@ public class YamlReader {
 
     /**
      * Converts a YAML-formatted string into a JSON string.
+     * This method first parses the YAML string into a map representation,
+     * then serializes the map into a JSON-formatted string using the ObjectMapper.
      *
-     * @param yamlString the YAML string to convert.
-     * @return a JSON-formatted string representing the YAML data.
-     * @throws NullPointerException if the YAML string is null.
-     * @throws RuntimeException     if an error occurs during conversion.
+     * @param yamlString the YAML string to convert. Must not be null.
+     * @return a JSON-formatted string representing the data contained in the YAML string.
+     * @throws NullPointerException if the YAML string is null, with a message indicating that the YAML string cannot be null.
+     * @throws RuntimeException if an error occurs during the parsing of the YAML string or serialization to JSON. The original IOException is included as the cause of this RuntimeException.
      */
     public String convertYamlStringToJson(String yamlString) {
         Objects.requireNonNull(yamlString, "YAML string cannot be null");

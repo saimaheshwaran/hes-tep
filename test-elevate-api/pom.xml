@@ -6,13 +6,27 @@
 
     <groupId>com.tep</groupId>
     <artifactId>api</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>DeploymentRepository</id>
+            <name>Internal Releases</name>
+            <url>http://co1-rep01sha01.test.healthe:8080/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>SnapshotRepository</id>
+            <name>snapshot releases</name>
+            <url>http://co1-rep01sha01.test.healthe:8080/nexus/content/repositories/snapshots/</url>
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+    </distributionManagement>
 
     <repositories>
         <repository>
@@ -25,7 +39,7 @@
         <dependency>
             <groupId>com.tep</groupId>
             <artifactId>utilities</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

@@ -48,7 +48,6 @@ public class BrowserEventTest {
         driver.browserEvent.refresh();
     }
 
-
     @AfterEach
     public void tearDown() {
         driver.closeBrowser();

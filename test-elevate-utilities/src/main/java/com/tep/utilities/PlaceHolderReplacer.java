@@ -65,9 +65,12 @@ public class PlaceHolderReplacer {
     /**
      * Retrieves the replacement value for a given placeholder.
      *
-     * @param variable the placeholder name (case-insensitive)
-     * @return the replacement value if found, or a fallback value if the placeholder is unknown
-     */
+     * @param variable The variable name for which the replacement value is to be retrieved.
+     *  *                 The variable name matching is case-insensitive.
+     *  * @return The replacement value associated with the variable if it exists in the map,
+     *  *         "VALUE_NOT_SET" if the variable is not found and 'replaceUnknown' is true,
+     *  *         or the original placeholder in escaped form if the variable is not found and 'replaceUnknown' is false.
+     *  */
     protected String getReplacement(String variable) {
         // Convert the variable name to lowercase for case-insensitive matching
         variable = variable.toLowerCase();

@@ -25,9 +25,7 @@ public class WindowScrollingTest {
     public void testScrollEndTop() throws InterruptedException {
         driver.browserEvent.goToUrl("https://www.w3schools.com");
         driver.windowScrolling.scrollVerticalPixels(2000);
-        Thread.sleep(3000);
         driver.windowScrolling.scrollToTop();
-        Thread.sleep(3000);
         driver.windowScrolling.scrollToEnd();
     }
 

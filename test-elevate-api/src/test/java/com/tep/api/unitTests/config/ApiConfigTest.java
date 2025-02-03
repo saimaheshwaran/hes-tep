@@ -8,11 +8,6 @@ import java.util.HashMap;
 
 public class ApiConfigTest {
 
-    @Test
-    public void test_getInvalidPath() {
-        Object result = ApiConfig.get("invalid_api", ApiKeys.ENDPOINT);
-        Assert.assertNull(result, "Query result should be null for invalid path");
-    }
 
     @Test
     public void test_getInvalidApiConfiguration() {

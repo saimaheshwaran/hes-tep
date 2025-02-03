@@ -51,4 +51,25 @@ public class TestCases {
         driver.closeBrowser();
     }
 
+    @Test
+    public void unitTestCases_chromeCanary() {
+
+        WebAppDriver driver = new WebAppDriver();
+        driver.openBrowser(WebEnums.BrowserType.CHROME_CANARY);
+        driver.browserEvent.goToUrlByPOValue("EY.page");
+        HomePage homePage = new HomePage(driver.getBrowser());
+        SearchPage searchPage = new SearchPage(driver.getBrowser());
+        ProductPage productPage = new ProductPage(driver.getBrowser());
+        driver.seleniumSendKeys.sendKeys(homePage.getSearchBox(), "Pen");
+        driver.actionSendKeys.enterKeys(homePage.getSearchBox(), "ENTER");
+        driver.pageValidation.checkPartialPageTitle("Search", true);
+        driver.seleniumClick.click(searchPage.getProductPen());
+        driver.pageValidation.checkPartialPageTitle("Pen", true);
+        driver.seleniumSendKeys.clearInputs(productPage.getQuantity());
+        driver.seleniumSendKeys.sendKeys(productPage.getQuantity(), "2");
+        driver.seleniumClick.click(productPage.getAddToCart());
+        driver.textValidation.isPartiallyMatching(productPage.getAlert(), "Added to cart", true);
+        driver.closeBrowser();
+    }
+
 }

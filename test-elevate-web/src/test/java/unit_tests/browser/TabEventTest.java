@@ -22,7 +22,6 @@ public class TabEventTest {
         driver.tabEvent.createNew("https://www.w3schools.com");
         driver.tabEvent.createNew("http://google.com");
         driver.tabEvent.createNew("https://www.w3schools.com");
-        Thread.sleep(3000);
         driver.tabEvent.switchTo("google");
         driver.tabEvent.switchToFirstTab();
     }

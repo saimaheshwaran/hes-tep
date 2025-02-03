@@ -84,4 +84,14 @@ public class TestCasesWeb {
         driver.closeBrowser();
     }
 
+    @Test
+    public void testverifypage_chromecanary() {
+        WebAppDriver driver = new WebAppDriver();
+        driver.openBrowser(WebEnums.BrowserType.CHROME_CANARY);
+        HomePage homePage = new HomePage(driver.getBrowser());
+        driver.browserEvent.goToUrl(homePage.getUrl());
+        driver.pageValidation.checkPageTitle("Search", true);
+        driver.closeBrowser();
+    }
+
 }

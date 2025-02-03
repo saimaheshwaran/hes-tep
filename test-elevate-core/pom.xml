@@ -6,7 +6,7 @@
 
     <groupId>com.tep</groupId>
     <artifactId>core</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -14,21 +14,22 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <allure.version>2.29.0</allure.version>
         <aspectj.version>1.9.22</aspectj.version>
+        <cucumber.version>7.20.1</cucumber.version>
     </properties>
-  
-	<distributionManagement>
-		<repository>
-			<id>DeploymentRepository</id>
-			<name>Internal Releases</name>
-			<url>http://co1-rep01sha01.test.healthe:8080/nexus/content/repositories/releases/</url>
-		</repository>
-		<snapshotRepository>
-			<id>SnapshotRepository</id>
-			<name>snapshot releases</name>
-			<url>http://co1-rep01sha01.test.healthe:8080/nexus/content/repositories/snapshots/</url>
-			<uniqueVersion>false</uniqueVersion>
-		</snapshotRepository>
-	</distributionManagement>
+
+    <distributionManagement>
+        <repository>
+            <id>DeploymentRepository</id>
+            <name>Internal Releases</name>
+            <url>http://co1-rep01sha01.test.healthe:8080/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>SnapshotRepository</id>
+            <name>snapshot releases</name>
+            <url>http://co1-rep01sha01.test.healthe:8080/nexus/content/repositories/snapshots/</url>
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>
@@ -93,13 +94,6 @@
             <version>2.9.0</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/io.cucumber/datatable -->
-        <dependency>
-            <groupId>io.cucumber</groupId>
-            <artifactId>datatable</artifactId>
-            <version>7.20.1</version>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.skyscreamer/jsonassert -->
         <dependency>
             <groupId>org.skyscreamer</groupId>
@@ -156,6 +150,13 @@
             <version>8.0.33</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc -->
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>12.9.0.jre11-preview</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.testng/testng -->
         <dependency>
             <groupId>org.testng</groupId>
@@ -174,13 +175,6 @@
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-junit5</artifactId>
-            <version>2.29.1</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-junit4 -->
-        <dependency>
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-junit4</artifactId>
             <version>2.29.1</version>
         </dependency>
 
@@ -203,6 +197,45 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.5.15</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-java -->
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>${cucumber.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-junit-platform-engine -->
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit-platform-engine</artifactId>
+            <version>7.20.1</version>
+         </dependency>
+        <!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-testng -->
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-testng</artifactId>
+            <version>7.20.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/io.cucumber/gherkin -->
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>gherkin</artifactId>
+            <version>30.0.4</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/io.cucumber/datatable -->
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>datatable</artifactId>
+            <version>7.20.1</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/jaxen/jaxen -->
+        <dependency>
+            <groupId>jaxen</groupId>
+            <artifactId>jaxen</artifactId>
+            <version>2.0.0</version>
         </dependency>
 
     </dependencies>

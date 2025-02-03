@@ -4,6 +4,7 @@ Test Elevate Platform is a test automation framework to test Web, API and Databa
 It enables you to write and execute automated acceptance/unit tests.
 Automate your test cases with minimal coding.
 
+
 ## Table of Contents
 <ul>
 	<li>
@@ -37,10 +38,15 @@ Automate your test cases with minimal coding.
 ## Introduction
 
 Test Elevate is an essential unit testing framework for Java, streamlining the development process with simple annotations, assertions, and test runners. It facilitates test-driven development, enabling consistent and efficient testing practices that integrate seamlessly with build tools and CI/CD pipelines. Adopting a JUnit-based automation framework enhances software quality by enabling thorough regression testing and rapid identification of bugs.
+Core project contains all the POM dependencies which can be leveraged in utilities and Database projects.
 
 ## Installation
 
+Note : Please feel free to skip the Java and Maven installation section if you have it installed.
+
 ## Version control System GitHub
+
+Disclaimer : GitHub Desktop is used to pull the latest code from BitBucket repository. Please feel free to use the version control of your choice to pull the latest repo.
 
 1. **Installation**: Download and install GitHub Desktop from the official website. Log in with your GitHub credentials to connect your repositories.
 2. **Clone a Repository**: Start by cloning a repository from GitHub to your local machine, creating a local copy to work on.
@@ -119,7 +125,7 @@ Steps to create core jar in Nexus Repo:-
 
 Please follow the below steps incase you need to update any core framework components.
 
-1. Use Bitbucket version control, to pull the latest code from your source repository.
+1. Pull the latest code from your source repository.
      http://git.hestest.com:7990/projects/DEVOPS/repos/test-elevate-core/browse
 2. In the project directory, run the Maven command to update your project dependencies:
    Run the command: mvn clean install

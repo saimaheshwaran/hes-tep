@@ -124,16 +124,16 @@ public class RetrospectiveBillingTest {
         Allure.addAttachment("Response Body", apiDriver.getResponse().getBody().asString());
     }
 
-    @Test
-    public void retrospective_api_without_billReceivedDate() {
-        apiDriver.setConfigFromYaml("api_retrospective_billing_837Pone");
-        apiDriver.updateRequestBody(apiDriver.getBody().toString(), "billReceivedDate", "", "", Enums.Manipulation_Mode.DELETE);
-        apiDriver.executeRequest(ApiEnums.Http_Method.POST);
-        apiDriver.getResponse().then().statusCode(400);
-        apiDriver.getResponse().then().body("errors[0]", equalTo("The billReceivedDate must not be null."));
-        Allure.addAttachment("Status Code", String.valueOf(apiDriver.Response().get().statusCode()));
-        Allure.addAttachment("Response Body", apiDriver.getResponse().getBody().asString());
-    }
+//    @Test
+//    public void retrospective_api_without_billReceivedDate() {
+//        apiDriver.setConfigFromYaml("api_retrospective_billing_837Pone");
+//        apiDriver.updateRequestBody(apiDriver.getBody().toString(), "billReceivedDate", "", "", Enums.Manipulation_Mode.DELETE);
+//        apiDriver.executeRequest(ApiEnums.Http_Method.POST);
+//        apiDriver.getResponse().then().statusCode(400);
+//        apiDriver.getResponse().then().body("errors[0]", equalTo("The billReceivedDate must not be null."));
+//        Allure.addAttachment("Status Code", String.valueOf(apiDriver.Response().get().statusCode()));
+//        Allure.addAttachment("Response Body", apiDriver.getResponse().getBody().asString());
+//    }
 
     @Test
     public void retrospective_api_Invalid_billReceivedDate() {

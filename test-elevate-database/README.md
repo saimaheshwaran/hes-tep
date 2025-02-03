@@ -46,7 +46,11 @@ Test Elevate is an essential unit testing framework for Java, streamlining the d
 
 ## Installation
 
+Note : Please feel free to skip the Java and Maven installation section if you have it installed.
+
 ## Version control System GitHub
+
+Disclaimer : GitHub Desktop is used to pull the latest code from BitBucket repository. Please feel free to use the version control of your choice to pull the latest repo.
 
 1. **Installation**: Download and install GitHub Desktop from the official website. Log in with your GitHub credentials to connect your repositories.
 2. **Clone a Repository**: Start by cloning a repository from GitHub to your local machine, creating a local copy to work on.
@@ -117,7 +121,7 @@ IntelliJ IDEA requires a Java Development Kit (JDK) to develop Java applications
 
 Steps to create Database jar in Nexus Repo:-
 
-1. Use Bitbucket version control, to pull the latest api code from your source repository.
+1. Pull the latest database code from your source repository.
       "http://git.hestest.com:7990/projects/DEVOPS/repos/test-elevate-database/browse"
 2. In the project directory, run the Maven command to update your project dependencies:
    Run the command: mvn clean install

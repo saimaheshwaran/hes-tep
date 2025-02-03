@@ -6,6 +6,7 @@ import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ public class Retrieve {
     private static MongoDatabase database;
     private String dataBase;
     private static Statement statement;
+    private static ResultSet resultSet;
     private static final Logger LOGGER = LoggerFactory.getLogger(Retrieve.class);
 
     public Retrieve(Object db, String DBType) {
@@ -28,6 +30,7 @@ public class Retrieve {
                 this.statement = (Statement) db;
                 break;
             case "SQL":
+                this.statement = (Statement) db;
                 break;
         }
 
@@ -49,7 +52,7 @@ public class Retrieve {
                     results.add(documents);
                     break;
                 case "MYSQL":
-                    ResultSet resultSet = statement.executeQuery("SELECT * FROM " + collectionName + " LIMIT 1;");
+                    resultSet = statement.executeQuery("SELECT * FROM " + collectionName + " LIMIT 1;");
                     while (resultSet.next()) {
                         Document row = new Document();
                         for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
@@ -59,6 +62,15 @@ public class Retrieve {
                     }
                     break;
                 case "SQL":
+                    resultSet = statement.executeQuery("SELECT TOP 1 * FROM " + collectionName + " ;");
+                    while (resultSet.next()) {
+                        Document row = new Document();
+                        for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
+                            row.append(resultSet.getMetaData().getColumnName(i), resultSet.getObject(i));
+                        }
+                        results.add(row);
+                    }
+
                     break;
                 default:
                     LOGGER.error("Invalid DB selection. Available DB's are MongoDB and SQL");
@@ -88,7 +100,7 @@ public class Retrieve {
                     }
                     break;
                 case "MYSQL":
-                    ResultSet resultSet = statement.executeQuery("SELECT * FROM " + collectionName + ";");
+                    resultSet = statement.executeQuery("SELECT * FROM " + collectionName + ";");
                     while (resultSet.next()) {
                         Document row = new Document();
                         for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
@@ -98,6 +110,14 @@ public class Retrieve {
                     }
                     break;
                 case "SQL":
+                    resultSet = statement.executeQuery("SELECT * FROM " + collectionName + ";");
+                    while (resultSet.next()) {
+                        Document row = new Document();
+                        for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
+                            row.append(resultSet.getMetaData().getColumnName(i), resultSet.getObject(i));
+                        }
+                        results.add(row);
+                    }
                     break;
                 default:
                     LOGGER.error("Invalid DB selection. Available DB's are MongoDB and SQL");
@@ -128,7 +148,7 @@ public class Retrieve {
                     }
                     break;
                 case "MYSQL":
-                    ResultSet resultSet = statement.executeQuery(query);
+                    resultSet = statement.executeQuery(query);
                     while (resultSet.next()) {
                         Document row = new Document();
                         for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
@@ -138,6 +158,14 @@ public class Retrieve {
                     }
                     break;
                 case "SQL":
+                    resultSet = statement.executeQuery(query);
+                    while (resultSet.next()) {
+                        Document row = new Document();
+                        for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
+                            row.append(resultSet.getMetaData().getColumnName(i), resultSet.getObject(i));
+                        }
+                        results.add(row);
+                    }
                     break;
                 default:
                     LOGGER.error("Invalid DB selection. Available DB's are MongoDB and SQL");
